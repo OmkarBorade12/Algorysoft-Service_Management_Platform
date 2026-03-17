@@ -1,0 +1,224 @@
+--- Parsing MHTML ---
+Reading C:\Users\borad\OneDrive\Desktop\AlgorySoft\System Documentation and Flow (1).mhtml...
+ Ctrl+M System Documentation and Flow Skip to content Chat history New chat Ctrl Shift O Search chats Ctrl K Images Apps Deep research Codex GPTs AI Video Generator - VideoGPT by VEED Explore GPTs Projects New project Jeeju's Data Install all necessory Files to run 🤓 Your chats System Documentation and Flow Reduce PC Screen Time Financial Plan Files Financial Prediction Analysis Financial Analysis and Strategy Change Dark Theme Windows PostgreSQL Stack Builder Tips MySQL Installer Comparison XAMPP Installation Issue Funding Agreement Summary Loan Request Parameters LinkedIn Post Description Create DOCX File Movie scene identification Create Admin in MongoDB Fixing pip Command Issue MongoDB Atlas vs Compass Library Management System Hashtags Naina Tere Kajrare Song Cursor Extension Setup Project Testing Plan Mysore One Day Trip New chat AI in Software Engineering IntelliJ JDK Setup IntelliJ Download Links New chat Authentication vs Authorization React Ikhlas Free Claim offer Free offer ChatGPT Free offer Memory full Share You said: The project has The add carousel the product the details trending product hot product career page contact page whatsapp integration gmail insta linkidn page details Login page The my order track inside the product details page ha the product discription pric time duration the card base less pay immediately to get 2% discount also request card after request email the admin get the request to get the sign in first then request sent admin approve by the talking the my orders will get all info with % process with the status also can text one to one file sharing the product detail has description tech price discount images features the basic card 5k static domain basic feature wish list and the login required if payed direct added to my order if instant get discount else request has notification for admin request also login required before payment data required in the admin side request tab approve call track auto update under process can check payment status work status also text personel with the admin regarding the on going project ##prompt i will provide the client page requirement it has the all the product cards nav bar login, register button once i click on the product the perticular product details page opens where images description technology price all related data is visible ,, also he can live preview the products Order that product with patment if incase he need coustomize website we can take the requirement by click request button he gets email conformation Ok Also includes the we will provide more option for the customer like we will give card as the basic silver and gold where basic contains the simple features like static page contact form and other simple requirements silver has dynamic page with admin authentication and others gold is more featured card has feature like aws deployement payment gateway and more high features each card has differnt price wustomer can order the shown one else basic one else silver one else gold or also request for the customize feature taking user requirement for this prepare data flow and theoritical data Understood, Ikhlas—I've got your exact client page requirements locked in: product catalog with cards/navbar/auth, detailed product pages (images/tech/desc/price/live preview/order), tiered pricing cards (Basic/Silver/Gold), and customization requests via "Request Custom" button with email confirmation. Here's the professional data flow, theoretical data models, and build blueprint tailored to your AlgorySoft e-commerce for pre-built projects. ## Client Page Flow (User Journey) Visual flow for a buyer browsing your React/Node apps as products: 1. **Landing (Home/Shop)**&nbsp;→ Navbar (Home/Shop/About) + Login/Register → Product Grid (12 cards, filters: Category/Price/Tech). 2. **Click Product Card**&nbsp;→ Product Details Page (hero image, desc, tech stack: React/MongoDB, live preview iframe, pricing tiers). 3. **Choose Tier**&nbsp;→ Basic (₹2999: static pages/contact), Silver (₹7999: dynamic/admin), Gold (₹14999: AWS/Stripe/full features) → "Order Now" → Checkout (Stripe/UPI). 4. **Alt Path**: "Request Custom" → Modal form (requirements desc) → Email confirmation → Your team notified. 5. **Post-Order**&nbsp;→ Dashboard (downloads/license keys) or email delivery. Phase 1: Anonymous → Authenticated → Purchase → Post-Purchase ├── LANDING (Home/Shop) → Product Details → Tier Selection → Checkout ├── Login/Register (required for cart/checkout/dashboard) ├── DASHBOARD (post-login default) → Orders History + Live Tracking └── CUSTOM REQUEST → Email Confirmation → Dashboard Tracking ┌─ HEADER ──────────────────────────────┐ │ Logo | Home Shop About | Login/Signup │ ← Navbar ├─ HERO SECTION ────────────────────────┤ │ "Buy Production-Ready Web Apps" │ │ Filter: [All ▼] [Web Apps] [AI] [₹0-5k] │ ├─ PRODUCT GRID (3x4 cards) ────────────┤ │ ┌─ CARD 1 ─┐ ┌─ CARD 2 ─┐ ┌─ CARD 3 ─┐ │ │ │ [Image] │ │ [Image] │ │ [Image] │ │ │ │ E-comm │ │ Chat App │
+--- Parsing PDF ---
+Reading C:\Users\borad\OneDrive\Desktop\AlgorySoft\Project Documentation.pdf...
+Number of pages: 10
+--- Page 1 ---
+Project Documentation: AlgorySoft E -Commerce Platform  
+Project Name: AlgorySoft Pre -built Project Marketplace  
+Version: 1.0  
+Prepared For: Development Team & 
+Stakeholders ________________________________________  
+1. Project Overview  
+The AlgorySoft platform is a specialized e -commerce solution 
+designed to sell pre -built software projects (React, Node.js, etc.) 
+along with tiered customization services. The system facilitates the 
+sale of "Products" (code templates) and "Services" (customization) 
+through a streamlined workflow involving client interactions, 
+payment gateways, and an administrative project management 
+suite.  
+Key Features  
+• Client Side: Product browsing, tiered purchasing 
+(Basic/Silver/Gold), custom request handling, real -time order 
+tracking, and live chat.  
+• Admin Side: Product management (CRUD), order lifecycle 
+management, request approval workflows, 1 :1 client 
+communication, and analytics.  
+________________________________________  
+2. Theoretical Data Models  
+Before diving into the flow, the following data structures define how 
+information is stored and processed.  
+A. User Schema (Client)  
+• id: Unique Iden tifier 
+• name, email, password_hash, phone  
+• role: "Client" (Default)  
+• wishlist: Array of Product IDs  
+B. Product Schema  
+--- Page 2 ---
+• id: Unique Identifier  
+• title, description, images[], tech_stack[] (e.g., React, 
+MongoDB)  
+• live_preview_url: Link to demo  
+• pricing_tiers:  
+o Basic: { price: 5000, features: ["Static", "Contact Form", 
+"Domain"] }  
+o Silver: { price: 12000, features: ["Dynamic", "Admin Panel", 
+"Auth"] }  
+o Gold: { price: 25000, features: ["AWS Deploy", "Payment 
+Gateway", "Full Support"] }  
+C. Orde r Schema  
+• id: Unique Order ID  
+• user_id: Reference to Client  
+• product_id: Reference to Product  
+• selected_tier: "Basic" | "Silver" | "Gold"  
+• status: "Pending" | "Processing" | "Deploying" | "Delivered"  
+• progress_percentage: 0 -100 
+• payment_status: "Pai d" | "Requested"  
+• discount_applied: Boolean (2% if immediate pay)  
+D. Request Schema (Custom Orders)  
+• id: Unique Request ID  
+• user_id: Reference to Client  
+• requirements_text: String  
+• attachments[]: File URLs  
+• status: "New" | "Approved" | "Quoted" | "In  Development"  
+• admin_notes: String  
+--- Page 3 ---
+________________________________________  
+3. Client Side Workflow & Data Flow  
+3.1 Navigation & Discovery  
+Pages: Home, Shop, Product Details, Cart, Checkout.  
+1. Landing Page: Displays Trending Products, Hot Products, and 
+Carousel.  
+2. Shop Page: Grid view of products with Filters (Category, Tech 
+Stack, Price).  
+3. Authentication: Login/Register required for "Wishlist", "My 
+Orders", and "Checkout".  
+3.2 Product Detail & Purchase Flow  
+Logic Flow:  
+1. User clicks a Product Card  
+→ 
+Navigates to Product Detail Page.  
+2. Detail Page Displays:  
+o Images, Description, Tech Stack, Features.  
+o Live Preview Button: Opens iframe/modal.  
+o Pricing Tiers: Cards showing Basic, Silver, Gold prices.  
+3. Purchase Decision:  
+o Path A (Instant Purchase ): 
+o User selects a tier (e.g., Silver).  
+o Clicks "Buy Now".  
+o Logic Check: If paying immediately  
+→ 
+Apply 2% Discount.  
+o Payment Gateway opens.  
+--- Page 4 ---
+o Success  
+→ 
+Order Created in DB with status "Processing"  
+→ 
+Redirect to "My Orders".  
+o Path B (Request Customi zation):  
+o User clicks "Request Custom".  
+o Logic Check: Is User Logged In?  
+o No: Redirect to Login, then back to form.  
+o Yes: Open Requirement Form.  
+o User fills details, uploads files.  
+o Clicks Submit  
+→ 
+Request Entry Created in DB  
+→ 
+Email sent to Admin.  
+3.3 Post -Purchase: Order Tracking  
+Pages: My Orders, Order Detail.  
+• Order List: Shows all purchased projects.  
+• Order Detail:  
+o Progress Bar (e.g., "Design: 100%", "Dev: 45%").  
+o Current Status (Processing / Deploying).  
+o Chat Interfac e: 1-to-1 messaging with Admin for project 
+updates.  
+o File Sharing: Ability to share requirement docs/images within 
+chat.  
+________________________________________  
+--- Page 5 ---
+4. Admin Side Workflow & Data Flow  
+4.1 Dashboard Overview  
+• Stats: Revenue Today, Active Orde rs, Pending Requests.  
+• Quick Actions: Approve Requests, Reply to Chats.  
+4.2 Product Management (CRUD)  
+• Create Product: Input Name, Description, Tech Stack, Upload 
+Images.  
+• Define Tiers: Set specific prices and feature lists for 
+Basic/Silver/Gold cards f or that specific product.  
+• Search & Pagination: Server -side search to handle large 
+inventories.  
+4.3 Request & Approval Pipeline  
+Flow:  
+1. New Request Notification: Admin sees new "Custom Request" 
+in the Request Tab.  
+2. Review: Admin reads requirements and checks user history.  
+3. Action:  
+o Approve: Admin clicks "Approve"  
+→ 
+Status changes to "Quoted" or "Processing".  
+o Talk: Admin initiates Chat from the Request Detail page to 
+clarify scope.  
+4. Conversion: Once approved, the Request can be converted 
+into an active Project/Order for tracking.  
+4.4 Order Management & Progress Tracking  
+Flow:  
+1. Admin selects an Order ID.  
+--- Page 6 ---
+2. Update Progress: Slider/Input to update percentage (e.g., 10% 
+to 50%).  
+3. Update Status: Dropdown (e.g., "In Progress"  
+→ 
+"Testing").  
+4. Client Notification: System automatically notifies the client via 
+email/panel when progress updates.  
+5. Chat: Admin can send messages/files to the client regarding 
+the specific order.  
+________________________________________  
+5. Visual Data Flow Diagrams  (DFD)  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+--- Page 7 ---
+                               
+
+--- Page 8 ---
+                                       
+
+--- Page 9 ---
+A. Tiered Pricing Logic (The Cards)   
+ 
+• Basic Card (₹5k Range):  
+o Static Frontend (HTML/CSS/JS or basic React).  
+o Contact Form integration.  
+o Basic Domain assistance.  
+o No Database/Admin Panel.  
+• Silver Card (₹10k+ Range):  
+o Dynamic Frontend.  
+o Custom Admin Dashboard.  
+o Database Integration (MongoDB/Firebase).  
+o Authentication System.  
+• Gold Card (₹20k+ Range):  
+o Full Stack Application.  
+o AWS/Cloud Deployment.  
+o Payment Gateway Integration.  
+o Priority Support.  
+B. Communication Integration  
+• WhatsApp: Floating button on Client Side for quick support.  
+• Gmail/LinkedIn: Footer links.  
+• Internal Chat: Socket.io or similar technology for real -time 1 -
+to-1 chat between Admin and Client inside the Order Tracking 
+page.  
+C. Automation Rules  
+1. Discoun t Logic: Total Price * 0.98 applied at checkout if 
+payment method is "Instant Pay".  
+--- Page 10 ---
+2. Status Update: When Admin sets progress to 100%, system 
+automatically asks user for a Review.  
+3. Login Guard: Any action involving PII (Personally Identifiable 
+Informati on) or financial transaction triggers the Login Guard.  
+________________________________________  
+7. Technical Requirements Summary  
+• Frontend: React.js (Client & Admin Panel), CSS/Tailwind.  
+• Backend: Node.js with Express.  
+• Database: MongoDB (for flexible product schemas) or 
+PostgreSQL.  
+• Real-time: Socket.io (Chat & Progress Updates).  
+• Storage: AWS S3 or Cloudinary (for product images and 
+requirement files).  
+• Payments: Razorpay or Stripe API.  
+ 
