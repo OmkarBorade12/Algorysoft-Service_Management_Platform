@@ -1,0 +1,260 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.count {
+    color: var(--dark-pista-bright);
+}
+
+.closeBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-glass);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.closeBtn:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    padding: 40px;
+    text-align: center;
+}
+
+.items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item {
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+}
+
+.itemIcon {
+    width: 50px;
+    height: 50px;
+    background: var(--bg-card-hover);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.itemInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.itemTitle {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+.itemCategory {
+    font-size: 0.75rem;
+    color: var(--dark-pista-bright);
+    margin: 4px 0 8px;
+}
+
+.itemActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quantityCtrl {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.quantityCtrl button {
+    width: 26px;
+    height: 26px;
+    background: var(--bg-glass);
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.quantityCtrl button:hover {
+    background: var(--bg-card-hover);
+}
+
+.quantityCtrl span {
+    width: 28px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.wishlistBtn,
+.removeBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s;
+}
+
+.wishlistBtn {
+    color: var(--text-muted);
+}
+
+.wishlistBtn:hover {
+    color: var(--dark-pista-bright);
+    background: var(--bg-card-hover);
+}
+
+.removeBtn {
+    color: var(--text-muted);
+}
+
+.removeBtn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.itemPrice {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--dark-pista-bright);
+}
+
+.originalPrice {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.footer {
+    padding: 16px 24px 24px;
+    border-top: 1px solid var(--border-color);
+}
+
+.summary {
+    margin-bottom: 16px;
+}
+
+.summaryRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.total {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    border-bottom: none;
+    padding-top: 10px;
+}
+
+.clearBtn {
+    width: 100%;
+    background: none;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    border-radius: var(--radius-full);
+    padding: 8px;
+    margin-top: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.clearBtn:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 100vw;
+    }
+}

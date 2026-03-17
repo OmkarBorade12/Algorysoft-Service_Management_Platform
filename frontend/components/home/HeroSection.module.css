@@ -1,0 +1,347 @@
+.hero {
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 80px 0 60px;
+    background: var(--gradient-hero);
+}
+
+/* Subtle grid overlay */
+.bgGrid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(109, 176, 58, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(109, 176, 58, 0.06) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+}
+
+/* Glowing orbs */
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.orb1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(109, 176, 58, 0.14) 0%, transparent 65%);
+    top: -150px;
+    right: -100px;
+    filter: blur(40px);
+    animation: float 8s ease-in-out infinite;
+}
+
+.orb2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(135, 200, 80, 0.10) 0%, transparent 65%);
+    bottom: -80px;
+    left: -60px;
+    filter: blur(40px);
+    animation: float 10s ease-in-out infinite reverse;
+}
+
+.heroContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.left {}
+
+/* Top badge */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--pista-xlight);
+    border: 1.5px solid var(--pista-border);
+    border-radius: 9999px;
+    padding: 7px 18px;
+    font-size: 0.83rem;
+    font-weight: 700;
+    color: var(--pista-dark);
+    margin-bottom: 24px;
+    animation: fadeInUp 0.5s ease forwards;
+    box-shadow: 0 2px 10px rgba(109, 176, 58, 0.15);
+}
+
+.badge_dot {
+    width: 8px;
+    height: 8px;
+    background: var(--pista-primary);
+    border-radius: 50%;
+    animation: pulse-glow 1.5s ease infinite;
+}
+
+.heading {
+    font-size: clamp(2.4rem, 4.2vw, 3.6rem);
+    font-weight: 900;
+    line-height: 1.12;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    animation: fadeInUp 0.5s 0.1s ease both;
+    letter-spacing: -0.02em;
+}
+
+.highlight {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subHeading {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    margin-bottom: 28px;
+    animation: fadeInUp 0.5s 0.2s ease both;
+}
+
+.features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+    animation: fadeInUp 0.5s 0.3s ease both;
+}
+
+.featureTag {
+    background: #ffffff;
+    border: 1.5px solid var(--border-solid);
+    border-radius: var(--radius-full);
+    padding: 6px 16px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-sm);
+}
+
+.ctaRow {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+    animation: fadeInUp 0.5s 0.4s ease both;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    animation: fadeInUp 0.5s 0.5s ease both;
+}
+
+.techTag {
+    padding: 5px 13px;
+    background: #ffffff;
+    border: 1.5px solid var(--border-solid);
+    border-radius: var(--radius-full);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
+}
+
+.techTag:hover {
+    background: var(--pista-xlight);
+    border-color: var(--pista-primary);
+    color: var(--pista-dark);
+    transform: translateY(-1px);
+}
+
+/* ===== RIGHT VISUAL ===== */
+.right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.7s 0.3s ease both;
+}
+
+.heroVisual {
+    position: relative;
+    width: 420px;
+    height: 420px;
+}
+
+.logoCard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    border: 2px solid var(--border-solid);
+    border-radius: var(--radius-xl);
+    padding: 28px;
+    box-shadow: 0 20px 60px rgba(26, 36, 16, 0.14);
+    z-index: 2;
+}
+
+.heroLogo {
+    border-radius: 14px;
+}
+
+.logoName {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Floating cards */
+.floatCard {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    border: 1.5px solid var(--pista-border);
+    border-radius: var(--radius-lg);
+    padding: 10px 16px;
+    box-shadow: 0 8px 24px rgba(109, 176, 58, 0.16);
+    font-size: 1.3rem;
+    z-index: 3;
+    animation: float 4s ease-in-out infinite;
+    backdrop-filter: blur(10px);
+}
+
+.cardTitle {
+    font-size: 0.83rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.cardSub {
+    font-size: 0.72rem;
+    color: var(--pista-primary);
+    font-weight: 600;
+}
+
+.card1 {
+    top: 12px;
+    left: -30px;
+    animation-delay: 0s;
+}
+
+.card2 {
+    top: 12px;
+    right: -30px;
+    animation-delay: 1s;
+}
+
+.card3 {
+    bottom: 12px;
+    left: -30px;
+    animation-delay: 2s;
+}
+
+.card4 {
+    bottom: 12px;
+    right: -30px;
+    animation-delay: 0.5s;
+}
+
+/* Rings */
+.ringOuter {
+    position: absolute;
+    inset: -24px;
+    border: 1.5px solid rgba(109, 176, 58, 0.2);
+    border-radius: 50%;
+    animation: spin 20s linear infinite;
+}
+
+.ringInner {
+    position: absolute;
+    inset: 30px;
+    border: 1.5px dashed rgba(109, 176, 58, 0.15);
+    border-radius: 50%;
+    animation: spin 15s linear infinite reverse;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scroll hint */
+.scrollHint {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    animation: fadeIn 1s 1s ease both;
+}
+
+.scrollLine {
+    width: 1.5px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--pista-primary));
+    animation: scrollAnim 1.5s ease-in-out infinite;
+}
+
+@keyframes scrollAnim {
+
+    0%,
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scaleY(0.5);
+        opacity: 0.5;
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .heroContent {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .right {
+        display: none;
+    }
+
+    .hero {
+        min-height: auto;
+        padding: 60px 0 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ctaRow {
+        flex-direction: column;
+    }
+
+    .heading {
+        font-size: 2rem;
+    }
+}

@@ -1,0 +1,346 @@
+.topBar {
+    background: var(--pista-dark);
+    border-bottom: none;
+    padding: 7px 0;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.topBarInner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topBarLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topBarSep {
+    opacity: 0.4;
+}
+
+.phoneLink {
+    color: #cff09a;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.phoneLink:hover {
+    opacity: 0.8;
+}
+
+.waBtn {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-full);
+    padding: 3px 14px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.waBtn:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* ===== MAIN HEADER ===== */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1.5px solid var(--border-solid);
+    transition: all 0.3s ease;
+}
+
+.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 2px 20px rgba(26, 36, 16, 0.10);
+}
+
+.headerInner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    height: 70px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.logoImg {
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.logoText {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 900;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: 8px;
+    flex: 1;
+}
+
+.navLink {
+    padding: 8px 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.navLink:hover {
+    color: var(--pista-dark);
+    background: var(--pista-xlight);
+}
+
+.dropdown {
+    position: relative;
+}
+
+.megaMenu {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    background: #ffffff;
+    border: 1.5px solid var(--border-solid);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(26, 36, 16, 0.15);
+    z-index: 200;
+    animation: fadeInUp 0.2s ease;
+}
+
+.megaMenuGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+}
+
+.megaItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--radius-md);
+    transition: all 0.15s;
+    text-decoration: none;
+}
+
+.megaItem:hover {
+    background: var(--pista-xlight);
+}
+
+.megaIcon {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.megaLabel {
+    flex: 1;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.megaItem:hover .megaLabel {
+    color: var(--pista-dark);
+}
+
+.megaCount {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-solid);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.iconBtn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border-solid);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    color: var(--text-secondary);
+}
+
+.iconBtn:hover {
+    border-color: var(--pista-primary);
+    background: var(--pista-xlight);
+    color: var(--pista-dark);
+}
+
+.authBtns {
+    display: flex;
+    gap: 8px;
+}
+
+.userBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border-solid);
+    border-radius: var(--radius-full);
+    padding: 5px 14px 5px 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.userBtn:hover {
+    border-color: var(--pista-primary);
+    background: var(--pista-xlight);
+}
+
+.userAvatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--gradient-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: white;
+}
+
+.userName {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.userMenu {
+    right: 0;
+    left: auto;
+}
+
+.mobileMenu {
+    display: none;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border-solid);
+    border-radius: var(--radius-md);
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.mobileNav {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 24px 20px;
+    border-top: 1.5px solid var(--border-solid);
+    background: #ffffff;
+    animation: fadeInUp 0.2s ease;
+}
+
+.mobileNavLink {
+    display: block;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+}
+
+.mobileNavLink:hover {
+    background: var(--pista-xlight);
+    color: var(--pista-dark);
+}
+
+.mobileAuthBtns {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+    .nav {
+        display: none;
+    }
+
+    .authBtns {
+        display: none;
+    }
+
+    .topBarLeft span:first-child {
+        display: none;
+    }
+
+    .topBarSep {
+        display: none;
+    }
+
+    .mobileMenu {
+        display: flex;
+    }
+
+    .mobileNav {
+        display: flex;
+    }
+}
+
+@media (max-width: 600px) {
+    .topBar {
+        display: none;
+    }
+
+    .logoText {
+        display: none;
+    }
+
+    .headerInner {
+        height: 60px;
+    }
+}

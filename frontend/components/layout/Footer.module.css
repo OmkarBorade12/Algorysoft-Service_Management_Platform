@@ -1,0 +1,211 @@
+.footer {
+    background: var(--pista-dark);
+    color: rgba(255, 255, 255, 0.85);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle grid pattern */
+.footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(168, 220, 120, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168, 220, 120, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+.footerGrid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+    gap: 48px;
+    padding: 64px 24px 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.brand {
+    /* brand column container */
+}
+
+.logo {
+    border-radius: 12px;
+    margin-bottom: 14px;
+}
+
+.brandName {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-bottom: 10px;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.brandDesc {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 20px;
+}
+
+.socialLinks {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.socialBtn {
+    width: 38px;
+    height: 38px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.socialBtn:hover {
+    background: rgba(168, 220, 120, 0.2);
+    border-color: rgba(168, 220, 120, 0.4);
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Brand colour highlights on hover */
+.socialWa:hover {
+    background: rgba(37, 211, 102, 0.18) !important;
+    border-color: #25D366 !important;
+    color: #25D366;
+}
+
+.socialYt:hover {
+    background: rgba(255, 0, 0, 0.14) !important;
+    border-color: #ff0000 !important;
+    color: #ff0000;
+}
+
+.socialIg:hover {
+    background: rgba(221, 42, 123, 0.14) !important;
+    border-color: #dd2a7b !important;
+    color: #dd2a7b;
+}
+
+.socialLi:hover {
+    background: rgba(10, 102, 194, 0.14) !important;
+    border-color: #0a66c2 !important;
+    color: #0a66c2;
+}
+
+
+.colTitle {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #a8dc78;
+    margin-bottom: 18px;
+}
+
+.links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.link {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.62);
+    text-decoration: none;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.link:hover {
+    color: #a8dc78;
+    gap: 10px;
+}
+
+.contactItems {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.contactItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.88rem;
+}
+
+.contactLabel {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+}
+
+.contactValue {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+}
+
+.contactLink {
+    color: #a8dc78;
+    transition: color 0.2s;
+    text-decoration: none;
+}
+
+.contactLink:hover {
+    color: #cff09a;
+}
+
+/* Bottom bar */
+.footerBottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.policyFooterLink {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.policyFooterLink:hover {
+    color: #a8dc78;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .footerGrid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+
+    .brand {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 600px) {
+    .footerGrid {
+        grid-template-columns: 1fr;
+        padding: 40px 16px 24px;
+    }
+}

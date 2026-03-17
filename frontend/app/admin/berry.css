@@ -1,0 +1,260 @@
+.berry-admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #eef2f6; /* Berry Light Blue/Grey */
+  font-family: 'Inter', sans-serif;
+  color: #121926;
+}
+
+.berry-sidebar {
+  width: 260px;
+  background-color: #ffffff;
+  border-right: 1px solid #e3e8ef;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.02);
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.berry-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.berry-sidebar::-webkit-scrollbar-thumb {
+  background: #e3e8ef;
+  border-radius: 4px;
+}
+
+.berry-logo {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #5e35b1; /* Deep Purple */
+}
+
+.berry-nav {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.berry-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #364152;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.berry-nav-item:hover {
+  background-color: #f8fafc;
+  color: #5e35b1;
+}
+
+.berry-nav-item.active {
+  background-color: #ede7f6; /* Soft Purple */
+  color: #5e35b1;
+}
+
+.berry-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 260px;
+  width: calc(100% - 260px);
+  min-height: 100vh;
+}
+
+.berry-topbar {
+  background-color: #ffffff;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e3e8ef;
+}
+
+.berry-content {
+  padding: 32px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.berry-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e3e8ef;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.berry-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #121926;
+  margin-bottom: 16px;
+}
+
+.berry-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.berry-stat {
+  padding: 24px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.berry-stat.purple {
+  background: linear-gradient(135deg, #5e35b1, #311b92);
+  color: white;
+}
+.berry-stat.blue {
+  background: linear-gradient(135deg, #1e88e5, #0d47a1);
+  color: white;
+}
+.berry-stat.orange {
+  background: linear-gradient(135deg, #fbc02d, #f57f17);
+  color: white;
+}
+.berry-stat.green {
+  background: linear-gradient(135deg, #43a047, #1b5e20);
+  color: white;
+}
+
+.berry-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.berry-stat-label {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* Data Table */
+.berry-table-container {
+  overflow-x: auto;
+}
+.berry-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.berry-table th {
+  text-align: left;
+  padding: 16px;
+  color: #364152;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid #e3e8ef;
+  background-color: #f8fafc;
+}
+.berry-table td {
+  padding: 16px;
+  border-bottom: 1px solid #e3e8ef;
+  color: #121926;
+  font-size: 0.9rem;
+}
+
+.berry-btn-primary {
+  background-color: #5e35b1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.berry-btn-primary:hover {
+  background-color: #4527a0;
+}
+
+.berry-btn-outline {
+  background-color: transparent;
+  color: #5e35b1;
+  border: 1px solid #5e35b1;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.berry-btn-outline:hover {
+  background-color: #ede7f6;
+}
+
+.berry-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.berry-badge.success {
+  background-color: #b9f6ca;
+  color: #00c853;
+}
+.berry-badge.warning {
+  background-color: #ffe57f;
+  color: #ffab00;
+}
+.berry-badge.error {
+  background-color: #f8bbd0;
+  color: #c2185b;
+}
+.berry-badge.info {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.berry-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e3e8ef;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  font-family: inherit;
+  transition: border 0.2s;
+}
+.berry-input:focus {
+  border-color: #5e35b1;
+}
+@keyframes berryFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(94, 53, 177, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(94, 53, 177, 0); } 100% { box-shadow: 0 0 0 0 rgba(94, 53, 177, 0); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+.berry-animate { animation: berryFadeIn 0.4s ease forwards; }
+
+.handshake-lock { animation: pulseGlow 2s infinite; }
+.handshake-progress { 
+  background: linear-gradient(90deg, #ede7f6 25%, #d1c4e9 50%, #ede7f6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}

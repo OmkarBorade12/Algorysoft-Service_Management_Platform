@@ -1,0 +1,160 @@
+.modalHeader {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.modalTitle {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.modalSub {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.closeBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.closeBtn:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.googleBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 20px;
+}
+
+.googleBtn:hover {
+    border-color: var(--dark-pista-bright);
+    background: var(--bg-card-hover);
+}
+
+.googleIcon {
+    width: 24px;
+    height: 24px;
+    background: white;
+    color: #4285f4;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 20px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.forgot {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+    margin-top: -8px;
+}
+
+.forgotLink {
+    font-size: 0.82rem;
+    color: var(--dark-pista-bright);
+    transition: opacity 0.2s;
+}
+
+.forgotLink:hover {
+    opacity: 0.8;
+}
+
+.switchText {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.switchBtn {
+    background: none;
+    border: none;
+    color: var(--dark-pista-bright);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.88rem;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s;
+}
+
+.switchBtn:hover {
+    text-decoration-color: var(--dark-pista-bright);
+}
+
+.checkboxRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.checkboxRow input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    accent-color: var(--dark-pista-bright);
+    flex-shrink: 0;
+}
+
+.checkboxLabel {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.policyLink {
+    color: var(--dark-pista-bright);
+    text-decoration: underline;
+}
