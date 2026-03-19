@@ -87,26 +87,39 @@ export default function Header() {
                             </button>
                             {categoriesOpen && (
                                 <div className={styles.megaMenu}>
-                                    <div className={styles.megaMenuGrid}>
-                                        {categories.map((cat) => (
-                                            <Link
-                                                key={cat.id}
-                                                href={`/projects?category=${cat.slug}`}
-                                                className={styles.megaItem}
-                                                onClick={() => setCategoriesOpen(false)}
-                                            >
-                                                <span className={styles.megaIcon} style={{ color: 'var(--pista-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                    {renderCategoryIcon(cat, 20)}
-                                                </span>
-                                                <span className={styles.megaLabel}>{cat.name}</span>
-                                                <span className={styles.megaCount}>
-                                                    {products.filter(p =>
-                                                        p.category === cat.name ||
-                                                        p.category?.toLowerCase().replace(/[^a-z0-9]+/g, '-') === cat.slug
-                                                    ).length} Solutions
-                                                </span>
+                                    <div className={styles.megaMenuInner}>
+                                        <div className={styles.megaMenuHeader}>
+                                            <h4 className={styles.megaMenuTitle}>Marketplace Categories</h4>
+                                        </div>
+                                        <div className={styles.megaMenuGrid}>
+                                            {categories.map((cat) => (
+                                                <Link
+                                                    key={cat.id}
+                                                    href={`/projects?category=${cat.slug}`}
+                                                    className={styles.megaItem}
+                                                    onClick={() => setCategoriesOpen(false)}
+                                                >
+                                                    <div className={styles.megaIcon}>
+                                                        {renderCategoryIcon(cat, 22)}
+                                                    </div>
+                                                    <div className={styles.megaInfo}>
+                                                        <span className={styles.megaLabel}>{cat.name}</span>
+                                                        <span className={styles.megaCount}>
+                                                            {products.filter(p =>
+                                                                p.category === cat.name ||
+                                                                p.category?.toLowerCase().replace(/[^a-z0-9]+/g, '-') === cat.slug
+                                                            ).length} Solutions Published
+                                                        </span>
+                                                    </div>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                        <div className={styles.megaMenuFooter}>
+                                            <Link href="/projects" className={styles.viewAllLink} onClick={() => setCategoriesOpen(false)}>
+                                                Browse All Projects <FiPackage size={14} />
                                             </Link>
-                                        ))}
+                                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{products.length}+ Premium Templates</span>
+                                        </div>
                                     </div>
                                 </div>
                             )}

@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface CartItem {
     id: number;
     title: string;
-    price: number;          // total price (basePrice + tierPrice if tier item, otherwise base alone)
+    price: number;          // standalone price: tier price OR base price (never combined)
     originalPrice: number;
     discount: number;
     icon?: string;
@@ -12,8 +12,7 @@ export interface CartItem {
     image?: string;
     quantity: number;
     tier?: string;          // tier key: 'Basic' | 'Silver' | 'Gold' (undefined = no tier)
-    basePrice?: number;     // original product price set during creation
-    tierPrice?: number;     // the tier add-on price
+    tierPrice?: number;     // same as price for tier items, kept for display reference
 }
 
 // Per-user cart: keyed by user email (or 'guest')

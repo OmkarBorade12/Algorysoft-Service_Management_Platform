@@ -55,7 +55,7 @@ export default function CartSidebar() {
                     <>
                         <div className={styles.items}>
                             {items.map((item) => {
-                                const isTierItem = !!item.tier && item.basePrice !== undefined && item.tierPrice !== undefined;
+                                const isTierItem = !!item.tier;
                                 const tc = item.tier ? TIER_COLORS[item.tier] : null;
 
                                 return (
@@ -93,40 +93,26 @@ export default function CartSidebar() {
                                                 )}
                                             </div>
 
-                                            {/* ── Price Breakdown for Tier Items ── */}
+                                            {/* ── Price for Tier Items ── */}
                                             {isTierItem ? (
                                                 <div style={{
-                                                    background: 'var(--bg-card, #fff)',
-                                                    borderRadius: 10,
-                                                    padding: '8px 12px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 8,
                                                     marginBottom: 8,
-                                                    border: `1px solid ${tc!.border}`,
-                                                    fontSize: '0.8rem',
+                                                    fontSize: '0.88rem',
                                                 }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                                                        <span style={{ color: 'var(--text-muted)' }}>① Base Price</span>
-                                                        <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
-                                                            {fmt(item.basePrice!)}
-                                                        </span>
-                                                    </div>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                                                        <span style={{ color: 'var(--text-muted)' }}>
-                                                            ② {item.tier} Tier
-                                                        </span>
-                                                        <span style={{ fontWeight: 700, color: tc!.color }}>
-                                                            + {fmt(item.tierPrice!)}
-                                                        </span>
-                                                    </div>
-                                                    <div style={{
-                                                        display: 'flex', justifyContent: 'space-between',
-                                                        borderTop: `1px dashed ${tc!.border}`,
-                                                        paddingTop: 6,
+                                                    <span style={{ fontWeight: 900, fontSize: '1rem', color: tc!.color }}>
+                                                        {fmt(item.price)}
+                                                    </span>
+                                                    <span style={{
+                                                        fontSize: '0.68rem', fontWeight: 700,
+                                                        padding: '2px 7px', borderRadius: 9999,
+                                                        background: tc!.bg, color: tc!.color,
+                                                        border: `1px solid ${tc!.border}`,
                                                     }}>
-                                                        <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>Total</span>
-                                                        <span style={{ fontWeight: 900, fontSize: '0.95rem', color: tc!.color }}>
-                                                            = {fmt(item.basePrice! + item.tierPrice!)}
-                                                        </span>
-                                                    </div>
+                                                        {item.tier} Plan
+                                                    </span>
                                                 </div>
                                             ) : (
                                                 <p className={styles.itemCategory} style={{ marginBottom: 6 }}>{item.category}</p>
@@ -181,8 +167,8 @@ export default function CartSidebar() {
                                     ) : null;
                                 })()}
 
-                                {/* Tier breakdown summary */}
-                                {items.some(i => i.tier && i.basePrice !== undefined) && (
+                                {/* Tier items summary */}
+                                {items.some(i => i.tier) && (
                                     <div style={{
                                         margin: '8px 0',
                                         padding: '10px 12px',
@@ -192,22 +178,16 @@ export default function CartSidebar() {
                                         fontSize: '0.78rem',
                                     }}>
                                         <div style={{ fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 6 }}>
-                                            📦 Tier Breakdown
+                                            🏷️ Selected Tiers
                                         </div>
-                                        {items.filter(i => i.tier && i.basePrice !== undefined).map(i => {
+                                        {items.filter(i => i.tier).map(i => {
                                             const tc = i.tier ? TIER_COLORS[i.tier] : null;
                                             return (
-                                                <div key={i.id} style={{ marginBottom: 6 }}>
-                                                    <div style={{ fontWeight: 600, fontSize: '0.75rem', color: 'var(--text-primary)', marginBottom: 2 }}>
-                                                        {i.title}
-                                                    </div>
-                                                    <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
-                                                        <span style={{ color: 'var(--text-muted)' }}>Base {fmt(i.basePrice!)}</span>
-                                                        <span style={{ color: 'var(--text-muted)' }}>+</span>
-                                                        <span style={{ color: tc?.color }}>{i.tier} {fmt(i.tierPrice!)}</span>
-                                                        <span style={{ color: 'var(--text-muted)' }}>=</span>
-                                                        <strong style={{ color: tc?.color }}>{fmt(i.basePrice! + i.tierPrice!)}</strong>
-                                                    </div>
+                                                <div key={i.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                                                    <span style={{ fontWeight: 600, fontSize: '0.75rem', color: 'var(--text-primary)' }}>
+                                                        {i.title} — <span style={{ color: tc?.color }}>{i.tier}</span>
+                                                    </span>
+                                                    <strong style={{ color: tc?.color }}>{fmt(i.price)}</strong>
                                                 </div>
                                             );
                                         })}

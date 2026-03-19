@@ -126,50 +126,110 @@
 
 .megaMenu {
     position: absolute;
-    top: calc(100% + 14px);
+    top: calc(100% + 15px);
     left: 50%;
     transform: translateX(-50%);
-    width: 700px;
+    width: 680px;
     background: #ffffff;
-    border: 1.5px solid var(--border-solid);
-    border-radius: var(--radius-xl);
-    padding: 20px;
-    box-shadow: 0 20px 60px rgba(26, 36, 16, 0.15);
-    z-index: 200;
-    animation: fadeInUp 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 24px;
+    padding: 0;
+    box-shadow: 0 30px 60px -12px rgba(26, 36, 16, 0.18), 0 18px 36px -18px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    overflow: hidden;
+    animation: megaMenuIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes megaMenuIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.98); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+.megaMenuInner {
+    display: flex;
+    flex-direction: column;
+}
+
+.megaMenuHeader {
+    padding: 24px 28px 16px;
+    background: linear-gradient(to right, #f8fafc, #ffffff);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.megaMenuTitle {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--pista-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.megaMenuTitle::before {
+    content: '';
+    width: 4px;
+    height: 18px;
+    background: var(--pista-primary);
+    border-radius: 4px;
 }
 
 .megaMenuGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    padding: 12px;
 }
 
 .megaItem {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 10px;
-    border-radius: var(--radius-md);
-    transition: all 0.15s;
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: 16px;
+    transition: all 0.25s ease;
     text-decoration: none;
+    background: transparent;
 }
 
 .megaItem:hover {
-    background: var(--pista-xlight);
+    background: #f8fafc;
+    transform: scale(1.01);
 }
 
 .megaIcon {
-    font-size: 1rem;
-    width: 20px;
-    text-align: center;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    color: var(--pista-primary);
+    font-size: 1.25rem;
+    transition: all 0.25s;
+    flex-shrink: 0;
+}
+
+.megaItem:hover .megaIcon {
+    background: var(--pista-primary);
+    color: white;
+    box-shadow: 0 8px 16px rgba(109, 176, 58, 0.2);
+}
+
+.megaInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
 }
 
 .megaLabel {
-    flex: 1;
-    font-size: 0.82rem;
-    color: var(--text-secondary);
-    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    transition: color 0.15s;
 }
 
 .megaItem:hover .megaLabel {
@@ -177,13 +237,35 @@
 }
 
 .megaCount {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     color: var(--text-muted);
-    background: var(--bg-secondary);
-    padding: 2px 7px;
-    border-radius: var(--radius-full);
-    border: 1px solid var(--border-solid);
+    font-weight: 500;
 }
+
+.megaMenuFooter {
+    padding: 16px 28px;
+    background: #f8fafc;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.viewAllLink {
+    font-size: 0.82rem;
+    color: var(--pista-dark);
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.viewAllLink:hover {
+    color: var(--pista-primary);
+    text-decoration: underline;
+}
+
 
 .actions {
     display: flex;

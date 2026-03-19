@@ -1,6 +1,6 @@
 // Redux store with localStorage persistence
 import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistStore, persistReducer, createMigrate } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from '@reduxjs/toolkit';
 import cartReducer from './slices/cartSlice';
@@ -35,9 +35,19 @@ const rootReducer = combineReducers({
   features: featuresReducer,
 });
 
+// v2 migration: wipe cart to remove stale items that had combined base+tier pricing
+const migrations: any = {
+  2: (state: any) => ({
+    ...state,
+    cart: undefined, // forces cart reducer to reset to its initialState
+  }),
+};
+
 const persistConfig = {
   key: 'algorysoft-root',
+  version: 2,
   storage,
+  migrate: createMigrate(migrations, { debug: false }),
   whitelist: ['cart', 'wishlist', 'auth', 'currency', 'carousel', 'reviews', 'orders', 'products', 'categories', 'requests', 'invoices', 'features'],
 };
 

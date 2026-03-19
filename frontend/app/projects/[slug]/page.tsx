@@ -671,20 +671,18 @@ export default function ProjectDetailPage() {
                                             onClick={e => {
                                                 e.stopPropagation();
                                                 setSelectedTier(tier.key);
-                                                const bp = project.price;          // base price from creation
-                                                const tp = tier.data.price;         // tier add-on price
-                                                const total = bp + tp;              // combined total
+                                                // Tier price is standalone — base product price is NOT added
+                                                const tp = tier.data.price;
                                                 dispatch(addToCart({
                                                     id: Number(`${project.id}${tier.key === 'Basic' ? 1 : tier.key === 'Silver' ? 2 : 3}`),
                                                     title: `${project.title}`,
-                                                    price: total,                   // total shown in cart summary
-                                                    originalPrice: project.originalPrice + tp,
-                                                    discount: project.discount,
+                                                    price: tp,                      // only the tier's own price
+                                                    originalPrice: tp,
+                                                    discount: 0,
                                                     icon: project.icon,
                                                     slug: project.slug,
                                                     tier: tier.key,
-                                                    basePrice: bp,                  // product creation price
-                                                    tierPrice: tp,                  // tier add-on price
+                                                    tierPrice: tp,
                                                 }));
                                                 toast.success(`✨ ${tier.label} added to cart!`, {
                                                     style: { background: tier.color, color: '#fff', fontWeight: 700 },
