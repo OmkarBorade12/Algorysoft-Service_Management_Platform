@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useAppSelector, useAppDispatch } from '@/hooks/useRedux';
 import { addInvoice, InvoiceData } from '@/store/slices/invoicesSlice';
 import { FiZap, FiFileText, FiUser, FiBox, FiEye, FiSave, FiList, FiPrinter } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 
 
 const getBlankInvoice = (): Omit<InvoiceData, 'id' | 'createdAt'> => ({
@@ -25,6 +26,7 @@ const getBlankInvoice = (): Omit<InvoiceData, 'id' | 'createdAt'> => ({
 
 export default function AdminInvoicesPage() {
     const orders = useAppSelector(s => s.orders.items);
+    const oStatus = useAppSelector(s => s.orders.status);
     const invoiceHistory = useAppSelector(s => s.invoices?.items || []);
     const dispatch = useAppDispatch();
     const [inv, setInv] = useState<Omit<InvoiceData, 'id' | 'createdAt'>>(getBlankInvoice());
@@ -36,8 +38,8 @@ export default function AdminInvoicesPage() {
         if (o) {
             setInv(p => ({
                 ...p,
-                clientName: o.clientName,
-                clientEmail: o.clientEmail,
+                clientName: o.client_name,
+                clientEmail: o.client_email,
                 projectName: o.product,
                 amount: o.amount,
                 status: o.status === 'Completed' ? 'Paid' : 'Sent',
@@ -66,8 +68,26 @@ export default function AdminInvoicesPage() {
 
     const f = (n: number) => `₹${n.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
 
+    if (oStatus === 'loading') return (
+        <div style={{ padding: 24 }}>
+            <div className="berry-card" style={{ opacity: 0.6 }}>
+                <div style={{ height: 32, width: '40%', backgroundColor: '#f0f0f0', borderRadius: 8, marginBottom: 16 }} />
+                <div style={{ height: 16, width: '60%', backgroundColor: '#f0f0f0', borderRadius: 6, marginBottom: 32 }} />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                    <div style={{ height: 500, backgroundColor: '#f5f5f5', borderRadius: 12 }} />
+                    <div style={{ height: 300, backgroundColor: '#f5f5f5', borderRadius: 12 }} />
+                </div>
+            </div>
+        </div>
+    );
+
     return (
-        <div>
+        <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            transition={{ duration: 0.4 }}
+            style={{ width: '100%', maxWidth: '100%' }}
+        >
             {!preview ? (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 24 }}>
                     {/* Form Section */}
@@ -77,7 +97,7 @@ export default function AdminInvoicesPage() {
                             <select className="berry-input" onChange={e => handleAutofill(e.target.value)} defaultValue="">
                                 <option value="" disabled>Select an Active Order...</option>
                                 {orders.map(o => (
-                                    <option key={o.id} value={o.id}>{o.id} - {o.clientName} ({o.product})</option>
+                                    <option key={o.id} value={o.id}>{o.order_id || `#${o.id}`} - {o.client_name} ({o.product})</option>
                                 ))}
                             </select>
                         </div>
@@ -291,6 +311,6 @@ export default function AdminInvoicesPage() {
                     </div>
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 }

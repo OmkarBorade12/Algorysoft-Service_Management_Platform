@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { toggleCart, toggleWishlist, toggleMobileMenu, openLogin, openRegister, closeModals, toggleSearch } from '@/store/slices/uiSlice';
+import { toggleCart, toggleWishlist, toggleMobileMenu, openLogin, openRegister, openQuote, closeModals, toggleSearch } from '@/store/slices/uiSlice';
 import { logout } from '@/store/slices/authSlice';
 import { setCartUser } from '@/store/slices/cartSlice';
 import { setWishlistUser } from '@/store/slices/wishlistSlice';
@@ -11,6 +11,7 @@ import CartSidebar from '@/components/cart/CartSidebar';
 import WishlistSidebar from '@/components/wishlist/WishlistSidebar';
 import LoginModal from '@/components/auth/LoginModal';
 import RegisterModal from '@/components/auth/RegisterModal';
+import FreeQuoteModal from '@/components/auth/FreeQuoteModal';
 import SearchOverlay from '@/components/search/SearchOverlay';
 import CurrencyToggle from '@/components/ui/CurrencyToggle';
 import { PHONE } from '@/lib/data';
@@ -21,7 +22,7 @@ import { renderCategoryIcon } from '@/lib/icons';
 
 export default function Header() {
     const dispatch = useAppDispatch();
-    const { cartOpen, wishlistOpen, mobileMenuOpen, loginModalOpen, registerModalOpen, searchOpen } = useAppSelector((s) => s.ui);
+    const { cartOpen, wishlistOpen, mobileMenuOpen, loginModalOpen, registerModalOpen, quoteModalOpen, searchOpen } = useAppSelector((s) => s.ui);
     const { items: cartItems, totalItems } = useAppSelector((s) => s.cart);
     const { items: wishlistItems } = useAppSelector((s) => s.wishlist);
     const { user, isAuthenticated } = useAppSelector((s) => s.auth);
@@ -217,6 +218,7 @@ export default function Header() {
             {wishlistOpen && <WishlistSidebar />}
             {loginModalOpen && <LoginModal />}
             {registerModalOpen && <RegisterModal />}
+            {quoteModalOpen && <FreeQuoteModal />}
             {searchOpen && <SearchOverlay />}
         </>
     );

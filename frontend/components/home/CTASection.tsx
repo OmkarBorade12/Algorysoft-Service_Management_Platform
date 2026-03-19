@@ -1,6 +1,6 @@
 'use client';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { openRegister } from '@/store/slices/uiSlice';
+import { openRegister, openQuote } from '@/store/slices/uiSlice';
 import Link from 'next/link';
 import { WHATSAPP } from '@/lib/data';
 import { FiShield, FiPackage, FiTrendingUp, FiGlobe } from 'react-icons/fi';
@@ -79,7 +79,7 @@ export default function CTASection() {
                                 Browse Solutions <FiGlobe size={16} />
                             </Link>
                             <button
-                                onClick={() => dispatch(openRegister())}
+                                onClick={() => dispatch(openQuote())}
                                 style={{
                                     display: 'inline-flex', alignItems: 'center', gap: '8px',
                                     padding: '15px 36px',

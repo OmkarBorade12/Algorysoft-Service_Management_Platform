@@ -1,7 +1,7 @@
 'use client';
 import { useAppSelector, useAppDispatch } from '@/hooks/useRedux';
 import { clearCart } from '@/store/slices/cartSlice';
-import { addOrder } from '@/store/slices/ordersSlice';
+import { addOrderThunk } from '@/store/slices/ordersSlice';
 import { useRazorpay } from '@/hooks/useRazorpay';
 import { formatPrice } from '@/store/slices/currencySlice';
 import { useRouter } from 'next/navigation';
@@ -171,25 +171,28 @@ export default function CheckoutPage() {
             onSuccess: async (paymentId, orderId, signature) => {
                 setProcessingStage(null);
 
-                // Record each item as an order in Redux (and would go to DB)
-                items.forEach((item, idx) => {
-                    dispatch(addOrder({
-                        id: `ORD-${Date.now().toString().slice(-4)}-${idx}`,
-                        clientName: form.name,
-                        clientEmail: form.email,
-                        product: item.title,
-                        tier: (item as any).tier || 'Basic',
-                        amount: item.price,
-                        status: 'Pending',
-                        progress: 0,
-                        date: new Date().toLocaleDateString('en-IN'),
-                        chat: [{
-                            sender: 'admin',
-                            text: `Welcome! Your payment (${paymentId}) was successful. Let's get started with ${item.title}!`,
-                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                        }],
-                    }));
-                });
+                // Record each item as an order in Redux & Backend
+                for (const item of items) {
+                    try {
+                        await dispatch(addOrderThunk({
+                            order_id: `ORD-${Date.now().toString().slice(-6)}`,
+                            client_name: form.name,
+                            client_email: form.email,
+                            product: item.title,
+                            tier: (item as any).tier || 'Basic',
+                            amount: item.price,
+                            status: 'Pending',
+                            progress: 0,
+                            chat: [{
+                                sender: 'admin',
+                                text: `Welcome! Your payment (${paymentId}) was successful. Let's get started with ${item.title}!`,
+                                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                            }],
+                        })).unwrap();
+                    } catch (err) {
+                        console.error('Failed to save order:', err);
+                    }
+                }
 
                 setSuccessData({ paymentId, amount: totalPrice });
                 toast.success('🎉 Payment verified! Order confirmed.', { duration: 5000, style: { background: '#22c55e', color: 'white', fontWeight: 700 } });

@@ -6,10 +6,11 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { addToCart } from '@/store/slices/cartSlice';
 import { toggleWishlistItem } from '@/store/slices/wishlistSlice';
 import { addReview, type Review } from '@/store/slices/reviewSlice';
-import { addRequest } from '@/store/slices/requestsSlice';
+import { addRequestThunk } from '@/store/slices/requestsSlice';
 import { formatPrice } from '@/store/slices/currencySlice';
 import { Product } from '@/store/slices/productsSlice';
 import toast from 'react-hot-toast';
+import { FiSettings, FiCpu } from 'react-icons/fi';
 
 // Simulated media gallery for each project
 function getMediaItems(slug: string) {
@@ -35,15 +36,13 @@ function RequirementModal({ project, onClose }: { project: Product; onClose: () 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const featureText = selectedFeatures.length > 0 ? `\n\nSelected Add-on Features:\n- ${selectedFeatures.join('\n- ')}` : '';
-        dispatch(addRequest({
-            id: `REQ-${Date.now().toString().slice(-4)}`,
+        dispatch(addRequestThunk({
             client: form.name,
             email: form.email,
             phone: form.phone,
             business: form.business,
             requirements: `For Project: ${project.title}\n${form.requirements}${featureText}`,
             status: 'New',
-            date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
             timeline: form.timeline,
             budget: form.budget
         }));
@@ -426,17 +425,66 @@ export default function ProjectDetailPage() {
                                 ))}
                             </div>
 
-                            {/* Tech Stack */}
+                            {/* Tech Stack - Premium Berry Style */}
                             {project.tech && project.tech.filter(Boolean).length > 0 && (
-                            <div style={{ marginTop: 28, padding: 24, background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-solid)' }}>
-                                <h3 style={{ fontWeight: 700, marginBottom: 16, fontSize: '1.2rem', color: 'var(--text-primary)' }}>🛠️ Technologies Used</h3>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                            <div style={{ 
+                                marginTop: 32, 
+                                padding: '28px', 
+                                background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)', 
+                                borderRadius: '24px', 
+                                border: '1px solid #e3e8ef',
+                                boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
+                                position: 'relative',
+                                overflow: 'hidden'
+                            }}>
+                                <div style={{ position: 'absolute', top: -20, right: -20, opacity: 0.03, fontSize: '8rem', color: '#5e35b1' }}>
+                                    <FiSettings />
+                                </div>
+                                <h3 style={{ 
+                                    fontWeight: 800, 
+                                    marginBottom: 20, 
+                                    fontSize: '1.25rem', 
+                                    color: '#121926', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: 10,
+                                    letterSpacing: '-0.3px'
+                                }}>
+                                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, background: '#ede7f6', color: '#5e35b1', borderRadius: '10px' }}>
+                                        <FiCpu size={20} />
+                                    </span>
+                                    Core Tech Stack
+                                </h3>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
                                     {project.tech.filter(Boolean).map((t, i) => (
-                                        <span key={`${t}-${i}`} style={{ background: 'var(--bg-primary)', border: '1px solid var(--border-solid)', padding: '6px 14px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                                        <span key={`${t}-${i}`} style={{ 
+                                            background: '#ffffff', 
+                                            border: '1px solid #e3e8ef', 
+                                            padding: '10px 20px', 
+                                            borderRadius: '14px', 
+                                            fontSize: '0.9rem', 
+                                            fontWeight: 700, 
+                                            color: '#364152', 
+                                            boxShadow: '0 4px 6px rgba(0,0,0,0.02)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 8,
+                                            transition: 'all 0.3s ease',
+                                            cursor: 'default'
+                                        }} className="tech-badge-hover">
+                                            <span style={{ width: 8, height: 8, borderRadius: '50%', background: i % 2 === 0 ? '#5e35b1' : '#2196f3' }} />
                                             {t}
                                         </span>
                                     ))}
                                 </div>
+                                <style jsx>{`
+                                    .tech-badge-hover:hover {
+                                        transform: translateY(-3px);
+                                        border-color: #5e35b1;
+                                        box-shadow: 0 8px 15px rgba(94, 53, 177, 0.08);
+                                        color: #5e35b1;
+                                    }
+                                `}</style>
                             </div>
                             )}
                         </div>

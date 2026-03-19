@@ -5,6 +5,7 @@ import CategoryCarousel from '@/components/home/CategoryCarousel';
 import StatsSection from '@/components/home/StatsSection';
 import USPSection from '@/components/home/USPSection';
 import HeroCarousel from '@/components/home/HeroCarousel';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 
@@ -39,50 +40,74 @@ export default function HomePage() {
 
   return (
     <>
+      {/* Hero doesn't need scroll reveal — it's above the fold */}
       <HeroSection />
-      <StatsSection />
-      <HeroCarousel />
-      <CategoryCarousel />
 
-      {/* Latest Work */}
-      <section style={{ padding: '70px 0', background: 'var(--bg-secondary)' }}>
-        <div className="container">
-          <Suspense fallback={<ProductSkeleton />}>
-            <ProductSection
-              title="🆕 Latest Solutions"
-              subtitle="Freshly Launched"
-              projects={latestSolutions}
-              viewAllLink="/projects?filter=new"
-            />
-          </Suspense>
-        </div>
-      </section>
+      {/* Stats — wireframe reveal from below */}
+      <ScrollReveal direction="wireframe" delay={0} duration={0.7}>
+        <StatsSection />
+      </ScrollReveal>
 
-      <USPSection />
+      {/* Hero Carousel — slide in from right */}
+      <ScrollReveal direction="right" delay={0.05} duration={0.65}>
+        <HeroCarousel />
+      </ScrollReveal>
 
-      {/* Most Popular */}
-      <section style={{ padding: '70px 0', background: 'var(--bg-primary)' }}>
-        <div className="container">
-          <Suspense fallback={<ProductSkeleton />}>
-            <ProductSection
-              title="🔥 Most Popular"
-              subtitle="Client Favourites"
-              projects={popularSolutions}
-              viewAllLink="/projects?filter=popular"
-            />
-          </Suspense>
-        </div>
-      </section>
+      {/* Category Carousel — fade up */}
+      <ScrollReveal direction="up" delay={0} duration={0.55}>
+        <CategoryCarousel />
+      </ScrollReveal>
 
+      {/* Latest Work — wireframe reveal */}
+      <ScrollReveal direction="wireframe" delay={0} duration={0.7}>
+        <section style={{ padding: '70px 0', background: 'var(--bg-secondary)' }}>
+          <div className="container">
+            <Suspense fallback={<ProductSkeleton />}>
+              <ProductSection
+                title="🆕 Latest Solutions"
+                subtitle="Freshly Launched"
+                projects={latestSolutions}
+                viewAllLink="/projects?filter=new"
+              />
+            </Suspense>
+          </div>
+        </section>
+      </ScrollReveal>
 
+      {/* USP — slide from left */}
+      <ScrollReveal direction="left" delay={0} duration={0.65}>
+        <USPSection />
+      </ScrollReveal>
 
-      <Suspense fallback={<div style={{ height: '200px' }} />}>
-        <TestimonialsSection />
-      </Suspense>
+      {/* Most Popular — wireframe reveal */}
+      <ScrollReveal direction="wireframe" delay={0} duration={0.7}>
+        <section style={{ padding: '70px 0', background: 'var(--bg-primary)' }}>
+          <div className="container">
+            <Suspense fallback={<ProductSkeleton />}>
+              <ProductSection
+                title="🔥 Most Popular"
+                subtitle="Client Favourites"
+                projects={popularSolutions}
+                viewAllLink="/projects?filter=popular"
+              />
+            </Suspense>
+          </div>
+        </section>
+      </ScrollReveal>
 
-      <Suspense fallback={null}>
-        <CTASection />
-      </Suspense>
+      {/* Testimonials — zoom in */}
+      <ScrollReveal direction="zoom" delay={0} duration={0.6}>
+        <Suspense fallback={<div style={{ height: '200px' }} />}>
+          <TestimonialsSection />
+        </Suspense>
+      </ScrollReveal>
+
+      {/* CTA — fade up */}
+      <ScrollReveal direction="up" delay={0} duration={0.5}>
+        <Suspense fallback={null}>
+          <CTASection />
+        </Suspense>
+      </ScrollReveal>
     </>
   );
 }

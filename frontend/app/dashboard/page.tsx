@@ -4,31 +4,34 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { FiExternalLink, FiGlobe, FiArrowLeft, FiMessageSquare, FiSettings, FiShoppingCart, FiLayout } from 'react-icons/fi';
+import { fetchOrders, addOrderMessageThunk } from '@/store/slices/ordersSlice';
 import '../admin/berry.css';
 
 export default function ClientDashboardPage() {
     const { isAuthenticated, user } = useAppSelector(s => s.auth);
-    const orders = useAppSelector(s => s.orders.items);
-    const invoices = useAppSelector(s => s.invoices?.items || []);
+    const { items: orders, status } = useAppSelector(s => s.orders);
+    const invoices = useAppSelector(s => (s as any).invoices?.items || []);
     const dispatch = useAppDispatch();
     const router = useRouter();
     
     const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'invoices' | 'profile'>('dashboard');
-    const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+    const [selectedOrderId, setSelectedOrderId] = useState<string | number | null>(null);
     const [chatMsg, setChatMsg] = useState('');
     const chatRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!isAuthenticated) {
             router.push('/');
+        } else {
+            dispatch(fetchOrders());
         }
-    }, [isAuthenticated, router]);
+    }, [isAuthenticated, router, dispatch]);
 
-    const activeOrder = orders.find(o => o.id === selectedOrderId);
+    const activeOrder = orders.find(o => o.id == selectedOrderId);
 
     // Filter data for the logged in user
-    const displayOrders = orders.filter(o => o.clientEmail === user?.email);
-    const displayInvoices = invoices.filter(i => i.clientEmail === user?.email);
+    const displayOrders = orders.filter(o => o.client_email === user?.email);
+    const displayInvoices = invoices.filter((i: any) => i.clientEmail === user?.email);
 
     useEffect(() => {
         if (chatRef.current) {
@@ -36,13 +39,19 @@ export default function ClientDashboardPage() {
         }
     }, [activeOrder?.chat]);
 
-    const handleSendMsg = () => {
+    const handleSendMsg = async () => {
         if (!chatMsg.trim() || !activeOrder) return;
-        dispatch(addOrderMessage({
-            id: activeOrder.id,
-            message: { sender: 'client', text: chatMsg, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
-        }));
-        setChatMsg('');
+        const newMsg = { 
+            sender: 'client' as const, 
+            text: chatMsg, 
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+        };
+        try {
+            await dispatch(addOrderMessageThunk({ id: activeOrder.id, message: newMsg, chat: activeOrder.chat })).unwrap();
+            setChatMsg('');
+        } catch (err) {
+            console.error('Failed to send message:', err);
+        }
     };
 
     if (!isAuthenticated || !user) return null;
@@ -137,7 +146,7 @@ export default function ClientDashboardPage() {
                                     <div className="berry-stat-label">In Development</div>
                                 </div>
                                 <div className="berry-stat orange">
-                                    <div className="berry-stat-value">{displayInvoices.filter(i => i.status === 'Sent').length}</div>
+                                    <div className="berry-stat-value">{displayInvoices.filter((i: any) => i.status === 'Sent').length}</div>
                                     <div className="berry-stat-label">Pending Invoices</div>
                                 </div>
                             </div>
@@ -206,7 +215,7 @@ export default function ClientDashboardPage() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {displayInvoices.map(inv => (
+                                            {displayInvoices.map((inv: any) => (
                                                 <tr key={inv.id}>
                                                     <td><strong style={{ color: '#5e35b1' }}>{inv.invoiceNo}</strong></td>
                                                     <td style={{ fontSize: '0.85rem', color: '#697586' }}>{new Date(inv.date).toLocaleDateString()}</td>
@@ -240,7 +249,7 @@ export default function ClientDashboardPage() {
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
                                             <div>
                                                 <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#121926' }}>{o.product}</div>
-                                                <div style={{ fontSize: '0.85rem', color: '#697586', marginTop: 4 }}>Order ID: {o.id}</div>
+                                                <div style={{ fontSize: '0.85rem', color: '#697586', marginTop: 4 }}>Order ID: {o.order_id || `#${o.id}`}</div>
                                             </div>
                                             <span className={`berry-badge ${o.status === 'Completed' ? 'success' : o.status === 'In Progress' ? 'warning' : 'info'}`}>{o.status}</span>
                                         </div>

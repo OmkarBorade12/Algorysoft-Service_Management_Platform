@@ -7,6 +7,7 @@ interface UIState {
     searchOpen: boolean;
     loginModalOpen: boolean;
     registerModalOpen: boolean;
+    quoteModalOpen: boolean;
     activeCategory: string | null;
 }
 
@@ -19,6 +20,7 @@ const uiSlice = createSlice({
         searchOpen: false,
         loginModalOpen: false,
         registerModalOpen: false,
+        quoteModalOpen: false,
         activeCategory: null,
     } as UIState,
     reducers: {
@@ -26,11 +28,13 @@ const uiSlice = createSlice({
         toggleWishlist: (state) => { state.wishlistOpen = !state.wishlistOpen; },
         toggleMobileMenu: (state) => { state.mobileMenuOpen = !state.mobileMenuOpen; },
         toggleSearch: (state) => { state.searchOpen = !state.searchOpen; },
-        openLogin: (state) => { state.loginModalOpen = true; state.registerModalOpen = false; },
-        openRegister: (state) => { state.registerModalOpen = true; state.loginModalOpen = false; },
+        openLogin: (state) => { state.loginModalOpen = true; state.registerModalOpen = false; state.quoteModalOpen = false; },
+        openRegister: (state) => { state.registerModalOpen = true; state.loginModalOpen = false; state.quoteModalOpen = false; },
+        openQuote: (state) => { state.quoteModalOpen = true; state.loginModalOpen = false; state.registerModalOpen = false; },
         closeModals: (state) => {
             state.loginModalOpen = false;
             state.registerModalOpen = false;
+            state.quoteModalOpen = false;
             state.cartOpen = false;
             state.wishlistOpen = false;
         },
@@ -42,6 +46,6 @@ const uiSlice = createSlice({
 
 export const {
     toggleCart, toggleWishlist, toggleMobileMenu, toggleSearch,
-    openLogin, openRegister, closeModals, setActiveCategory,
+    openLogin, openRegister, openQuote, closeModals, setActiveCategory,
 } = uiSlice.actions;
 export default uiSlice.reducer;

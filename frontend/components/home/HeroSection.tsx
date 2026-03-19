@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { openRegister } from '@/store/slices/uiSlice';
+import { openRegister, openQuote } from '@/store/slices/uiSlice';
 import styles from './HeroSection.module.css';
 import Link from 'next/link';
 import { FiShoppingBag, FiBarChart2, FiZap, FiCheckCircle, FiStar, FiMapPin, FiPenTool, FiTrendingUp, FiTool } from 'react-icons/fi';
@@ -15,7 +15,7 @@ export default function HeroSection() {
     const products = useAppSelector(s => s.products.items);
     const orders = useAppSelector(s => s.orders.items);
     const websitesDelivered = orders.length;
-    const happyClients = new Set(orders.map(o => o.clientEmail)).size;
+    const happyClients = new Set(orders.map(o => o.client_email)).size;
     const reviews = useAppSelector(s => s.reviews.reviews);
     const avgRating = reviews.length ? (reviews.reduce((acc: number, rv) => acc + rv.rating, 0) / reviews.length).toFixed(1) : '5.0';
 
@@ -80,7 +80,7 @@ export default function HeroSection() {
                         <button
                             className="btn-secondary"
                             style={{ fontSize: '1rem', padding: '14px 32px' }}
-                            onClick={() => dispatch(openRegister())}
+                            onClick={() => dispatch(openQuote())}
                         >
                             Get Free Quote
                         </button>

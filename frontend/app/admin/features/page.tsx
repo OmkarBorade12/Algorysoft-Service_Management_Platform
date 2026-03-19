@@ -72,27 +72,29 @@ export default function FeaturesAdmin() {
             {/* Form Section */}
             <div className="berry-card">
                 <h2 className="berry-title" style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: 8 }}><FiStar /> {editingId ? 'Edit Feature' : 'Create New Feature'}</h2>
-                <p style={{ color: '#697586', marginBottom: 24 }}>Manage the features that can be added to pricing cards/tiers.</p>
+                <p style={{ color: '#697586', marginBottom: 24, fontSize: '0.9rem' }}>Manage the features that can be added to pricing cards/tiers.</p>
 
                 <form onSubmit={handleSubmit}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'revert', gap: 16 }}>
-                        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                            <div style={{ flex: 2, minWidth: 200 }}>
-                                <label style={{ display: 'block', marginBottom: 8, fontWeight: 600 }}>Feature Name <span style={{ color: '#ef5350' }}>*</span></label>
-                                <input
-                                    type="text"
-                                    className="berry-input"
-                                    placeholder="e.g. Dynamic Frontend"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div style={{ flex: 1, minWidth: 150 }}>
-                                <label style={{ display: 'block', marginBottom: 8, fontWeight: 600 }}>Price (₹) <span style={{ color: '#ef5350' }}>*</span></label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 24, marginBottom: 24 }}>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#364152', marginBottom: 8 }}>Feature Name <span style={{ color: '#ef5350' }}>*</span></label>
+                            <input
+                                type="text"
+                                className="berry-input"
+                                placeholder="e.g. Dynamic Frontend"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#364152', marginBottom: 8 }}>Price (₹) <span style={{ color: '#ef5350' }}>*</span></label>
+                            <div style={{ position: 'relative' }}>
+                                <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: '#94a3b8' }}>₹</span>
                                 <input
                                     type="number"
                                     className="berry-input"
+                                    style={{ paddingLeft: 28 }}
                                     placeholder="0"
                                     value={price}
                                     onChange={(e) => setPrice(e.target.value ? Number(e.target.value) : '')}
@@ -103,12 +105,12 @@ export default function FeaturesAdmin() {
                         </div>
                     </div>
                     
-                    <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-start', gap: 12 }}>
-                        <button type="submit" className="berry-btn-primary" style={{ padding: '12px 24px', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ display: 'flex', gap: 12 }}>
+                        <button type="submit" className="berry-btn-primary" style={{ padding: '12px 28px' }}>
                             {editingId ? <><FiSave /> Update Feature</> : <><FiCheck /> Save Feature</>}
                         </button>
                         {editingId && (
-                            <button type="button" className="berry-btn-outline" onClick={resetForm} style={{ padding: '12px 24px' }}>
+                            <button type="button" className="berry-btn-outline" onClick={resetForm} style={{ padding: '12px 28px' }}>
                                 Cancel
                             </button>
                         )}

@@ -19,17 +19,44 @@ class Project(models.Model):
     icon = models.CharField(max_length=50)
     is_new = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
+    popular = models.BooleanField(default=False)
     description = models.TextField()
     tech = models.JSONField(default=list)
+    main_image = models.TextField(blank=True, null=True)
+    images = models.JSONField(default=list)
+    pricing_tiers = models.JSONField(default=dict, blank=True, null=True)
 
     def __str__(self):
         return self.title
 
+class CustomRequest(models.Model):
+    client = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    business = models.CharField(max_length=100, blank=True, null=True)
+    requirements = models.TextField()
+    status = models.CharField(max_length=50, default='New')
+    date = models.DateTimeField(auto_now_add=True)
+    timeline = models.CharField(max_length=100, blank=True, null=True)
+    budget = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"Request from {self.client}"
+
 class Order(models.Model):
-    user_email = models.EmailField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    order_id = models.CharField(max_length=50, unique=True, null=True)
+    client_name = models.CharField(max_length=100)
+    client_email = models.EmailField()
+    product = models.CharField(max_length=200)
+    tier = models.CharField(max_length=50)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=50, default='Pending')
+    progress = models.IntegerField(default=0)
+    date = models.DateTimeField(auto_now_add=True)
+    chat = models.JSONField(default=list, blank=True)
+
+    def __str__(self):
+        return f"Order {self.order_id} - {self.client_name}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)

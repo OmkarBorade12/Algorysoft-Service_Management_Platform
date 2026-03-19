@@ -17,16 +17,24 @@ export interface LocalUser {
 export function getRegisteredUsers(): LocalUser[] {
     if (typeof window === 'undefined') return [];
 
-    // ADDED: Initialize a default admin user on first load
     try {
         let currentUsers = localStorage.getItem(STORAGE_KEY);
-        let parsedUsers = currentUsers ? JSON.parse(currentUsers) : [];
-        const hasAdmin = parsedUsers.some((u: LocalUser) => u.email === 'admin@algorysoft.com');
+        let parsedUsers: LocalUser[] = currentUsers ? JSON.parse(currentUsers) : [];
+
+        // MIGRATION: Remove old admin@algorysoft.com if it still exists
+        const hasOldAdmin = parsedUsers.some((u: LocalUser) => u.email === 'admin@algorysoft.com');
+        if (hasOldAdmin) {
+            parsedUsers = parsedUsers.filter((u: LocalUser) => u.email !== 'admin@algorysoft.com');
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(parsedUsers));
+        }
+
+        // Seed the correct admin account if not already present
+        const hasAdmin = parsedUsers.some((u: LocalUser) => u.email === 'algorysoft@gmail.com');
         if (!hasAdmin) {
             parsedUsers.push({
                 id: 1,
                 name: 'AlgorySoft Admin',
-                email: 'admin@algorysoft.com',
+                email: 'algorysoft@gmail.com',
                 password: 'admin123',
                 role: 'admin',
                 createdAt: new Date().toISOString()

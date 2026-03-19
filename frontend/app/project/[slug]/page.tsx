@@ -168,16 +168,38 @@ export default function ProjectDetail() {
                         </div>
                     </div>
 
-                    <div style={{ marginBottom: '32px' }}>
-                        <h3 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>Technologies Used</h3>
-                        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                    <div style={{ marginBottom: '40px' }}>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: 10, color: 'var(--dark-pista-bright)' }}>
+                            <div style={{ width: 8, height: 24, background: 'var(--dark-pista-bright)', borderRadius: 4 }} /> 
+                            Technologies Used
+                        </h3>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '16px' }}>
                             {project.tech.map(t => (
-                                <span key={t} style={{ padding: '8px 16px', background: 'var(--bg-glass)', border: '1px solid var(--border-color)', borderRadius: '8px', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
-                                    {t}
-                                </span>
+                                <div key={t} style={{ 
+                                    padding: '16px', 
+                                    background: 'var(--bg-card)', 
+                                    border: '1px solid var(--border-color)', 
+                                    borderRadius: '16px', 
+                                    fontSize: '0.95rem', 
+                                    color: 'var(--text-primary)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 12,
+                                    boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
+                                    transition: 'transform 0.2s'
+                                }} className="tech-badge-hover">
+                                    <div style={{ width: 32, height: 32, background: 'rgba(82, 183, 136, 0.1)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--dark-pista-bright)' }}>
+                                        <div style={{ width: 6, height: 6, background: 'currentColor', borderRadius: '50%' }} />
+                                    </div>
+                                    <span style={{ fontWeight: 600 }}>{t}</span>
+                                </div>
                             ))}
                         </div>
                     </div>
+
+                    <style jsx>{`
+                        .tech-badge-hover:hover { transform: translateY(-4px); border-color: var(--dark-pista-bright); }
+                    `}</style>
 
                     <div>
                         <h3 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>What's Included?</h3>

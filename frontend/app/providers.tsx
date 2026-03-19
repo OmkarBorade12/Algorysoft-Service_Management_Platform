@@ -7,6 +7,17 @@ import { SessionProvider, useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { setUser } from '@/store/slices/authSlice';
+import { fetchCategories } from '@/store/slices/categoriesSlice';
+import { fetchProducts } from '@/store/slices/productsSlice';
+
+function DataSync() {
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(fetchCategories());
+        dispatch(fetchProducts());
+    }, [dispatch]);
+    return null;
+}
 
 /**
  * Syncs a NextAuth Google session into Redux state so the rest of the
@@ -39,6 +50,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <SessionProvider>
             <Provider store={store}>
                 <PersistGate loading={null} persistor={persistor}>
+                    <DataSync />
                     <GoogleAuthSync />
                     {children}
                     <Toaster

@@ -1,29 +1,35 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useAppSelector, useAppDispatch } from '@/hooks/useRedux';
-import { updateOrderStatus, updateOrderProgress, addOrderMessage, deleteOrder, OrderItem, OrderStatus } from '@/store/slices/ordersSlice';
+import { fetchOrders, updateOrderStatusThunk, updateOrderProgressThunk, updateOrderAmountThunk, addOrderMessageThunk, deleteOrderThunk, OrderItem, OrderStatus } from '@/store/slices/ordersSlice';
 import Pagination from '@/components/ui/Pagination';
 import ConfirmModal from '@/components/ui/ConfirmModal';
-import { FiSend, FiPaperclip, FiSmile, FiUser, FiCode, FiShoppingCart } from 'react-icons/fi';
-
+import { FiSend, FiPaperclip, FiSmile, FiUser, FiCode, FiShoppingCart, FiSearch, FiEdit2, FiCheck } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminOrdersPage() {
     const dispatch = useAppDispatch();
-    const orders = useAppSelector(s => s.orders.items);
+    const { items: orders, status } = useAppSelector(s => s.orders);
     
     const [filter, setFilter] = useState<OrderStatus | 'All'>('All');
     const [search, setSearch] = useState('');
-    const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+    const [selectedOrderId, setSelectedOrderId] = useState<string | number | null>(null);
     const [chatMsg, setChatMsg] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [deleteId, setDeleteId] = useState<string | null>(null);
-    const itemsPerPage = 8;
+    const [deleteId, setDeleteId] = useState<string | number | null>(null);
+    const [editingAmountId, setEditingAmountId] = useState<string | number | null>(null);
+    const [tempAmount, setTempAmount] = useState<string>('');
+    const itemsPerPage = 6;
     
     const chatRef = useRef<HTMLDivElement>(null);
     
-    const selectedOrder = orders.find(o => o.id === selectedOrderId) || null;
+    const selectedOrder = orders.find(o => o.id == selectedOrderId) || null;
+
+    useEffect(() => {
+        dispatch(fetchOrders());
+    }, [dispatch]);
 
     useEffect(() => {
         if (chatRef.current) {
@@ -33,7 +39,7 @@ export default function AdminOrdersPage() {
 
     const filtered = orders.filter(o => {
         if (filter !== 'All' && o.status !== filter) return false;
-        if (search && !o.clientName.toLowerCase().includes(search.toLowerCase()) && !o.product.toLowerCase().includes(search.toLowerCase())) return false;
+        if (search && !o.client_name.toLowerCase().includes(search.toLowerCase()) && !o.product.toLowerCase().includes(search.toLowerCase())) return false;
         return true;
     });
 
@@ -42,13 +48,30 @@ export default function AdminOrdersPage() {
     // Reset pagination when searching/filtering
     useEffect(() => setCurrentPage(1), [filter, search]);
 
-    const updateStatus = (id: string, status: OrderStatus) => {
-        dispatch(updateOrderStatus({ id, status }));
-        toast.success(`Order ${id} → ${status}`);
+    const updateStatus = (id: string | number, status: OrderStatus) => {
+        dispatch(updateOrderStatusThunk({ id, status }));
+        toast.success(`Order #${id} updated to ${status}`);
     };
 
-    const updateProgress = (id: string, progress: number) => {
-        dispatch(updateOrderProgress({ id, progress }));
+    const handleSaveAmount = async (id: string | number) => {
+        const val = parseFloat(tempAmount);
+        if (isNaN(val)) return toast.error("Enter a valid amount");
+        try {
+            await dispatch(updateOrderAmountThunk({ id, amount: val })).unwrap();
+            toast.success("Order amount updated!");
+            setEditingAmountId(null);
+        } catch (err) {
+            toast.error("Failed to update amount");
+        }
+    };
+
+    const startEditingAmount = (id: string | number, current: number) => {
+        setEditingAmountId(id);
+        setTempAmount(current.toString());
+    };
+
+    const updateProgress = (id: string | number, progress: number) => {
+        dispatch(updateOrderProgressThunk({ id, progress }));
     };
 
     const handleProgressRelease = () => {
@@ -57,38 +80,75 @@ export default function AdminOrdersPage() {
 
     const executeDelete = () => {
         if (deleteId) {
-            dispatch(deleteOrder(deleteId));
-            toast.success(`Order ${deleteId} deleted.`);
+            dispatch(deleteOrderThunk(deleteId));
+            toast.success(`Order #${deleteId} deleted.`);
             setDeleteId(null);
         }
     };
 
-    const sendMsg = () => {
+    const sendMsg = async () => {
         if (!chatMsg.trim() || !selectedOrder) return;
-        const newMsg = { sender: 'admin' as const, text: chatMsg, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
-        dispatch(addOrderMessage({ id: selectedOrder.id, message: newMsg }));
-        setChatMsg('');
+        const newMsg = { 
+            sender: 'admin' as const, 
+            text: chatMsg, 
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+        };
+        try {
+            await dispatch(addOrderMessageThunk({ id: selectedOrder.id, message: newMsg, chat: selectedOrder.chat })).unwrap();
+            setChatMsg('');
+        } catch (err) {
+            toast.error('Failed to send message');
+        }
     };
 
+    if (status === 'loading') return (
+        <div style={{ padding: 24 }}>
+            <div className="berry-card" style={{ opacity: 0.6 }}>
+                <div style={{ height: 32, width: '40%', backgroundColor: '#f0f0f0', borderRadius: 8, marginBottom: 16 }} />
+                <div style={{ height: 16, width: '60%', backgroundColor: '#f0f0f0', borderRadius: 6, marginBottom: 32 }} />
+                <div style={{ border: '1px solid #e3e8ef', borderRadius: 12, overflow: 'hidden' }}>
+                    {[1, 2, 3, 4, 5].map(i => (
+                        <div key={i} style={{ height: 60, width: '100%', borderBottom: '1px solid #f0f0f0', padding: '16px 24px', display: 'flex', gap: 24, alignItems: 'center' }}>
+                            <div style={{ width: 80, height: 24, backgroundColor: '#f0f0f0', borderRadius: 4 }} />
+                            <div style={{ width: '15%', height: 20, backgroundColor: '#f0f0f0', borderRadius: 4 }} />
+                            <div style={{ flex: 1, height: 20, backgroundColor: '#f0f0f0', borderRadius: 4 }} />
+                            <div style={{ width: 100, height: 28, backgroundColor: '#f0f0f0', borderRadius: 12 }} />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
     return (
-        <div>
+        <motion.div 
+            initial={{ opacity: 0, y: 15 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.35 }}
+            style={{ width: '100%' }}
+        >
+            <div className="berry-animate-in">
             <div className="berry-card">
                 <h2 className="berry-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FiShoppingCart /> Order Management</h2>
                 
-                {/* Filters */}
-                <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
-                    <input className="berry-input" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search client or project..." style={{ flex: 1, minWidth: 200, maxWidth: 400 }} />
-                    <select className="berry-input" style={{ width: 200 }} value={filter} onChange={e => setFilter(e.target.value as OrderStatus | 'All')}>
-                        <option value="All">All Categories</option>
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Cancelled">Cancelled</option>
-                    </select>
+                <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', flex: 1 }}>
+                        <div style={{ position: 'relative', flex: 1, minWidth: 200, maxWidth: 450 }}>
+                            <FiSearch style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                            <input className="berry-input" value={search} onChange={e => {setSearch(e.target.value); setCurrentPage(1);}} placeholder="Search client or project..." style={{ paddingLeft: 36 }} />
+                        </div>
+                        <select className="berry-input" style={{ width: 'auto', minWidth: 220 }} value={filter} onChange={e => {setFilter(e.target.value as any); setCurrentPage(1);}}>
+                            <option value="All">All Categories</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div className="berry-table-container">
-                    <table className="berry-table">
+                    <table className="berry-table" style={{ width: '100%' }}>
                         <thead>
                             <tr>
                                 <th>Order ID</th>
@@ -103,13 +163,37 @@ export default function AdminOrdersPage() {
                         <tbody>
                             {paginatedOrders.map(o => (
                                 <tr key={o.id}>
-                                    <td><code style={{ color: '#5e35b1', background: '#ede7f6', padding: '4px 8px', borderRadius: 6, fontWeight: 600 }}>{o.id}</code></td>
+                                    <td><code style={{ color: '#5e35b1', background: '#ede7f6', padding: '4px 8px', borderRadius: 6, fontWeight: 600 }}>{o.order_id || `#${o.id}`}</code></td>
                                     <td>
-                                        <div style={{ fontWeight: 600, color: '#121926' }}>{o.clientName}</div>
-                                        <div style={{ fontSize: '0.75rem', color: '#697586' }}>{o.clientEmail}</div>
+                                        <div style={{ fontWeight: 600, color: '#121926' }}>{o.client_name}</div>
+                                        <div style={{ fontSize: '0.75rem', color: '#697586' }}>{o.client_email}</div>
                                     </td>
-                                    <td style={{ fontSize: '0.85rem', maxWidth: 220 }}>{o.product} <span style={{opacity: 0.7}}>({o.tier})</span></td>
-                                    <td style={{ fontWeight: 700 }}>₹{o.amount.toLocaleString('en-IN')}</td>
+                                    <td style={{ fontSize: '0.85rem', maxWidth: 220 }}>{o.product} <br/> <span className="berry-badge info" style={{ fontSize: '0.7rem' }}>{o.tier}</span></td>
+                                    <td style={{ fontWeight: 700 }}>
+                                        {o.tier === 'Custom Request' ? (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                {editingAmountId === o.id ? (
+                                                    <div style={{ display: 'flex', gap: 4 }}>
+                                                        <input 
+                                                            className="berry-input" 
+                                                            style={{ width: 100, padding: '4px 8px' }} 
+                                                            value={tempAmount} 
+                                                            onChange={e => setTempAmount(e.target.value)}
+                                                            autoFocus
+                                                        />
+                                                        <button onClick={() => handleSaveAmount(o.id)} style={{ background: '#00c853', color: 'white', border: 'none', borderRadius: 4, width: 28, height: 28, cursor: 'pointer' }}><FiCheck/></button>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        ₹{o.amount.toLocaleString('en-IN')}
+                                                        <button onClick={() => startEditingAmount(o.id, o.amount)} style={{ background: 'transparent', border: 'none', color: '#5e35b1', cursor: 'pointer', padding: 4 }}><FiEdit2 size={12} /></button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            `₹${o.amount.toLocaleString('en-IN')}`
+                                        )}
+                                    </td>
                                     <td>
                                         <select value={o.status} onChange={e => updateStatus(o.id, e.target.value as OrderStatus)}
                                             style={{ padding: '6px 12px', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, border: '1px solid #e3e8ef', background: '#f8fafc', outline: 'none', cursor: 'pointer' }}>
@@ -163,9 +247,9 @@ export default function AdminOrdersPage() {
                         {/* Progress Panel */}
                         <div style={{ width: '38%', padding: 32, borderRight: '1px solid #e3e8ef', backgroundColor: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
                             <h3 style={{ fontSize: '1.25rem', margin: '0 0 8px', color: '#121926', display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <FiCode /> Order {selectedOrder.id}
+                                <FiCode /> Order {selectedOrder.order_id || `#${selectedOrder.id}`}
                             </h3>
-                            <p style={{ color: '#697586', fontSize: '0.9rem', marginBottom: 32 }}>{selectedOrder.clientName}</p>
+                            <p style={{ color: '#697586', fontSize: '0.9rem', marginBottom: 32 }}>{selectedOrder.client_name}</p>
 
                             <label style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: 12, display: 'flex', justifyContent: 'space-between' }}>
                                 <span>Update Progress:</span>
@@ -203,7 +287,7 @@ export default function AdminOrdersPage() {
                                         <FiUser />
                                     </div>
                                     <div>
-                                        <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#121926', fontWeight: 800 }}>{selectedOrder.clientName}</h4>
+                                        <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#121926', fontWeight: 800 }}>{selectedOrder.client_name}</h4>
                                         <p style={{ margin: 0, fontSize: '0.8rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: 4 }}>
                                             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', display: 'inline-block' }} /> Online (Client)
                                         </p>
@@ -267,10 +351,11 @@ export default function AdminOrdersPage() {
             <ConfirmModal 
                 isOpen={!!deleteId}
                 title="Delete Order"
-                message={`Are you sure you want to permanently delete Order ${deleteId}? This action cannot be undone.`}
+                message={`Are you sure you want to permanently delete Order #${deleteId}? This action cannot be undone.`}
                 onConfirm={executeDelete}
                 onCancel={() => setDeleteId(null)}
             />
-        </div>
+            </div>
+        </motion.div>
     );
 }

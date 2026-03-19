@@ -1,42 +1,61 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import api from '@/lib/axios';
 
 export interface Category {
-  id: number | string;
-  name: string;
-  icon: string;
-  count: number;
-  slug: string;
+    id: number | string;
+    name: string;
+    icon: string;
+    count: number;
+    slug: string;
 }
 
 interface CategoriesState {
-  items: Category[];
+    items: Category[];
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
 
 const initialState: CategoriesState = {
-  items: [],
+    items: [],
+    status: 'idle',
 };
 
-const categoriesSlice = createSlice({
-  name: 'categories',
-  initialState,
-  reducers: {
-    setCategories: (state, action: PayloadAction<Category[]>) => {
-      state.items = action.payload;
-    },
-    addCategory: (state, action: PayloadAction<Category>) => {
-      state.items.push(action.payload);
-    },
-    updateCategory: (state, action: PayloadAction<Category>) => {
-      const index = state.items.findIndex((c) => c.id === action.payload.id);
-      if (index !== -1) {
-        state.items[index] = action.payload;
-      }
-    },
-    deleteCategory: (state, action: PayloadAction<number | string>) => {
-      state.items = state.items.filter((c) => c.id !== action.payload);
-    },
-  },
+export const fetchCategories = createAsyncThunk('categories/fetchCategories', async () => {
+    const response = await api.get('/api/categories/');
+    return response.data;
 });
 
-export const { setCategories, addCategory, updateCategory, deleteCategory } = categoriesSlice.actions;
+export const addCategoryThunk = createAsyncThunk('categories/addCategory', async (category: Omit<Category, 'id' | 'count'>) => {
+    const response = await api.post('/api/categories/', category);
+    return response.data;
+});
+
+export const deleteCategoryThunk = createAsyncThunk('categories/deleteCategory', async (id: number | string) => {
+    await api.delete(`/api/categories/${id}/`);
+    return id;
+});
+
+const categoriesSlice = createSlice({
+    name: 'categories',
+    initialState,
+    reducers: {
+        setCategories: (state, action: PayloadAction<Category[]>) => {
+            state.items = action.payload;
+        },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchCategories.fulfilled, (state, action) => {
+                state.items = action.payload;
+                state.status = 'succeeded';
+            })
+            .addCase(addCategoryThunk.fulfilled, (state, action) => {
+                state.items.push(action.payload);
+            })
+            .addCase(deleteCategoryThunk.fulfilled, (state, action) => {
+                state.items = state.items.filter((c) => c.id !== action.payload);
+            });
+    },
+});
+
+export const { setCategories } = categoriesSlice.actions;
 export default categoriesSlice.reducer;

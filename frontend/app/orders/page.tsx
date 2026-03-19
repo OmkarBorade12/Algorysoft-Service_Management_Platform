@@ -3,19 +3,25 @@ import { useState, useRef, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '@/hooks/useRedux';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { addOrderMessage, OrderItem } from '@/store/slices/ordersSlice';
+import { fetchOrders, addOrderMessageThunk, OrderItem } from '@/store/slices/ordersSlice';
 import { FiSend, FiPaperclip, FiSmile } from 'react-icons/fi';
 
 export default function MyOrdersPage() {
     const { isAuthenticated, user } = useAppSelector(s => s.auth);
-    const allOrders = useAppSelector(s => s.orders.items);
+    const { items: allOrders, status } = useAppSelector(s => s.orders);
     const dispatch = useAppDispatch();
     const router = useRouter();
-    const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+    const [selectedOrderId, setSelectedOrderId] = useState<string | number | null>(null);
     const [chatMsg, setChatMsg] = useState('');
 
-    const orders = allOrders.filter(o => o.clientEmail === user?.email);
-    const selectedOrder = orders.find(o => o.id === selectedOrderId) || null;
+    useEffect(() => {
+        if (isAuthenticated) {
+            dispatch(fetchOrders());
+        }
+    }, [isAuthenticated, dispatch]);
+
+    const orders = allOrders.filter(o => o.client_email === user?.email);
+    const selectedOrder = orders.find(o => o.id == selectedOrderId) || null;
 
     const chatRef = useRef<HTMLDivElement>(null);
 
@@ -49,13 +55,22 @@ export default function MyOrdersPage() {
         );
     }
 
-    const handleSendMsg = () => {
+    const handleSendMsg = async () => {
         if (!chatMsg.trim() || !selectedOrder) return;
-        const newMsg = { sender: 'client' as const, text: chatMsg, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
-        
-        dispatch(addOrderMessage({ id: selectedOrder.id, message: newMsg }));
-        setChatMsg('');
+        const newMsg = { 
+            sender: 'client' as const, 
+            text: chatMsg, 
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+        };
+        try {
+            await dispatch(addOrderMessageThunk({ id: selectedOrder.id, message: newMsg, chat: selectedOrder.chat })).unwrap();
+            setChatMsg('');
+        } catch (err) {
+            console.error('Failed to send message:', err);
+        }
     };
+
+    if (status === 'loading') return <div style={{ padding: 120, textAlign: 'center' }}>Loading your projects...</div>;
 
     return (
         <div style={{ background: 'var(--bg-secondary)', minHeight: '100vh', padding: '60px 0' }}>
@@ -79,7 +94,7 @@ export default function MyOrdersPage() {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
                                     <div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                                            <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--pista-dark)' }}>{order.id}</span>
+                                            <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--pista-dark)' }}>{order.order_id || `#${order.id}`}</span>
                                             <span className={`badge ${order.status === 'Completed' ? 'badge-discount' : 'badge-category'}`} 
                                                 style={{ background: order.status === 'Completed' ? 'var(--pista-xlight)' : 'rgba(37, 99, 235, 0.1)', color: order.status === 'Completed' ? 'var(--pista-dark)' : '#2563eb', border: 'none' }}>
                                                 {order.status}
@@ -87,7 +102,7 @@ export default function MyOrdersPage() {
                                             <span className="badge" style={{ background: '#fff9c4', color: '#f57f17', border: '1px solid #ffd54f' }}>🏎️ {order.tier} Tier</span>
                                         </div>
                                         <h3 style={{ fontSize: '1.4rem', fontWeight: 700, margin: '0 0 4px 0', color: 'var(--text-primary)' }}>{order.product}</h3>
-                                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Ordered on {order.date}</div>
+                                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Ordered on {new Date(order.date).toLocaleDateString()}</div>
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
                                         <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
@@ -134,7 +149,7 @@ export default function MyOrdersPage() {
                         {/* Header */}
                         <div style={{ padding: '24px 32px', background: 'var(--pista-primary)', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
-                                <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700 }}>{selectedOrder.product} <span style={{ opacity: 0.8, fontSize: '0.9rem' }}>({selectedOrder.id})</span></h3>
+                                <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700 }}>{selectedOrder.product} <span style={{ opacity: 0.8, fontSize: '0.9rem' }}>({selectedOrder.order_id || `#${selectedOrder.id}`})</span></h3>
                                 <p style={{ margin: 0, opacity: 0.9, fontSize: '0.9rem', marginTop: 4 }}>Live tracking and developer chat regarding your project.</p>
                             </div>
                             <button onClick={() => setSelectedOrderId(null)} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: 36, height: 36, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
