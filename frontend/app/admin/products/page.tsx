@@ -212,77 +212,11 @@ export default function AdminProductsPage() {
     );
 
     return (
-        <motion.div 
-            initial={{ opacity: 0, scale: 0.99 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            transition={{ duration: 0.4 }}
-            style={{ width: '100%' }}
-        >
-            <div className="berry-animate-in">
-            <div className="berry-card">
-            <h2 className="berry-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FiBox /> Product Management</h2>
-            
-            <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', flex: 1, minWidth: 300 }}>
-                    <div style={{ position: 'relative', flex: 1, minWidth: 200, maxWidth: 450 }}>
-                        <FiSearch style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                        <input className="berry-input" value={search} onChange={e => {setSearch(e.target.value); setCurrentPage(1);}} placeholder="Search title..." style={{ paddingLeft: 36 }} />
-                    </div>
-                    <select className="berry-input" value={filter} onChange={e => {setFilter(e.target.value); setCurrentPage(1);}} style={{ width: 'auto', minWidth: 200 }}>
-                        <option value="all">All Categories</option>
-                        {categories.map((c: Category) => <option key={c.slug} value={c.name}>{c.name}</option>)}
-                    </select>
-                </div>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                    <button className="berry-btn-outline" onClick={() => setShowManageCategories(true)} style={{ borderColor: '#c2185b', color: '#c2185b' }}>Categories</button>
-                    <button className="berry-btn-primary" onClick={() => setShowCategoryForm(true)} style={{ background: '#364152' }}>+ Category</button>
-                    <button className="berry-btn-primary" onClick={openNew}>+ Product</button>
-                </div>
-            </div>
-
-            <div className="berry-table-container">
-                <table className="berry-table">
-                    <thead>
-                        <tr>
-                            <th>Preview</th>
-                            <th>Title</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {paginatedProducts.map((p) => (
-                            <tr key={p.id}>
-                                <td>{p.mainImage ? <img src={p.mainImage} style={{ width: 40, height: 40, borderRadius: 6, objectFit: 'cover' }} /> : <FiBox size={24} />}</td>
-                                <td><div style={{ fontWeight: 600 }}>{p.title}</div><div style={{ fontSize: '0.75rem', opacity: 0.7 }}>{p.slug}</div></td>
-                                <td><span className="berry-badge info">{p.category}</span></td>
-                                <td>₹{p.price.toLocaleString()}</td>
-                                <td>
-                                    <div style={{ display: 'flex', gap: 8 }}>
-                                        <button onClick={() => openEdit(p)} className="berry-btn-outline" style={{ padding: '4px 8px' }}>Edit</button>
-                                        <button onClick={() => setDeleteProductId(Number(p.id))} className="berry-btn-outline" style={{ padding: '4px 8px', color: '#ef4444', borderColor: '#ef4444' }}>Del</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-                <div style={{ marginTop: 24, display: 'flex', justifyContent: 'center', gap: 8 }}>
-                    {Array.from({ length: totalPages }).map((_, i) => (
-                        <button key={i} onClick={() => setCurrentPage(i + 1)} className={currentPage === i+1 ? 'berry-btn-primary' : 'berry-btn-outline'} style={{ minWidth: 40 }}>{i + 1}</button>
-                    ))}
-                </div>
-            )}
-
+        <>
             <AnimatePresence>
                 {/* CATEGORY MODAL */}
                 {showCategoryForm && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="modal-overlay">
+                    <div className="modal-overlay">
                         <motion.div initial={{ y: 20, scale: 0.95 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, opacity: 0 }} className="berry-card modal-container" style={{ maxWidth: 450 }}>
                             <div className="modal-header">
                                 <h3>New Category</h3>
@@ -318,13 +252,13 @@ export default function AdminProductsPage() {
                                 <button className="berry-btn-outline" style={{ borderColor: '#ffccbc', color: '#d84315' }} onClick={() => setShowCategoryForm(false)}>Cancel</button>
                             </div>
                         </motion.div>
-                    </motion.div>
+                    </div>
                 )}
 
                 {/* PRODUCT MODAL */}
                 {showForm && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="modal-overlay">
-                        <motion.div initial={{ y: 20, scale: 0.95 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, opacity: 0 }} className="berry-card modal-container" style={{ maxWidth: 750 }}>
+                    <div className="modal-overlay">
+                        <motion.div initial={{ y: 20, scale: 0.95 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, opacity: 0 }} className="berry-card modal-container" style={{ maxWidth: 850 }}>
                             <div className="modal-header">
                                 <h3>{editProject ? 'Edit Project' : 'Add New Project'}</h3>
                                 <button onClick={() => setShowForm(false)} className="close-btn"><FiX /></button>
@@ -421,66 +355,19 @@ export default function AdminProductsPage() {
                                     />
                                     <FiSettings style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', color: '#cbd5e1' }} />
                                 </div>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12 }}>
-                                    {(form.tech || []).map((t, i) => (
-                                        <span key={i} className="berry-badge" style={{ 
-                                            background: 'linear-gradient(45deg, #ede7f6, #f3f0ff)', 
-                                            color: '#5e35b1', 
-                                            borderRadius: '8px', 
-                                            fontSize: '0.8rem', 
-                                            padding: '6px 14px',
-                                            border: '1px solid #d1c4e9',
-                                            fontWeight: 600,
-                                            boxShadow: '0 2px 6px rgba(94, 53, 177, 0.1)'
-                                        }}>
-                                            {t}
-                                        </span>
-                                    ))}
-                                </div>
                             </div>
 
                             <div className="modal-footer">
-                                <button className="berry-btn-primary" style={{ flex: 1 }} onClick={handleSave}>{editProject ? 'Update Product' : 'Create Product'}</button>
-                                <button className="berry-btn-outline" style={{ flex: 1, borderColor: '#ffccbc', color: '#d84315' }} onClick={() => setShowForm(false)}>Cancel</button>
+                                <button className="berry-btn-primary" style={{ flex: 1, padding: '14px' }} onClick={handleSave}>{editProject ? 'Update Product' : 'Create Product'}</button>
+                                <button className="berry-btn-outline" style={{ flex: 1, padding: '14px', borderColor: '#ffccbc', color: '#d84315' }} onClick={() => setShowForm(false)}>Cancel</button>
                             </div>
                         </motion.div>
-                    </motion.div>
-                )}
-
-                {/* MAXIMIZED VIEW (LIGHTROOM) */}
-                {maximizedImage && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="lightroom-overlay">
-                        <button className="lr-close" onClick={() => setMaximizedImage(null)}><FiX size={40}/></button>
-                        <div className="lr-container">
-                            <motion.img key={maximizedImage.index} initial={{ scale: 0.9 }} animate={{ scale: 1 }} src={maximizedImage.images[maximizedImage.index]} className="lr-image" />
-                            
-                            <button className="lr-nav left" onClick={() => setMaximizedImage({...maximizedImage, index: (maximizedImage.index - 1 + maximizedImage.images.length) % maximizedImage.images.length})}><FiChevronLeft/></button>
-                            <button className="lr-nav right" onClick={() => setMaximizedImage({...maximizedImage, index: (maximizedImage.index + 1) % maximizedImage.images.length})}><FiChevronRight/></button>
-
-                            <div className="lr-actions">
-                                <button className="lr-btn" onClick={() => document.getElementById('lr-change')?.click()}><FiEdit2 /> Change This Image</button>
-                                <input id="lr-change" type="file" hidden accept="image/*" onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                        const reader = new FileReader();
-                                        reader.onloadend = () => {
-                                            const newGal = [...maximizedImage.images];
-                                            newGal[maximizedImage.index] = reader.result as string;
-                                            setForm({...form, images: newGal});
-                                            setMaximizedImage({...maximizedImage, images: newGal});
-                                            toast.success('Image replaced!');
-                                        };
-                                        reader.readAsDataURL(file);
-                                    }
-                                }} />
-                            </div>
-                        </div>
-                    </motion.div>
+                    </div>
                 )}
 
                 {/* MANAGE CATEGORIES MODAL */}
                 {showManageCategories && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="modal-overlay">
+                    <div className="modal-overlay">
                         <motion.div initial={{ y: 20 }} animate={{ y: 0 }} exit={{ y: 20 }} className="berry-card modal-container" style={{ maxWidth: 500 }}>
                             <div className="modal-header">
                                 <h3>Manage Categories</h3>
@@ -498,9 +385,79 @@ export default function AdminProductsPage() {
                                 ))}
                             </div>
                         </motion.div>
-                    </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
+
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.99 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                transition={{ duration: 0.4 }}
+                style={{ width: '100%' }}
+            >
+            <div className="berry-animate-in">
+            <div className="berry-card">
+            <h2 className="berry-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FiBox /> Product Management</h2>
+            
+            <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', flex: 1, minWidth: 300 }}>
+                    <div style={{ position: 'relative', flex: 1, minWidth: 200, maxWidth: 450 }}>
+                        <FiSearch style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                        <input className="berry-input" value={search} onChange={e => {setSearch(e.target.value); setCurrentPage(1);}} placeholder="Search title..." style={{ paddingLeft: 36 }} />
+                    </div>
+                    <select className="berry-input" value={filter} onChange={e => {setFilter(e.target.value); setCurrentPage(1);}} style={{ width: 'auto', minWidth: 200 }}>
+                        <option value="all">All Categories</option>
+                        {categories.map((c: Category) => <option key={c.slug} value={c.name}>{c.name}</option>)}
+                    </select>
+                </div>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    <button className="berry-btn-outline" onClick={() => setShowManageCategories(true)} style={{ borderColor: '#c2185b', color: '#c2185b' }}>Categories</button>
+                    <button className="berry-btn-primary" onClick={() => setShowCategoryForm(true)} style={{ background: '#364152' }}>+ Category</button>
+                    <button className="berry-btn-primary" onClick={openNew}>+ Product</button>
+                </div>
+            </div>
+
+            <div className="berry-table-container">
+                <table className="berry-table">
+                    <thead>
+                        <tr>
+                            <th>Preview</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {paginatedProducts.map((p) => (
+                            <tr key={p.id}>
+                                <td>{p.mainImage ? <img src={p.mainImage} style={{ width: 40, height: 40, borderRadius: 6, objectFit: 'cover' }} /> : <FiBox size={24} />}</td>
+                                <td><div style={{ fontWeight: 600 }}>{p.title}</div><div style={{ fontSize: '0.75rem', opacity: 0.7 }}>{p.slug}</div></td>
+                                <td><span className="berry-badge info">{p.category}</span></td>
+                                <td>₹{p.price.toLocaleString()}</td>
+                                <td>
+                                    <div style={{ display: 'flex', gap: 8 }}>
+                                        <button onClick={() => openEdit(p)} className="berry-btn-outline" style={{ padding: '4px 8px' }}>Edit</button>
+                                        <button onClick={() => setDeleteProductId(Number(p.id))} className="berry-btn-outline" style={{ padding: '4px 8px', color: '#ef4444', borderColor: '#ef4444' }}>Del</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+                <div style={{ marginTop: 24, display: 'flex', justifyContent: 'center', gap: 8 }}>
+                    {Array.from({ length: totalPages }).map((_, i) => (
+                        <button key={i} onClick={() => setCurrentPage(i + 1)} className={currentPage === i+1 ? 'berry-btn-primary' : 'berry-btn-outline'} style={{ minWidth: 40 }}>{i + 1}</button>
+                    ))}
+                </div>
+            )}
+            </div>
+            </div>
+            </motion.div>
 
             <ConfirmModal 
                 isOpen={deleteProductId !== null} 
@@ -518,8 +475,8 @@ export default function AdminProductsPage() {
             />
 
             <style jsx>{`
-                .modal-overlay { position: fixed; inset: 0; background: rgba(18,25,38,0.5); backdrop-filter: blur(8px); display: flex; justify-content: center; z-index: 1100; padding: 40px 20px; overflow-y: auto; }
-                .modal-container { margin: auto 0; border: none; box-shadow: 0 40px 100px rgba(0,0,0,0.3); width: 100%; position: relative; }
+                .modal-overlay { position: fixed; inset: 0; background: rgba(18,25,38,0.6); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: flex-start; z-index: 10000; padding: 100px 20px 60px; overflow-y: auto; }
+                .modal-container { border: none; box-shadow: 0 40px 100px rgba(0,0,0,0.3); width: 100%; position: relative; margin-bottom: 60px; }
                 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
                 .modal-header h3 { margin: 0; font-size: 1.5rem; color: #121926; }
                 .close-btn { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; color: #64748b; }
@@ -555,8 +512,6 @@ export default function AdminProductsPage() {
                 .lr-actions { margin-top: 24px; }
                 .lr-btn { background: #5e35b1; color: #fff; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; }
             `}</style>
-            </div>
-            </div>
-        </motion.div>
+        </>
     );
 }

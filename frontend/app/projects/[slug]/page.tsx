@@ -9,6 +9,7 @@ import { addReview, type Review } from '@/store/slices/reviewSlice';
 import { addRequestThunk } from '@/store/slices/requestsSlice';
 import { formatPrice } from '@/store/slices/currencySlice';
 import { Product } from '@/store/slices/productsSlice';
+import { fetchFeatures } from '@/store/slices/featuresSlice';
 import toast from 'react-hot-toast';
 import { FiSettings, FiCpu } from 'react-icons/fi';
 
@@ -258,9 +259,10 @@ export default function ProjectDetailPage() {
 
     // Auto-open requirement modal after 4s
     useEffect(() => {
+        dispatch(fetchFeatures());
         const timer = setTimeout(() => setShowRequirement(true), 4000);
         return () => clearTimeout(timer);
-    }, []);
+    }, [dispatch]);
 
     // Auto-scroll gallery every 3s
     useEffect(() => {

@@ -1,9 +1,14 @@
 from rest_framework import serializers
-from .models import Category, Project, CustomRequest, Order
+from .models import Category, Project, CustomRequest, Order, Feature
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        fields = '__all__'
+
+class FeatureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feature
         fields = '__all__'
 
 class ProjectSerializer(serializers.ModelSerializer):

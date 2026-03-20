@@ -1,15 +1,19 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { closeModals } from '@/store/slices/uiSlice';
 import { addRequestThunk } from '@/store/slices/requestsSlice';
+import { fetchFeatures } from '@/store/slices/featuresSlice';
 import toast from 'react-hot-toast';
-import { FiX, FiSend, FiMessageSquare, FiUser, FiMail, FiPhone, FiBriefcase } from 'react-icons/fi';
+import { FiX, FiSend, FiMessageSquare, FiUser, FiMail, FiPhone, FiBriefcase, FiPlus } from 'react-icons/fi';
 import styles from './AuthModal.module.css'; // Reusing styles
 
 export default function FreeQuoteModal() {
     const dispatch = useAppDispatch();
     const { user } = useAppSelector(s => s.auth);
+    const { items: catalogFeatures } = useAppSelector(s => s.features);
+    const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+    
     const [form, setForm] = useState({
         client: user?.name || '',
         email: user?.email || '',
@@ -21,13 +25,23 @@ export default function FreeQuoteModal() {
     });
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        dispatch(fetchFeatures());
+    }, [dispatch]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!form.requirements) return toast.error('Please enter your requirements');
         setLoading(true);
+        
+        const featureText = selectedFeatures.length > 0 
+            ? `\n\nSelected Add-on Features:\n- ${selectedFeatures.join('\n- ')}` 
+            : '';
+
         try {
             await dispatch(addRequestThunk({
                 ...form,
+                requirements: `${form.requirements}${featureText}`,
                 status: 'New'
             })).unwrap();
             toast.success('Request sent! Our team will contact you shortly. 🚀');
@@ -41,7 +55,7 @@ export default function FreeQuoteModal() {
 
     return (
         <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && dispatch(closeModals())}>
-            <div className="modal-content animate-fadeInUp" style={{ maxWidth: '600px' }}>
+            <div className="modal-content animate-fadeInUp" style={{ maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
                 <div className={styles.modalHeader}>
                     <h2 className={styles.modalTitle} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <FiMessageSquare size={20} /> Get a Free Quote
@@ -74,11 +88,37 @@ export default function FreeQuoteModal() {
                     </div>
 
                     <div className="form-group">
+                        <label className="form-label">Add Your Needed Features (Optional)</label>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: selectedFeatures.length > 0 ? 8 : 0 }}>
+                            {selectedFeatures.map(f => (
+                                <span key={f} style={{ background: '#ede7f6', color: '#5e35b1', padding: '4px 8px', borderRadius: 6, fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600 }}>
+                                    {f}
+                                    <button type="button" onClick={() => setSelectedFeatures(s => s.filter(x => x !== f))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#5e35b1', fontSize: '1rem', lineHeight: 1, padding: 0 }}>×</button>
+                                </span>
+                            ))}
+                        </div>
+                        <select 
+                            className="form-input" 
+                            value="" 
+                            onChange={(e) => {
+                                if (e.target.value && !selectedFeatures.includes(e.target.value)) {
+                                    setSelectedFeatures(s => [...s, e.target.value]);
+                                }
+                            }}
+                        >
+                            <option value="" disabled>+ Pick a feature...</option>
+                            {catalogFeatures.filter(f => !selectedFeatures.includes(f.name)).map(f => (
+                                <option key={f.id} value={f.name}>{f.name}</option> 
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-group">
                         <label className="form-label">Tell us what you need built</label>
                         <textarea 
                             className="form-input" 
-                            style={{ height: '100px', paddingTop: '12px' }} 
-                            placeholder="e.g. I want an E-commerce site for my clothing brand with 10 products..."
+                            style={{ height: '80px', paddingTop: '12px' }} 
+                            placeholder="e.g. I want an E-commerce site for my clothing brand..."
                             value={form.requirements}
                             onChange={e => setForm({...form, requirements: e.target.value})}
                             required

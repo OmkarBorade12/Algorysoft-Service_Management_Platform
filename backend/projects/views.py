@@ -1,15 +1,20 @@
 from rest_framework import viewsets
-from .models import Category, Project, CustomRequest, Order
+from .models import Category, Project, CustomRequest, Order, Feature
 from .serializers import (
     CategorySerializer, 
     ProjectSerializer, 
     CustomRequestSerializer, 
-    OrderSerializer
+    OrderSerializer,
+    FeatureSerializer
 )
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+class FeatureViewSet(viewsets.ModelViewSet):
+    queryset = Feature.objects.all()
+    serializer_class = FeatureSerializer
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()

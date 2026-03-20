@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import api from '@/lib/axios';
 
 export interface Feature {
     id: number;
@@ -8,41 +9,75 @@ export interface Feature {
 
 interface FeaturesState {
     items: Feature[];
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
 
 const initialState: FeaturesState = {
-    items: [
-        { id: 1, name: 'Static Frontend', price: 1000 },
-        { id: 2, name: 'Contact Form', price: 500 },
-        { id: 3, name: 'Domain Setup', price: 1500 },
-        { id: 4, name: 'Dynamic Frontend', price: 3000 },
-        { id: 5, name: 'Admin Panel', price: 5000 },
-        { id: 6, name: 'Database (MongoDB)', price: 4000 },
-        { id: 7, name: 'Full Stack App', price: 8000 },
-        { id: 8, name: 'AWS Deployment', price: 5000 },
-        { id: 9, name: 'Payment Gateway', price: 2000 },
-    ],
+    items: [],
+    status: 'idle',
 };
+
+export const fetchFeatures = createAsyncThunk('features/fetchFeatures', async () => {
+    const response = await api.get('/api/features/');
+    return response.data.map((f: any) => ({
+        id: f.id,
+        name: f.name,
+        price: Number(f.price)
+    }));
+});
+
+export const addFeatureThunk = createAsyncThunk('features/addFeature', async (feature: Omit<Feature, 'id'>) => {
+    const response = await api.post('/api/features/', feature);
+    return {
+        id: response.data.id,
+        name: response.data.name,
+        price: Number(response.data.price)
+    };
+});
+
+export const updateFeatureThunk = createAsyncThunk('features/updateFeature', async (feature: Feature) => {
+    const response = await api.put(`/api/features/${feature.id}/`, feature);
+    return {
+        id: response.data.id,
+        name: response.data.name,
+        price: Number(response.data.price)
+    };
+});
+
+export const deleteFeatureThunk = createAsyncThunk('features/deleteFeature', async (id: number) => {
+    await api.delete(`/api/features/${id}/`);
+    return id;
+});
 
 const featuresSlice = createSlice({
     name: 'features',
     initialState,
-    reducers: {
-        addFeature: (state, action: PayloadAction<Omit<Feature, 'id'>>) => {
-            const nextId = state.items.length > 0 ? Math.max(...state.items.map(f => f.id)) + 1 : 1;
-            state.items.push({ id: nextId, ...action.payload });
-        },
-        updateFeature: (state, action: PayloadAction<Feature>) => {
-            const idx = state.items.findIndex((f) => f.id === action.payload.id);
-            if (idx !== -1) {
-                state.items[idx] = action.payload;
-            }
-        },
-        deleteFeature: (state, action: PayloadAction<number>) => {
-            state.items = state.items.filter((f) => f.id !== action.payload);
-        },
-    },
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchFeatures.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchFeatures.fulfilled, (state, action) => {
+                state.items = action.payload;
+                state.status = 'succeeded';
+            })
+            .addCase(fetchFeatures.rejected, (state) => {
+                state.status = 'failed';
+            })
+            .addCase(addFeatureThunk.fulfilled, (state, action) => {
+                state.items.push(action.payload);
+            })
+            .addCase(updateFeatureThunk.fulfilled, (state, action) => {
+                const index = state.items.findIndex(f => f.id === action.payload.id);
+                if (index !== -1) {
+                    state.items[index] = action.payload;
+                }
+            })
+            .addCase(deleteFeatureThunk.fulfilled, (state, action) => {
+                state.items = state.items.filter(f => f.id !== action.payload);
+            });
+    }
 });
 
-export const { addFeature, updateFeature, deleteFeature } = featuresSlice.actions;
 export default featuresSlice.reducer;

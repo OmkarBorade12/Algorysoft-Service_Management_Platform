@@ -1,14 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '@/hooks/useRedux';
-import { addFeature, updateFeature, deleteFeature, Feature } from '@/store/slices/featuresSlice';
+import { fetchFeatures, addFeatureThunk, updateFeatureThunk, deleteFeatureThunk, Feature } from '@/store/slices/featuresSlice';
 import toast from 'react-hot-toast';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import Pagination from '@/components/ui/Pagination';
-import { FiStar, FiSave, FiCheck } from 'react-icons/fi';
+import { FiStar, FiSave, FiCheck, FiRefreshCw } from 'react-icons/fi';
 
 export default function FeaturesAdmin() {
-    const features = useAppSelector(state => state.features?.items || []);
+    const { items: features, status } = useAppSelector(state => state.features);
     const dispatch = useAppDispatch();
 
     const [editingId, setEditingId] = useState<number | null>(null);
@@ -17,24 +17,31 @@ export default function FeaturesAdmin() {
     const [deleteId, setDeleteId] = useState<number | null>(null);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6;
+    const itemsPerPage = 8;
 
-    const handleSubmit = (e: React.FormEvent) => {
+    useEffect(() => {
+        dispatch(fetchFeatures());
+    }, [dispatch]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!name.trim() || price === '') {
             toast.error('Please enter both name and price.');
             return;
         }
 
-        if (editingId) {
-            dispatch(updateFeature({ id: editingId, name: name.trim(), price: Number(price) }));
-            toast.success('Feature updated successfully!');
-        } else {
-            dispatch(addFeature({ name: name.trim(), price: Number(price) }));
-            toast.success('Feature added successfully!');
+        try {
+            if (editingId) {
+                await dispatch(updateFeatureThunk({ id: editingId, name: name.trim(), price: Number(price) })).unwrap();
+                toast.success('Feature updated successfully!');
+            } else {
+                await dispatch(addFeatureThunk({ name: name.trim(), price: Number(price) })).unwrap();
+                toast.success('Feature added successfully!');
+            }
+            resetForm();
+        } catch (err) {
+            toast.error('Operation failed. Please try again.');
         }
-
-        resetForm();
     };
 
     const handleEdit = (f: Feature) => {
@@ -44,17 +51,20 @@ export default function FeaturesAdmin() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const confirmDelete = () => {
+    const confirmDelete = async () => {
         if (deleteId) {
-            dispatch(deleteFeature(deleteId));
-            toast.success('Feature deleted successfully!');
-            setDeleteId(null);
-            
-            // Adjust pagination if needed
-            const newTotal = features.length - 1;
-            const newMaxPages = Math.ceil(newTotal / itemsPerPage) || 1;
-            if (currentPage > newMaxPages) {
-                setCurrentPage(newMaxPages);
+            try {
+                await dispatch(deleteFeatureThunk(deleteId)).unwrap();
+                toast.success('Feature deleted successfully!');
+                setDeleteId(null);
+                
+                const newTotal = features.length - 1;
+                const newMaxPages = Math.ceil(newTotal / itemsPerPage) || 1;
+                if (currentPage > newMaxPages) {
+                    setCurrentPage(newMaxPages);
+                }
+            } catch (err) {
+                toast.error('Delete failed.');
             }
         }
     };
@@ -65,36 +75,40 @@ export default function FeaturesAdmin() {
         setPrice('');
     };
 
-    const displayedFeatures = features.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const displayedFeatures = (features || []).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
-        <div style={{ maxWidth: 900 }}>
-            {/* Form Section */}
+        <div style={{ maxWidth: 1000 }} className="berry-animate-in">
             <div className="berry-card">
-                <h2 className="berry-title" style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: 8 }}><FiStar /> {editingId ? 'Edit Feature' : 'Create New Feature'}</h2>
-                <p style={{ color: '#697586', marginBottom: 24, fontSize: '0.9rem' }}>Manage the features that can be added to pricing cards/tiers.</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                    <div>
+                        <h2 className="berry-title" style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}><FiStar /> {editingId ? 'Edit Feature' : 'Create New Feature'}</h2>
+                        <p style={{ color: '#697586', fontSize: '0.9rem' }}>Define features that clients can select in quote forms.</p>
+                    </div>
+                    {status === 'loading' && <FiRefreshCw className="berry-icon-spin" style={{ color: '#5e35b1' }} />}
+                </div>
 
                 <form onSubmit={handleSubmit}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 24, marginBottom: 24 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24, marginBottom: 24 }}>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#364152', marginBottom: 8 }}>Feature Name <span style={{ color: '#ef5350' }}>*</span></label>
+                            <label className="input-label">Feature Name <span style={{ color: '#ef5350' }}>*</span></label>
                             <input
                                 type="text"
                                 className="berry-input"
-                                placeholder="e.g. Dynamic Frontend"
+                                placeholder="e.g. SEO Optimization"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
                             />
                         </div>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#364152', marginBottom: 8 }}>Price (₹) <span style={{ color: '#ef5350' }}>*</span></label>
+                            <label className="input-label">Price Elevation (₹) <span style={{ color: '#ef5350' }}>*</span></label>
                             <div style={{ position: 'relative' }}>
-                                <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: '#94a3b8' }}>₹</span>
+                                <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontWeight: 800, color: '#94a3b8' }}>₹</span>
                                 <input
                                     type="number"
                                     className="berry-input"
-                                    style={{ paddingLeft: 28 }}
+                                    style={{ paddingLeft: 32 }}
                                     placeholder="0"
                                     value={price}
                                     onChange={(e) => setPrice(e.target.value ? Number(e.target.value) : '')}
@@ -106,58 +120,51 @@ export default function FeaturesAdmin() {
                     </div>
                     
                     <div style={{ display: 'flex', gap: 12 }}>
-                        <button type="submit" className="berry-btn-primary" style={{ padding: '12px 28px' }}>
+                        <button type="submit" className="berry-btn-primary" style={{ padding: '12px 32px' }}>
                             {editingId ? <><FiSave /> Update Feature</> : <><FiCheck /> Save Feature</>}
                         </button>
                         {editingId && (
-                            <button type="button" className="berry-btn-outline" onClick={resetForm} style={{ padding: '12px 28px' }}>
-                                Cancel
+                            <button type="button" className="berry-btn-outline" onClick={resetForm} style={{ padding: '12px 32px' }}>
+                                Cancel Edit
                             </button>
                         )}
                     </div>
                 </form>
             </div>
 
-            {/* Table Section */}
-            <div className="berry-card">
-                <h3 className="berry-title" style={{ marginBottom: 16 }}>Available Features List</h3>
+            <div className="berry-card" style={{ marginTop: 24 }}>
+                <h3 className="berry-title" style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '1.2rem' }}>
+                    Available Features ({features?.length || 0})
+                </h3>
                 
-                {features.length === 0 ? (
-                    <p style={{ color: '#697586', fontStyle: 'italic', padding: '16px 0' }}>No features created yet.</p>
+                {status === 'loading' && features.length === 0 ? (
+                    <div style={{ padding: 40, textAlign: 'center' }}><FiRefreshCw className="berry-icon-spin" size={32} /></div>
+                ) : features.length === 0 ? (
+                    <div style={{ padding: 40, textAlign: 'center', background: '#f8fafc', borderRadius: 12, color: '#64748b' }}>
+                        No features found. Start by creating one above.
+                    </div>
                 ) : (
                     <>
-                        <div style={{ overflowX: 'auto' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 500 }}>
+                        <div className="berry-table-container">
+                            <table className="berry-table">
                                 <thead>
-                                    <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e3e8ef' }}>
-                                        <th style={{ padding: '12px 16px', fontWeight: 600, color: '#364152' }}># ID</th>
-                                        <th style={{ padding: '12px 16px', fontWeight: 600, color: '#364152' }}>Feature Name</th>
-                                        <th style={{ padding: '12px 16px', fontWeight: 600, color: '#364152' }}>Price (₹)</th>
-                                        <th style={{ padding: '12px 16px', fontWeight: 600, color: '#364152', textAlign: 'right' }}>Actions</th>
+                                    <tr>
+                                        <th style={{ width: 60 }}>#</th>
+                                        <th>Feature Name</th>
+                                        <th>Price Addition</th>
+                                        <th style={{ textAlign: 'right' }}>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {displayedFeatures.map((f, index) => (
-                                        <tr key={f.id} style={{ borderBottom: '1px solid #e3e8ef', transition: 'background 0.2s', background: editingId === f.id ? '#f5f3ff' : 'transparent' }}>
-                                            <td style={{ padding: '12px 16px', color: '#697586' }}>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                                            <td style={{ padding: '12px 16px', fontWeight: 500 }}>{f.name}</td>
-                                            <td style={{ padding: '12px 16px', color: '#10b981', fontWeight: 600 }}>₹{f.price.toLocaleString('en-IN')}</td>
-                                            <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                                        <tr key={f.id} style={{ background: editingId === f.id ? '#f5f3ff' : 'transparent' }}>
+                                            <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                                            <td style={{ fontWeight: 600 }}>{f.name}</td>
+                                            <td style={{ color: '#10b981', fontWeight: 700 }}>+ ₹{f.price.toLocaleString('en-IN')}</td>
+                                            <td style={{ textAlign: 'right' }}>
                                                 <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                                                    <button 
-                                                        className="berry-btn-outline" 
-                                                        style={{ padding: '6px 12px', fontSize: '0.8rem' }}
-                                                        onClick={() => handleEdit(f)}
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                    <button 
-                                                        className="berry-btn-outline" 
-                                                        style={{ padding: '6px 12px', fontSize: '0.8rem', borderColor: '#ef5350', color: '#ef5350' }}
-                                                        onClick={() => setDeleteId(f.id)}
-                                                    >
-                                                        Delete
-                                                    </button>
+                                                    <button className="berry-btn-outline" style={{ padding: '6px 12px' }} onClick={() => handleEdit(f)}>Edit</button>
+                                                    <button className="berry-btn-outline" style={{ padding: '6px 12px', color: '#ef4444', borderColor: '#ef4444' }} onClick={() => setDeleteId(f.id)}>Delete</button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -183,10 +190,14 @@ export default function FeaturesAdmin() {
             <ConfirmModal 
                 isOpen={!!deleteId}
                 title="Delete Feature"
-                message="Are you sure you want to delete this feature? It will no longer be available for use."
+                message="Are you sure you want to delete this feature? Clients will no longer see this as an option."
                 onConfirm={confirmDelete}
                 onCancel={() => setDeleteId(null)}
             />
+
+            <style jsx>{`
+                .input-label { display: block; font-size: 0.85rem; font-weight: 700; color: #364152; margin-bottom: 8px; }
+            `}</style>
         </div>
     );
 }
