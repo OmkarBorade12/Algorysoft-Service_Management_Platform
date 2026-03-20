@@ -5,6 +5,39 @@ import { useAppSelector } from '@/hooks/useRedux';
 import type { CarouselSlide } from '@/store/slices/carouselSlice';
 import { FiStar } from 'react-icons/fi';
 
+const DEFAULT_SLIDES: CarouselSlide[] = [
+    {
+        id: 1,
+        title: 'Modern ERP Solutions',
+        subtitle: 'Scalable and efficient business management software for your growing enterprise.',
+        ctaText: 'Explore ERP',
+        ctaLink: '/projects?category=erp',
+        bgColor: 'linear-gradient(135deg, #f4fbee 0%, #e5f6d4 100%)',
+        order: 1,
+        isActive: true,
+    },
+    {
+        id: 2,
+        title: 'Advanced CRM Platforms',
+        subtitle: 'Build stronger relationships with your customers with our custom CRM tools.',
+        ctaText: 'View CRM',
+        ctaLink: '/projects?category=crm',
+        bgColor: 'linear-gradient(135deg, #e3f2fd 0%, #e1f5fe 100%)',
+        order: 2,
+        isActive: true,
+    },
+    {
+        id: 3,
+        title: 'Bespoke E-commerce Engines',
+        subtitle: 'High-performance online stores designed to convert and scale effortlessly.',
+        ctaText: 'Shop E-commerce',
+        ctaLink: '/projects?category=ecommerce',
+        bgColor: 'linear-gradient(135deg, #ede7f6 0%, #f3e5f5 100%)',
+        order: 3,
+        isActive: true,
+    }
+];
+
 function CarouselSlideItem({ slide, active }: { slide: CarouselSlide; active: boolean }) {
     return (
         <div
@@ -54,7 +87,9 @@ function CarouselSlideItem({ slide, active }: { slide: CarouselSlide; active: bo
 
 export default function HeroCarousel() {
     const { slides } = useAppSelector(s => s.carousel);
-    const activeSlides = slides.filter(s => s.isActive).sort((a, b) => a.order - b.order);
+    const activeSlides = (slides.length > 0 ? slides : DEFAULT_SLIDES)
+        .filter(s => s.isActive)
+        .sort((a, b) => a.order - b.order);
     const [current, setCurrent] = useState(0);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 

@@ -325,6 +325,7 @@ export default function ProjectDetailPage() {
             discount: project.discount,
             icon: project.icon,
             slug: project.slug,
+            tier: 'Base Product',
         }));
         toast.success(`🛒 ${project.title} added to cart — ${discountedPrice}`, {
             style: { background: '#22c55e', color: '#fff', fontWeight: 700 },

@@ -92,7 +92,7 @@ export default function AdminDashboard() {
                                                 <td>{o.client_name}</td>
                                                 <td>
                                                     <div>{o.product}</div>
-                                                    <div style={{ fontSize: '0.75rem', color: '#697586' }}>Tier: <strong style={{ color: '#121926' }}>{o.tier}</strong></div>
+                                                    <div style={{ marginTop: 4 }}><span className={`berry-badge ${o.tier === 'Base Product' ? 'secondary' : 'info'}`} style={{ fontSize: '0.65rem', padding: '2px 8px' }}>{o.tier}</span></div>
                                                 </td>
                                                 <td>
                                                     <span className={`berry-badge ${o.status === 'In Progress' || o.status === 'Completed' ? 'success' : o.status === 'Cancelled' ? 'error' : 'warning'}`}>

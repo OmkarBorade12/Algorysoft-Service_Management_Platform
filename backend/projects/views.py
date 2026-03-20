@@ -1,3 +1,6 @@
+"""
+Views for the projects app. These views handle API requests.
+"""
 from rest_framework import viewsets
 from .models import Category, Project, CustomRequest, Order, Feature
 from .serializers import (

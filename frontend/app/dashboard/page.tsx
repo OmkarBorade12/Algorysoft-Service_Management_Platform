@@ -173,7 +173,7 @@ export default function ClientDashboardPage() {
                                                 {displayOrders.slice(0, 3).map(o => (
                                                     <tr key={o.id} style={{ cursor: 'pointer' }} onClick={() => { setActiveTab('orders'); setSelectedOrderId(o.id); }}>
                                                         <td style={{ fontWeight: 600, color: '#121926' }}>{o.product} <span style={{ fontSize: '0.75rem', color: '#697586', marginLeft: 8 }}>({o.tier})</span></td>
-                                                        <td><span className={`berry-badge ${o.status === 'Completed' ? 'success' : o.status === 'In Progress' ? 'warning' : 'info'}`}>{o.status}</span></td>
+                                                        <td><span className={`berry-badge ${o.status === 'Completed' || o.status === 'Paid' ? 'success' : o.status === 'In Progress' ? 'warning' : 'info'}`}>{o.status}</span></td>
                                                         <td>
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                                                 <div style={{ flex: 1, height: 6, background: '#e3e8ef', borderRadius: 3, overflow: 'hidden' }}>
@@ -251,7 +251,7 @@ export default function ClientDashboardPage() {
                                                 <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#121926' }}>{o.product}</div>
                                                 <div style={{ fontSize: '0.85rem', color: '#697586', marginTop: 4 }}>Order ID: {o.order_id || `#${o.id}`}</div>
                                             </div>
-                                            <span className={`berry-badge ${o.status === 'Completed' ? 'success' : o.status === 'In Progress' ? 'warning' : 'info'}`}>{o.status}</span>
+                                            <span className={`berry-badge ${o.status === 'Completed' || o.status === 'Paid' ? 'success' : o.status === 'In Progress' ? 'warning' : 'info'}`}>{o.status}</span>
                                         </div>
                                         
                                         <div style={{ marginBottom: 20 }}>

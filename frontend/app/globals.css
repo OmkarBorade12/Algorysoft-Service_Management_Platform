@@ -193,6 +193,7 @@
 .berry-badge.warning { background: var(--berry-warning-light); color: var(--berry-warning-main); }
 .berry-badge.error { background: var(--berry-error-light); color: var(--berry-error-main); }
 .berry-badge.info { background: var(--berry-primary-light); color: var(--berry-primary-main); }
+.berry-badge.secondary { background: var(--berry-secondary-light); color: var(--berry-secondary-dark); }
 
 .berry-table-container { overflow-x: auto; width: 100%; }
 .berry-table { width: 100%; border-collapse: collapse; min-width: 600px; }

@@ -1,0 +1,10 @@
+[tool.pyright]
+include = ["."]
+extraPaths = ["venv/Lib/site-packages"]
+typeCheckingMode = "off"
+
+[tool.pylint.master]
+ignore = ["venv"]
+
+[tool.pylint.BASIC]
+good-names = ["id", "qs", "pk"]

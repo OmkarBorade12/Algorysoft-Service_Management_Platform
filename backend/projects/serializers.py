@@ -1,3 +1,6 @@
+"""
+Serializers for the projects app models.
+"""
 from rest_framework import serializers
 from .models import Category, Project, CustomRequest, Order, Feature
 

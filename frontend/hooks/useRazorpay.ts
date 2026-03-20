@@ -10,6 +10,7 @@ interface RazorpayOptions {
     description?: string;
     onSuccess: (paymentId: string, orderId: string, signature: string) => void;
     onFailure: (error: string) => void;
+    dbOrderIds?: number[]; // Added internal IDs
 }
 
 // Load Razorpay script dynamically
@@ -64,6 +65,7 @@ export function useRazorpay() {
             return;
         }
 
+
         // Step 3: Open the Razorpay checkout modal
         const razorpayOptions = {
             key: orderData.keyId,
@@ -107,6 +109,7 @@ export function useRazorpay() {
                                 phone: opts.phone,
                                 amount: opts.amount,
                             },
+                            dbOrderIds: opts.dbOrderIds,
                         }),
                     });
 

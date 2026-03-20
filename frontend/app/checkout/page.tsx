@@ -160,6 +160,36 @@ export default function CheckoutPage() {
         if (!validateForm()) return;
 
         setProcessingStage('creating');
+ 
+        // ── STEP 1: Create Orders as 'Pending' in Backend FIRST ──
+        const dbOrderIds: number[] = [];
+        for (const item of items) {
+            try {
+                const pendingOrder = await dispatch(addOrderThunk({
+                    order_id: `ORD-${Math.floor(100000 + Math.random() * 900000)}`,
+                    client_name: form.name,
+                    client_email: form.email,
+                    product: item.title,
+                    tier: (item as any).tier || 'Base Product',
+                    amount: item.price,
+                    status: 'Pending',
+                    progress: 0,
+                    chat: [{
+                        sender: 'admin',
+                        text: `Order created. Awaiting payment...`,
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    }],
+                })).unwrap();
+                dbOrderIds.push(pendingOrder.id as number);
+            } catch (err) {
+                console.error('Initial order creation failed:', err);
+            }
+        }
+ 
+        if (dbOrderIds.length === 0) {
+            setProcessingStage(null);
+            return toast.error('Failed to initialize order. Please try again.');
+        }
 
         await initiatePayment({
             amount: totalPrice,
@@ -168,32 +198,9 @@ export default function CheckoutPage() {
             email: form.email,
             phone: form.phone,
             description: `AlgorySoft — ${items.map(i => i.title).join(', ')}`,
+            dbOrderIds, 
             onSuccess: async (paymentId, orderId, signature) => {
                 setProcessingStage(null);
-
-                // Record each item as an order in Redux & Backend
-                for (const item of items) {
-                    try {
-                        await dispatch(addOrderThunk({
-                            order_id: `ORD-${Date.now().toString().slice(-6)}`,
-                            client_name: form.name,
-                            client_email: form.email,
-                            product: item.title,
-                            tier: (item as any).tier || 'Basic',
-                            amount: item.price,
-                            status: 'Pending',
-                            progress: 0,
-                            chat: [{
-                                sender: 'admin',
-                                text: `Welcome! Your payment (${paymentId}) was successful. Let's get started with ${item.title}!`,
-                                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                            }],
-                        })).unwrap();
-                    } catch (err) {
-                        console.error('Failed to save order:', err);
-                    }
-                }
-
                 setSuccessData({ paymentId, amount: totalPrice });
                 toast.success('🎉 Payment verified! Order confirmed.', { duration: 5000, style: { background: '#22c55e', color: 'white', fontWeight: 700 } });
                 dispatch(clearCart());

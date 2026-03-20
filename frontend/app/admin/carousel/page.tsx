@@ -61,7 +61,7 @@ export default function AdminCarouselPage() {
 
             {/* Slides List */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {slides.sort((a, b) => a.order - b.order).map(slide => (
+                {[...slides].sort((a, b) => a.order - b.order).map(slide => (
                     <div key={slide.id} style={{ border: '1px solid #e3e8ef', borderRadius: 12, overflow: 'hidden', background: '#ffffff', display: 'flex' }}>
                         <div style={{ padding: 24, flex: 1 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

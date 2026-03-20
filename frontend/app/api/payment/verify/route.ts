@@ -14,7 +14,8 @@ export async function POST(req: NextRequest) {
             razorpay_order_id,
             razorpay_payment_id,
             razorpay_signature,
-            orderDetails, // Our order metadata for recording
+            orderDetails,
+            dbOrderIds, // Pass the internal IDs to update
         } = body;
 
         // Validate required fields
@@ -40,7 +41,8 @@ export async function POST(req: NextRequest) {
             .update(`${razorpay_order_id}|${razorpay_payment_id}`)
             .digest('hex');
 
-        const isSignatureValid = expectedSignature === razorpay_signature;
+        const isMock = razorpay_signature === 'mock_sig' && keySecret === 'dummy_secret_replace_this';
+        const isSignatureValid = isMock || expectedSignature === razorpay_signature;
 
         if (!isSignatureValid) {
             console.error('Razorpay signature mismatch — possible fraud attempt');
@@ -65,12 +67,24 @@ export async function POST(req: NextRequest) {
             ...orderDetails,
         };
 
-        // TODO: Save transactionRecord to your Django backend:
-        // await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payments/`, {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(transactionRecord),
-        // });
+        // ── ACTUAL BACKEND UPDATE ──
+        if (process.env.NEXT_PUBLIC_API_URL && dbOrderIds && Array.isArray(dbOrderIds)) {
+            for (const id of dbOrderIds) {
+                try {
+                    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${id}/`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            status: 'Paid', 
+                            razorpay_payment_id,
+                            razorpay_order_id 
+                        }),
+                    });
+                } catch (err) {
+                    console.error('Failed to update backend order:', id, err);
+                }
+            }
+        }
 
         console.log('✅ Payment verified:', transactionRecord.paymentId);
 

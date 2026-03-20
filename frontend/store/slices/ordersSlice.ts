@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import api from '@/lib/axios';
 
-export type OrderStatus = 'Pending' | 'In Progress' | 'Completed' | 'Cancelled';
+export type OrderStatus = 'Pending' | 'Paid' | 'In Progress' | 'Completed' | 'Cancelled';
 
 export interface OrderMessage {
     sender: 'admin' | 'client';
@@ -19,6 +19,8 @@ export interface OrderItem {
     amount: number;
     status: OrderStatus;
     progress: number;
+    razorpay_order_id?: string;
+    razorpay_payment_id?: string;
     date: string;
     chat: OrderMessage[];
 }

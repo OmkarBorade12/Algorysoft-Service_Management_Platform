@@ -140,6 +140,7 @@ export default function AdminOrdersPage() {
                         <select className="berry-input" style={{ width: 'auto', minWidth: 220 }} value={filter} onChange={e => {setFilter(e.target.value as any); setCurrentPage(1);}}>
                             <option value="All">All Categories</option>
                             <option value="Pending">Pending</option>
+                            <option value="Paid">Paid</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Completed">Completed</option>
                             <option value="Cancelled">Cancelled</option>
@@ -167,8 +168,9 @@ export default function AdminOrdersPage() {
                                     <td>
                                         <div style={{ fontWeight: 600, color: '#121926' }}>{o.client_name}</div>
                                         <div style={{ fontSize: '0.75rem', color: '#697586' }}>{o.client_email}</div>
+                                        {o.razorpay_payment_id && <div style={{ fontSize: '0.65rem', color: '#10b981', marginTop: 4 }}>TXN: {o.razorpay_payment_id}</div>}
                                     </td>
-                                    <td style={{ fontSize: '0.85rem', maxWidth: 220 }}>{o.product} <br/> <span className="berry-badge info" style={{ fontSize: '0.7rem' }}>{o.tier}</span></td>
+                                    <td style={{ fontSize: '0.85rem', maxWidth: 220 }}>{o.product} <br/> <span className={`berry-badge ${o.tier === 'Base Product' ? 'secondary' : 'info'}`} style={{ fontSize: '0.7rem' }}>{o.tier}</span></td>
                                     <td style={{ fontWeight: 700 }}>
                                         {o.tier === 'Custom Request' ? (
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -198,6 +200,7 @@ export default function AdminOrdersPage() {
                                         <select value={o.status} onChange={e => updateStatus(o.id, e.target.value as OrderStatus)}
                                             style={{ padding: '6px 12px', borderRadius: 8, fontSize: '0.8rem', fontWeight: 600, border: '1px solid #e3e8ef', background: '#f8fafc', outline: 'none', cursor: 'pointer' }}>
                                             <option value="Pending">Pending</option>
+                                            <option value="Paid">Paid</option>
                                             <option value="In Progress">In Progress</option>
                                             <option value="Completed">Completed</option>
                                             <option value="Cancelled">Cancelled</option>
@@ -272,6 +275,7 @@ export default function AdminOrdersPage() {
                                 className="berry-input"
                             >
                                 <option value="Pending">Pending</option>
+                                <option value="Paid">Paid</option>
                                 <option value="In Progress">In Progress</option>
                                 <option value="Completed">Completed</option>
                                 <option value="Cancelled">Cancelled</option>

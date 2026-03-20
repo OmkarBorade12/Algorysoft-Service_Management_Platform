@@ -1,3 +1,6 @@
+"""
+Models for the projects app. Optimized database schema.
+"""
 from django.db import models
 
 class Category(models.Model):
@@ -53,6 +56,8 @@ class Order(models.Model):
     status = models.CharField(max_length=50, default='Pending')
     progress = models.IntegerField(default=0)
     date = models.DateTimeField(auto_now_add=True)
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
     chat = models.JSONField(default=list, blank=True)
 
     def __str__(self):

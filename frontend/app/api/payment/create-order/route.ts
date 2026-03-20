@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
         const { amount, currency = 'INR', receipt, notes } = body;
 
         // Validate input
-        if (!amount || typeof amount !== 'number' || amount < 100) {
+        if (!amount || typeof amount !== 'number' || amount < 1) {
             return NextResponse.json(
-                { error: 'Invalid amount. Minimum ₹1 (100 paise).' },
+                { error: 'Invalid amount. Minimum ₹1' },
                 { status: 400 }
             );
         }
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
         // Create Razorpay order via REST API (avoids SDK import issues in Next.js edge)
         const orderPayload = {
-            amount: Math.round(amount), // amount in paise
+            amount: Math.round(amount * 100), // amount in paise (Rupees * 100)
             currency,
             receipt: receipt || `rcpt_${Date.now()}`,
             notes: notes || {},
