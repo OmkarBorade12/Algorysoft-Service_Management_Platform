@@ -49,18 +49,25 @@ export default function Header() {
         return () => document.removeEventListener('mousedown', handleClick);
     }, []);
 
+    const handleLogout = () => {
+        dispatch(logout()); 
+        dispatch(setCartUser('guest'));
+        dispatch(setWishlistUser('guest'));
+        setUserMenuOpen(false);
+    };
+
     return (
         <>
             {/* Top Bar */}
             <div className={styles.topBar}>
                 <div className={`container ${styles.topBarInner}`}>
                     <div className={styles.topBarLeft}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><FiClock size={13} /> {`Mon–Sat: 9:30 AM – 6:30 PM`}</span>
+                        <span className={styles.topBarItem}><FiClock size={13} /> {`Mon–Sat: 9:30 AM – 6:30 PM`}</span>
                         <span className={styles.topBarSep}>|</span>
-                        <a href={`tel:${PHONE}`} className={styles.phoneLink} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><FiPhone size={13} /> {PHONE}</a>
+                        <a href={`tel:${PHONE}`} className={`${styles.phoneLink} ${styles.topBarItem}`}><FiPhone size={13} /> {PHONE}</a>
                     </div>
                     <div className={styles.topBarRight}>
-                        <a href={`https://wa.me/917899533525`} target="_blank" rel="noreferrer" className={styles.waBtn} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <a href={`https://wa.me/917899533525`} target="_blank" rel="noreferrer" className={styles.waBtn}>
                             <FiMessageCircle size={14} /> WhatsApp Us
                         </a>
                     </div>
@@ -135,13 +142,13 @@ export default function Header() {
                         {/* Currency */}
                         <CurrencyToggle />
 
-                        {/* Search */}
-                        <button className={styles.iconBtn} onClick={() => dispatch(toggleSearch())} aria-label="Search">
+                        {/* Search (Hide on small mobile, show in sidebar) */}
+                        <button className={`${styles.iconBtn} ${styles.hideMobile}`} onClick={() => dispatch(toggleSearch())} aria-label="Search">
                             <FiSearch size={18} />
                         </button>
 
-                        {/* Wishlist */}
-                        <button className={styles.iconBtn} onClick={() => dispatch(toggleWishlist())} style={{ position: 'relative' }} aria-label="Wishlist">
+                        {/* Wishlist (Hide on small mobile, show in sidebar) */}
+                        <button className={`${styles.iconBtn} ${styles.hideMobile}`} onClick={() => dispatch(toggleWishlist())} style={{ position: 'relative' }} aria-label="Wishlist">
                             <FiHeart size={18} />
                             {wishlistItems.length > 0 && (
                                 <span className="cart-badge">{wishlistItems.length}</span>
@@ -165,26 +172,21 @@ export default function Header() {
                                 </button>
                                 {userMenuOpen && (
                                     <div className={`dropdown-menu ${styles.userMenu}`} style={{ right: 0, left: 'auto', minWidth: 180 }}>
-                                        {user?.role !== 'admin' && (
+                                        {(user?.role as string) !== 'admin' && (
                                             <>
-                                                <Link href="/dashboard" className="dropdown-item" onClick={() => setUserMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'linear-gradient(90deg,#ede7f6,#f3e5f5)', color: '#5e35b1', fontWeight: 700, borderRadius: 8, marginBottom: 4 }}>
+                                                <Link href={(user?.role as string) === 'admin' ? "/admin" : "/dashboard"} className="dropdown-item" onClick={() => setUserMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'linear-gradient(90deg,#ede7f6,#f3e5f5)', color: '#5e35b1', fontWeight: 700, borderRadius: 8, marginBottom: 4 }}>
                                                     <FiGrid size={15} /> My Dashboard
                                                 </Link>
                                                 <Link href="/orders" className="dropdown-item" onClick={() => setUserMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FiPackage size={15} /> My Orders</Link>
                                             </>
                                         )}
                                         <Link href="/profile" className="dropdown-item" onClick={() => setUserMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FiUser size={15} /> Profile</Link>
-                                        {user?.role === 'admin' && (
+                                        {(user?.role as string) === 'admin' && (
                                             <Link href="/admin" className="dropdown-item" style={{ color: 'var(--pista-dark)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }} onClick={() => setUserMenuOpen(false)}><FiKey size={15} /> Admin Panel</Link>
                                         )}
                                         <div className="divider" style={{ margin: '4px 0' }} />
                                         <button className="dropdown-item" style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '8px' }}
-                                            onClick={() => { 
-                                                dispatch(logout()); 
-                                                dispatch(setCartUser('guest'));
-                                                dispatch(setWishlistUser('guest'));
-                                                setUserMenuOpen(false); 
-                                            }}>
+                                            onClick={handleLogout}>
                                             <FiLogOut size={15} /> Logout
                                         </button>
                                     </div>
@@ -204,26 +206,101 @@ export default function Header() {
                     </div>
                 </div>
 
-                {/* Mobile Nav */}
-                {mobileMenuOpen && (
-                    <div className={styles.mobileNav}>
-                        <Link href="/" className={styles.mobileNavLink} onClick={() => dispatch(closeModals())} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FiHome size={16} /> Home</Link>
-                        <Link href="/projects" className={styles.mobileNavLink} onClick={() => dispatch(closeModals())} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FiFolder size={16} /> Projects</Link>
-                        <Link href="/about" className={styles.mobileNavLink} onClick={() => dispatch(closeModals())} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FiInfo size={16} /> About</Link>
-                        <Link href="/contact" className={styles.mobileNavLink} onClick={() => dispatch(closeModals())} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FiPhone size={16} /> Contact</Link>
-                        {isAuthenticated && user?.role !== 'admin' && (
-                            <Link href="/dashboard" className={styles.mobileNavLink} onClick={() => dispatch(closeModals())} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'linear-gradient(90deg,#ede7f6,#f3e5f5)', color: '#5e35b1', fontWeight: 700, borderRadius: 8, padding: '10px 14px' }}>
-                                <FiGrid size={16} /> My Dashboard
-                            </Link>
-                        )}
-                        {!isAuthenticated && (
-                            <div className={styles.mobileAuthBtns}>
-                                <button className="btn-secondary" onClick={() => { dispatch(openLogin()); dispatch(closeModals()); }}>Login</button>
-                                <button className="btn-primary" onClick={() => { dispatch(openRegister()); dispatch(closeModals()); }}>Register</button>
+                {/* Mobile Sidebar Drawer moved outside header stacking context */}
+                <div className={`${styles.sidebarOverlay} ${mobileMenuOpen ? styles.show : ''}`} onClick={() => dispatch(toggleMobileMenu())} />
+                <div className={`${styles.mobileSidebar} ${mobileMenuOpen ? styles.show : ''}`}>
+                    <div className={styles.sidebarHeader}>
+                        <Link href="/" className={styles.logo} onClick={() => dispatch(toggleMobileMenu())}>
+                            <Image src="/logo.jpeg" alt="AlgorySoft" width={38} height={38} className={styles.logoImg} />
+                            <span className={styles.logoText} style={{ display: 'block' }}>AlgorySoft</span>
+                        </Link>
+                        <button className={styles.sidebarClose} onClick={() => dispatch(toggleMobileMenu())} aria-label="Close Menu">
+                            <FiX size={24} />
+                        </button>
+                    </div>
+                    
+                    <div className={styles.sidebarContent}>
+                        <div className={styles.sidebarSection}>
+                             <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                                <button className={styles.sidebarAction} onClick={() => { dispatch(toggleSearch()); dispatch(toggleMobileMenu()); }}>
+                                    <FiSearch size={18} /> Search
+                                </button>
+                                <button className={styles.sidebarAction} onClick={() => { dispatch(toggleWishlist()); dispatch(toggleMobileMenu()); }}>
+                                    <FiHeart size={18} /> Wishlist
+                                </button>
+                             </div>
+                        </div>
+                        
+                        <div className={styles.sidebarSection}>
+                            <h4 className={styles.sidebarSecTitle}>Navigation</h4>
+                            <Link href="/" className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())}><FiHome size={18} /> Home</Link>
+                            <Link href="/projects" className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())}><FiFolder size={18} /> All Projects</Link>
+                            <Link href="/about" className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())}><FiInfo size={18} /> About Us</Link>
+                            <Link href="/contact" className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())}><FiPhone size={18} /> Contact</Link>
+                        </div>
+
+                        <div className={styles.sidebarSection}>
+                            <h4 className={styles.sidebarSecTitle}>Categories</h4>
+                            <div className={styles.sidebarCatGrid}>
+                                {categories.slice(0, 6).map((cat) => (
+                                    <Link
+                                        key={cat.id}
+                                        href={`/projects?category=${cat.slug}`}
+                                        className={styles.sidebarCatItem}
+                                        onClick={() => dispatch(toggleMobileMenu())}
+                                    >
+                                        <span className={styles.sidebarCatIcon}>{renderCategoryIcon(cat, 18)}</span>
+                                        <span className={styles.sidebarCatLabel}>{cat.name}</span>
+                                    </Link>
+                                ))}
+                                <Link href="/projects" className={styles.sidebarCatItem} onClick={() => dispatch(toggleMobileMenu())} style={{ background: 'var(--pista-xlight)', color: 'var(--pista-dark)', gridColumn: 'span 2', justifyContent: 'center' }}>
+                                    View All Categories →
+                                </Link>
+                            </div>
+                        </div>
+
+                        {isAuthenticated ? (
+                             <div className={styles.sidebarAccount}>
+                                <div className={styles.sidebarUser}>
+                                     <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--pista-primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
+                                        {user?.name?.charAt(0).toUpperCase()}
+                                     </div>
+                                     <div style={{ minWidth: 0 }}>
+                                        <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--pista-dark)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.name}</div>
+                                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{(user?.role as string) === 'admin' ? 'Administrator' : 'Client Account'}</div>
+                                     </div>
+                                </div>
+                                <Link href={(user?.role as string) === 'admin' ? "/admin" : "/dashboard"} className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())} style={{ background: 'linear-gradient(90deg,#ede7f6,#f3e5f5)', color: '#5e35b1', fontWeight: 700, borderRadius: 12 }}>
+                                    <FiGrid size={18} /> My Dashboard
+                                </Link>
+                                <button className={styles.mobileNavLink} style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}
+                                    onClick={() => { 
+                                        handleLogout();
+                                        dispatch(toggleMobileMenu());
+                                    }}>
+                                    <FiLogOut size={18} /> Logout
+                                </button>
+                             </div>
+                        ) : (
+                            <div className={styles.sidebarSection}>
+                                <h4 className={styles.sidebarSecTitle}>Get Started</h4>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    <button className="btn-primary" style={{ width: '100%', padding: '14px' }} onClick={() => { dispatch(openLogin()); dispatch(toggleMobileMenu()); }}>Login</button>
+                                    <button className="btn-secondary" style={{ width: '100%', padding: '14px' }} onClick={() => { dispatch(openRegister()); dispatch(toggleMobileMenu()); }}>Create Account</button>
+                                </div>
                             </div>
                         )}
                     </div>
-                )}
+
+                    <div className={styles.sidebarFooter}>
+                        <div className={styles.sidebarFooterItem}>
+                            <FiPhone size={14} /> {PHONE}
+                        </div>
+                        <a href="https://wa.me/917899533525" target="_blank" rel="noreferrer" className={styles.waBtn} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>
+                            <FiMessageCircle size={15} /> WhatsApp Support
+                        </a>
+                    </div>
+                </div>
             </header>
 
             {/* Sidebars & Modals */}

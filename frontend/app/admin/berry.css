@@ -120,7 +120,7 @@
 .berry-topbar {
   background-color: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
-  padding: 12px 32px;
+  padding: 12px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -310,7 +310,7 @@
   }
 
   .berry-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px;
   }
 
@@ -347,6 +347,10 @@
     padding: 16px;
     min-height: 110px;
   }
+  
+  .berry-stat-value {
+    font-size: 1.4rem;
+  }
 
   /* Tables scroll horizontally on mobile */
   .berry-table-container {
@@ -360,8 +364,7 @@
   }
 
   .berry-search {
-    width: 160px;
-    padding: 8px 12px;
+    display: none !important; /* Hide search in topbar on mobile, put elsewhere if needed */
   }
 
   /* Modals/sidebars fill full screen */
@@ -383,10 +386,74 @@
 
   .berry-title {
     font-size: 1rem;
-  }
-
-  .berry-search {
-    width: 130px;
-    font-size: 0.8rem;
+    flex-direction: column;
+    align-items: flex-start !important;
   }
 }
+
+/* Helper for responsive grids in admin */
+.berry-responsive-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 24px;
+}
+
+.berry-form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.berry-form-grid-3 {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 1100px) {
+    .berry-responsive-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .berry-responsive-grid > div:last-child {
+        border-left: none !important;
+        border-top: 1px solid var(--berry-grey-200);
+    }
+}
+
+@media (max-width: 768px) {
+    .berry-form-grid-2,
+    .berry-form-grid-3 {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+.berry-modal-sidebar {
+    min-width: 320px;
+}
+
+@media (max-width: 900px) {
+    .berry-modal-container {
+        flex-direction: column !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        border-radius: 0 !important;
+        overflow-y: auto !important;
+    }
+    
+    .berry-modal-sidebar {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--berry-grey-200);
+        min-height: auto !important;
+    }
+    
+    .berry-modal-main {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 500px !important;
+    }
+}
+

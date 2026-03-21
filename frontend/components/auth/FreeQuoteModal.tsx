@@ -65,7 +65,7 @@ export default function FreeQuoteModal() {
                 </div>
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div className="requirement-form-grid">
                         <div className="form-group">
                             <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiUser size={14}/> Name</label>
                             <input type="text" className="form-input" value={form.client} onChange={e => setForm({...form, client: e.target.value})} required />
@@ -76,7 +76,7 @@ export default function FreeQuoteModal() {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div className="requirement-form-grid">
                         <div className="form-group">
                             <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiPhone size={14}/> Phone</label>
                             <input type="tel" className="form-input" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} placeholder="+91..." />
@@ -125,7 +125,7 @@ export default function FreeQuoteModal() {
                         />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div className="requirement-form-grid">
                         <div className="form-group">
                             <label className="form-label">Timeline</label>
                             <select className="form-input" value={form.timeline} onChange={e => setForm({...form, timeline: e.target.value})}>

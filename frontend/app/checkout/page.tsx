@@ -248,15 +248,15 @@ export default function CheckoutPage() {
                 <div className="container">
 
                     {/* Hero heading */}
-                    <div style={{ marginBottom: 40, display: 'flex', alignItems: 'center', gap: 16 }}>
-                        <div style={{ width: 50, height: 50, background: 'var(--gradient-accent)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', boxShadow: '0 8px 20px rgba(109,176,58,0.3)' }}>🔒</div>
-                        <div>
-                            <h1 style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>Secure Checkout</h1>
+                    <div style={{ marginBottom: 40, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                        <div style={{ width: 50, height: 50, background: 'var(--gradient-accent)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', boxShadow: '0 8px 20px rgba(109,176,58,0.3)', flexShrink: 0 }}>🔒</div>
+                        <div style={{ minWidth: 250 }}>
+                            <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>Secure Checkout</h1>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: 0 }}>Powered by Razorpay · PCI-DSS Compliant · SSL Encrypted</p>
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.25fr) minmax(0, 1fr)', gap: 32, alignItems: 'flex-start' }}>
+                    <div className="checkout-grid">
 
                         {/* ─── LEFT: Forms ─── */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -266,7 +266,7 @@ export default function CheckoutPage() {
                                 <h2 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: 24, display: 'flex', alignItems: 'center', gap: 10, color: 'var(--text-primary)' }}>
                                     <StepBadge num={1} /> Billing Details
                                 </h2>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                                <div className="checkout-form-grid">
                                     <InputField label="Full Name *" placeholder="John Doe" value={form.name} onChange={setField('name')} validate={validators.name} icon="👤" />
                                     <InputField label="Phone Number *" placeholder="9876543210" value={form.phone} onChange={setField('phone')} validate={validators.phone} icon="📱" />
                                 </div>
@@ -276,7 +276,7 @@ export default function CheckoutPage() {
                                 <div style={{ marginBottom: 16 }}>
                                     <InputField label="Full Address *" placeholder="Flat 201, MG Road, Bengaluru" value={form.address} onChange={setField('address')} validate={validators.address} icon="🏠" />
                                 </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
+                                <div className="responsive-3-col">
                                     <InputField label="City *" placeholder="Bengaluru" value={form.city} onChange={setField('city')} />
                                     <InputField label="State *" placeholder="Karnataka" value={form.state} onChange={setField('state')} />
                                     <InputField label="Pincode *" placeholder="560001" value={form.pincode} onChange={setField('pincode')} validate={validators.pincode} />
@@ -320,7 +320,7 @@ export default function CheckoutPage() {
                                 </div>
 
                                 {/* Trust indicators */}
-                                <div style={{ display: 'flex', gap: 10 }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: 10 }}>
                                     <TrustBadge icon="🔒" label="256-bit SSL" />
                                     <TrustBadge icon="✅" label="PCI Compliant" />
                                     <TrustBadge icon="🛡️" label="Secure Gateway" />
@@ -332,19 +332,19 @@ export default function CheckoutPage() {
                             <button
                                 onClick={handlePayment}
                                 style={{
-                                    width: '100%', height: 66, fontSize: '1.2rem', fontWeight: 900,
+                                    width: '100%', minHeight: 66, fontSize: '1.2rem', fontWeight: 900,
                                     background: 'linear-gradient(135deg, #6db03a, #4caf50)',
                                     color: 'white', border: 'none', borderRadius: 20, cursor: 'pointer',
                                     boxShadow: '0 12px 32px rgba(109,176,58,0.4)',
                                     transition: 'all 0.25s ease',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
-                                    letterSpacing: '0.01em',
+                                    letterSpacing: '0.01em', padding: '16px'
                                 }}
                                 onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 18px 40px rgba(109,176,58,0.5)'; }}
                                 onMouseOut={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(109,176,58,0.4)'; }}
                             >
                                 <span style={{ fontSize: '1.4rem' }}>🔐</span>
-                                Pay ₹{grandTotal.toLocaleString('en-IN')} via Razorpay
+                                <span style={{ textAlign: 'left' }}>Pay ₹{grandTotal.toLocaleString('en-IN')} via Razorpay</span>
                                 <span style={{ fontSize: '1.2rem' }}>→</span>
                             </button>
 

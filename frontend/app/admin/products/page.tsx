@@ -263,7 +263,7 @@ export default function AdminProductsPage() {
                                 <h3>{editProject ? 'Edit Project' : 'Add New Project'}</h3>
                                 <button onClick={() => setShowForm(false)} className="close-btn"><FiX /></button>
                             </div>
-                            <div className="grid-2">
+                            <div className="berry-form-grid-2">
                                 <div className="field-group">
                                     <label className="input-label">Project Title</label>
                                     <input className="berry-input" placeholder="e.g. Finance App Dashboard" value={form.title || ''} onChange={e => setForm({...form, title: e.target.value})} />
@@ -324,7 +324,7 @@ export default function AdminProductsPage() {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
+                            <div className="berry-form-grid-3">
                                 <div className="field-group">
                                     <label className="input-label">Price (₹)</label>
                                     <input type="number" className="berry-input" value={form.price || ''} onChange={e => setForm({...form, price: Number(e.target.value)})} />
@@ -482,7 +482,6 @@ export default function AdminProductsPage() {
                 .close-btn { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; color: #64748b; }
                 .input-label { display: block; font-size: 0.85rem; font-weight: 600; color: #364152; margin-bottom: 8px; }
                 .field-group { margin-bottom: 20px; }
-                .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
                 .modal-footer { display: flex; gap: 16px; margin-top: 32px; }
                 
                 .icon-dropdown-box { position: relative; }

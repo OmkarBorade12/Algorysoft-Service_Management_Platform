@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from '@/hooks/useRedux';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { FiExternalLink, FiGlobe, FiArrowLeft, FiMessageSquare, FiSettings, FiShoppingCart, FiLayout } from 'react-icons/fi';
+import { FiExternalLink, FiGlobe, FiArrowLeft, FiMessageSquare, FiSettings, FiShoppingCart, FiLayout, FiX, FiMenu } from 'react-icons/fi';
 import { fetchOrders, addOrderMessageThunk } from '@/store/slices/ordersSlice';
 import '../admin/berry.css';
 
@@ -13,11 +13,26 @@ export default function ClientDashboardPage() {
     const invoices = useAppSelector(s => (s as any).invoices?.items || []);
     const dispatch = useAppDispatch();
     const router = useRouter();
-    
-    const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'invoices' | 'profile'>('dashboard');
-    const [selectedOrderId, setSelectedOrderId] = useState<string | number | null>(null);
+
+    const [mounted, setMounted] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [activeTab, setActiveTab] = useState('dashboard');
+    const [selectedOrderId, setSelectedOrderId] = useState<any>(null);
     const [chatMsg, setChatMsg] = useState('');
     const chatRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setMounted(true);
+        const check = () => setIsMobile(window.innerWidth <= 960);
+        check();
+        window.addEventListener('resize', check);
+        return () => window.removeEventListener('resize', check);
+    }, []);
+
+    useEffect(() => {
+        if (mounted) setSidebarOpen(!isMobile);
+    }, [isMobile, mounted]);
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -26,6 +41,11 @@ export default function ClientDashboardPage() {
             dispatch(fetchOrders());
         }
     }, [isAuthenticated, router, dispatch]);
+
+    // Close sidebar on tab change on mobile
+    useEffect(() => {
+        if (isMobile) setSidebarOpen(false);
+    }, [activeTab, isMobile]);
 
     const activeOrder = orders.find(o => o.id == selectedOrderId);
 
@@ -41,10 +61,10 @@ export default function ClientDashboardPage() {
 
     const handleSendMsg = async () => {
         if (!chatMsg.trim() || !activeOrder) return;
-        const newMsg = { 
-            sender: 'client' as const, 
-            text: chatMsg, 
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+        const newMsg = {
+            sender: 'client' as const,
+            text: chatMsg,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         try {
             await dispatch(addOrderMessageThunk({ id: activeOrder.id, message: newMsg, chat: activeOrder.chat })).unwrap();
@@ -54,15 +74,30 @@ export default function ClientDashboardPage() {
         }
     };
 
-    if (!isAuthenticated || !user) return null;
+    if (!mounted || !isAuthenticated || !user) return null;
 
     return (
         <div className="berry-admin-layout" style={{ minHeight: '100vh', background: '#eef2f6' }}>
+            {/* Mobile backdrop */}
+            {isMobile && sidebarOpen && (
+                <div
+                    className="berry-sidebar-backdrop visible"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
             {/* Sidebar overlay styled for client */}
-            <aside className="berry-sidebar" style={{ width: '260px' }}>
+            <aside className={`berry-sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
                 <div className="berry-logo">
                     <span style={{ fontSize: '1.8rem' }}>⚛️</span>
                     <span>Client Portal</span>
+                    {isMobile && (
+                        <button
+                            onClick={() => setSidebarOpen(false)}
+                            style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}
+                        >
+                            <FiX size={20} />
+                        </button>
+                    )}
                 </div>
 
                 <div style={{ padding: '0 24px', marginBottom: 24 }}>
@@ -93,11 +128,11 @@ export default function ClientDashboardPage() {
                 </nav>
 
                 <div style={{ marginTop: 'auto', padding: '24px' }}>
-                    <Link href="/" style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center', 
-                        gap: '10px', 
+                    <Link href="/" style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px',
                         padding: '12px',
                         background: 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)',
                         color: 'white',
@@ -114,10 +149,21 @@ export default function ClientDashboardPage() {
             </aside>
 
             {/* Main Content Area */}
-            <div className="berry-main" style={{ marginLeft: '260px', width: 'calc(100% - 260px)' }}>
+            <div className="berry-main" style={{ marginLeft: (!isMobile && sidebarOpen) ? '260px' : '0' }}>
                 <header className="berry-topbar">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, margin: 0 }}>
+                        <button
+                            onClick={() => setSidebarOpen(prev => !prev)}
+                            style={{
+                                background: '#ede7f6', border: 'none', width: 38, height: 38,
+                                borderRadius: '10px', color: '#5e35b1', cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                flexShrink: 0
+                            }}
+                        >
+                            {sidebarOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+                        </button>
+                        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {activeTab === 'dashboard' && 'Welcome to your Workspace 👋'}
                             {activeTab === 'orders' && !activeOrder && 'My Active Projects'}
                             {activeTab === 'orders' && activeOrder && `Tracking: ${activeOrder.product}`}
@@ -125,7 +171,7 @@ export default function ClientDashboardPage() {
                             {activeTab === 'profile' && 'Account Settings'}
                         </h1>
                         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#697586', textDecoration: 'none', fontSize: '0.8rem', padding: '4px 10px', background: '#f8fafc', borderRadius: 6, border: '1px solid #e3e8ef' }}>
-                           <FiArrowLeft size={12} /> Go back to Website
+                            <FiArrowLeft size={12} /> Go back to Website
                         </Link>
                     </div>
                     <div style={{ color: '#697586', fontSize: '0.9rem' }}>
@@ -253,7 +299,7 @@ export default function ClientDashboardPage() {
                                             </div>
                                             <span className={`berry-badge ${o.status === 'Completed' || o.status === 'Paid' ? 'success' : o.status === 'In Progress' ? 'warning' : 'info'}`}>{o.status}</span>
                                         </div>
-                                        
+
                                         <div style={{ marginBottom: 20 }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: 8, color: '#364152' }}>
                                                 <span>Development Progress</span>
@@ -263,7 +309,7 @@ export default function ClientDashboardPage() {
                                                 <div style={{ width: `${o.progress}%`, height: '100%', background: '#5e35b1', borderRadius: 4 }} />
                                             </div>
                                         </div>
-                                        
+
                                         <button className="berry-btn-outline" style={{ width: '100%' }}>Track & Chat</button>
                                     </div>
                                 ))}
@@ -272,99 +318,79 @@ export default function ClientDashboardPage() {
                     )}
 
                     {activeTab === 'orders' && activeOrder && (
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: 24, height: 'calc(100vh - 120px)' }}>
+                        <div className="berry-modal-container" style={{ flex: 1, maxHeight: 'calc(100vh - 140px)', background: '#fff' }}>
                             {/* Chat Interface */}
-                            <div className="berry-card" style={{ display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden', height: '100%' }}>
-                                <div style={{ padding: '20px', borderBottom: '1px solid #e3e8ef', background: '#f8fafc', display: 'flex', alignItems: 'center', gap: 16 }}>
-                                    <button onClick={() => setSelectedOrderId(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#697586', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, fontSize: '1.2rem' }}>←</button>
-                                    <div>
-                                        <h3 style={{ margin: 0, color: '#121926', fontSize: '1.1rem' }}>{activeOrder.product} Workspace</h3>
-                                        <div style={{ fontSize: '0.8rem', color: '#5e35b1', fontWeight: 600, marginTop: 4 }}>• Admin Online</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
+                                <div style={{ padding: '16px 20px', borderBottom: '1px solid #e3e8ef', background: '#f8fafc', display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <button onClick={() => setSelectedOrderId(null)} className="berry-btn-outline" style={{ width: 32, height: 32, padding: 0, borderRadius: 8 }}>←</button>
+                                    <div style={{ minWidth: 0 }}>
+                                        <h3 style={{ margin: 0, color: '#121926', fontSize: '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{activeOrder.product} Workspace</h3>
+                                        <div style={{ fontSize: '0.75rem', color: '#5e35b1', fontWeight: 600 }}>• Support Online</div>
                                     </div>
                                 </div>
-                                     <div ref={chatRef} style={{ flex: 1, overflowY: 'auto', padding: 24, display: 'flex', flexDirection: 'column', gap: 16, background: '#f8fafc' }}>
+                                <div ref={chatRef} style={{ flex: 1, overflowY: 'auto', padding: 20, display: 'flex', flexDirection: 'column', gap: 12, background: '#f8fafc' }}>
                                     {activeOrder.chat.map((msg, i) => (
-                                        <div key={i} style={{ alignSelf: msg.sender === 'admin' ? 'flex-start' : 'flex-end', maxWidth: '80%' }}>
+                                        <div key={i} style={{ alignSelf: msg.sender === 'admin' ? 'flex-start' : 'flex-end', maxWidth: '85%' }}>
                                             <div style={{
                                                 background: msg.sender === 'admin' ? '#ffffff' : '#5e35b1',
                                                 color: msg.sender === 'admin' ? '#121926' : '#ffffff',
-                                                padding: '12px 16px',
-                                                borderRadius: '16px',
-                                                borderBottomRightRadius: msg.sender !== 'admin' ? 4 : 16,
-                                                borderBottomLeftRadius: msg.sender === 'admin' ? 4 : 16,
-                                                fontSize: '0.95rem',
-                                                boxShadow: msg.sender === 'admin' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
+                                                padding: '10px 14px',
+                                                borderRadius: '14px',
+                                                fontSize: '0.9rem',
                                                 border: msg.sender === 'admin' ? '1px solid #e3e8ef' : 'none'
                                             }}>
                                                 {msg.text}
                                             </div>
-                                            <div style={{ fontSize: '0.75rem', color: '#697586', marginTop: 6, textAlign: msg.sender !== 'admin' ? 'right' : 'left' }}>
+                                            <div style={{ fontSize: '0.7rem', color: '#697586', marginTop: 4, textAlign: msg.sender !== 'admin' ? 'right' : 'left' }}>
                                                 {msg.sender === 'admin' ? 'AlgorySoft Admin' : 'You'} • {msg.time}
                                             </div>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div style={{ padding: 20, borderTop: '1px solid #e3e8ef', background: '#ffffff', display: 'flex', gap: 12 }}>
-                                    <input 
-                                        type="text" 
-                                        className="berry-input" 
-                                        placeholder="Type a message or share requirements..." 
-                                        value={chatMsg} 
-                                        onChange={(e) => setChatMsg(e.target.value)} 
+                                <div style={{ padding: 16, borderTop: '1px solid #e3e8ef', display: 'flex', gap: 10 }}>
+                                    <input
+                                        type="text"
+                                        className="berry-input"
+                                        placeholder="Type a message..."
+                                        value={chatMsg}
+                                        onChange={(e) => setChatMsg(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && handleSendMsg()}
-                                        style={{ flex: 1 }}
+                                        style={{ height: 42 }}
                                     />
-                                    <button className="berry-btn-primary" style={{ padding: '0 24px' }} onClick={handleSendMsg}>Send</button>
+                                    <button className="berry-btn-primary" style={{ padding: '0 16px' }} onClick={handleSendMsg}>Send</button>
                                 </div>
                             </div>
 
                             {/* Tracking Sidebar */}
-                            <div className="berry-card" style={{ height: 'fit-content' }}>
-                                <h3 className="berry-title" style={{ fontSize: '1.1rem', marginBottom: 24 }}>Project Tracking</h3>
-                                
-                                <div style={{ marginBottom: 24, paddingBottom: 24, borderBottom: '1px solid #e3e8ef' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#364152', fontSize: '0.9rem', marginBottom: 8 }}>
-                                        <span style={{ fontWeight: 600 }}>Total Progress</span>
+                            <div className="berry-modal-sidebar" style={{ padding: 20, borderLeft: '1px solid #e3e8ef' }}>
+                                <h3 className="berry-title" style={{ fontSize: '1rem', marginBottom: 20 }}>Project Status</h3>
+
+                                <div style={{ marginBottom: 20 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: 6 }}>
+                                        <span style={{ fontWeight: 600 }}>Progress</span>
                                         <span style={{ color: '#5e35b1', fontWeight: 700 }}>{activeOrder.progress}%</span>
                                     </div>
-                                    <div style={{ width: '100%', height: 8, background: '#ede7f6', borderRadius: 4, overflow: 'hidden' }}>
-                                        <div style={{ width: `${activeOrder.progress}%`, height: '100%', background: '#5e35b1', borderRadius: 4, transition: 'width 0.5s ease' }} />
+                                    <div style={{ width: '100%', height: 6, background: '#ede7f6', borderRadius: 3, overflow: 'hidden' }}>
+                                        <div style={{ width: `${activeOrder.progress}%`, height: '100%', background: '#5e35b1' }} />
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: activeOrder.progress >= 25 ? '#b9f6ca' : '#f8fafc', color: activeOrder.progress >= 25 ? '#00e676' : '#697586', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>✓</div>
-                                        <div>
-                                            <div style={{ fontWeight: 600, color: '#121926', fontSize: '0.9rem' }}>Project Initiated</div>
-                                            <div style={{ fontSize: '0.75rem', color: '#697586' }}>Requirements gathered</div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                    {[
+                                        { label: 'Initiated', sub: 'Requirements gathered', p: 25 },
+                                        { label: 'UI/UX Design', sub: 'Mockups approved', p: 50 },
+                                        { label: 'Development', sub: 'Code & Integration', p: 75 },
+                                        { label: 'Testing & Delivery', sub: 'Project completed', p: 100 }
+                                    ].map((step, idx) => (
+                                        <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                            <div style={{ width: 28, height: 28, borderRadius: '50%', background: activeOrder.progress >= step.p ? '#b9f6ca' : '#f8fafc', color: activeOrder.progress >= step.p ? '#00c853' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.75rem' }}>✓</div>
+                                            <div>
+                                                <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>{step.label}</div>
+                                                <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{step.sub}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div style={{ width: 2, height: 20, background: '#e3e8ef', marginLeft: 15 }}></div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: activeOrder.progress >= 50 ? '#b9f6ca' : '#f8fafc', color: activeOrder.progress >= 50 ? '#00e676' : '#697586', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>✓</div>
-                                        <div>
-                                            <div style={{ fontWeight: 600, color: '#121926', fontSize: '0.9rem' }}>Design & UI/UX</div>
-                                            <div style={{ fontSize: '0.75rem', color: '#697586' }}>Mockups approved</div>
-                                        </div>
-                                    </div>
-                                    <div style={{ width: 2, height: 20, background: '#e3e8ef', marginLeft: 15 }}></div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: activeOrder.progress >= 75 ? '#b9f6ca' : '#f8fafc', color: activeOrder.progress >= 75 ? '#00e676' : '#697586', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>✓</div>
-                                        <div>
-                                            <div style={{ fontWeight: 600, color: '#121926', fontSize: '0.9rem' }}>Development</div>
-                                            <div style={{ fontSize: '0.75rem', color: '#697586' }}>Code & API integration</div>
-                                        </div>
-                                    </div>
-                                    <div style={{ width: 2, height: 20, background: '#e3e8ef', marginLeft: 15 }}></div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: activeOrder.progress >= 100 ? '#b9f6ca' : '#f8fafc', color: activeOrder.progress >= 100 ? '#00e676' : '#697586', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>✓</div>
-                                        <div>
-                                            <div style={{ fontWeight: 600, color: '#121926', fontSize: '0.9rem' }}>Testing & Delivery</div>
-                                            <div style={{ fontSize: '0.75rem', color: '#697586' }}>Ready for launch</div>
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>

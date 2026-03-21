@@ -71,7 +71,7 @@ function RequirementModal({ project, onClose }: { project: Product; onClose: () 
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                        <div className="requirement-form-grid">
                             <div className="form-group">
                                 <label className="form-label">Full Name *</label>
                                 <input className="form-input" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} placeholder="Your name" required />
@@ -188,7 +188,7 @@ function ReviewForm({ projectSlug }: { projectSlug: string }) {
                 ))}
                 <span style={{ alignSelf: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>({['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][rating]})</span>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+            <div className="requirement-form-grid" style={{ marginBottom: 12 }}>
                 <input className="form-input" value={name} onChange={e => setName(e.target.value)} placeholder="Your name *" required />
                 <input type="email" className="form-input" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email (private)" />
             </div>
@@ -595,7 +595,7 @@ export default function ProjectDetailPage() {
                             </div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+                        <div className="pricing-tiers-grid">
                             {TIER_CONFIG.map(tier => {
                                 const isSelected = selectedTier === tier.key;
                                 const features = tier.data.features.split('\n').filter(Boolean);
@@ -715,7 +715,7 @@ export default function ProjectDetailPage() {
                     {/* Reviews Section */}
                     <div style={{ marginTop: 64, paddingTop: 48, borderTop: '2px solid var(--border-solid)' }}>
                         <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 32 }}>⭐ Customer Reviews</h2>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
+                        <div className="reviews-grid-container">
                             <div>
                                 <h3 style={{ fontWeight: 700, marginBottom: 20, color: 'var(--text-secondary)' }}>What Clients Say</h3>
                                 <ReviewList projectSlug={slug} />

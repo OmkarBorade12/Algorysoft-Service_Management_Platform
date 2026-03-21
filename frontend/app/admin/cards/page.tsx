@@ -252,39 +252,42 @@ export default function PricingCardsAdmin() {
                     {projects.filter(p => p.pricingTiers && p.pricingTiers.basic).length === 0 ? (
                         <p style={{ color: '#697586', fontStyle: 'italic' }}>No products have customized tiers saved yet. They are using global defaults.</p>
                     ) : (
-                        <>
-                            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                {projects.filter(p => p.pricingTiers && p.pricingTiers.basic).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(p => (
-                                    <li key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 12, border: '1px solid #e3e8ef', borderRadius: 8 }}>
-                                        <div>
-                                            <strong>{p.title}</strong> <span style={{ color: '#697586', fontSize: '0.85rem' }}>(ID: {p.id})</span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                            {projects.filter(p => p.pricingTiers && p.pricingTiers.basic).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(p => (
+                                <div key={p.id} className="berry-responsive-list-item" style={{ border: '1px solid #e3e8ef', borderRadius: 12, padding: 16, background: '#fff' }}>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{ fontWeight: 800, fontSize: '1rem', color: '#121926' }}>{p.title}</div>
+                                        <div style={{ color: '#64748b', fontSize: '0.75rem', marginBottom: 12 }}>Product ID: {p.id}</div>
+                                        
+                                        <div className="berry-responsive-flex-group" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
+                                            <span className="berry-badge info" style={{ padding: '4px 10px' }}>Basic: ₹{p.pricingTiers?.basic?.price?.toLocaleString('en-IN') || 0}</span>
+                                            <span className="berry-badge warning" style={{ padding: '4px 10px' }}>Silver: ₹{p.pricingTiers?.silver?.price?.toLocaleString('en-IN') || 0}</span>
+                                            <span className="berry-badge success" style={{ padding: '4px 10px' }}>Gold: ₹{p.pricingTiers?.gold?.price?.toLocaleString('en-IN') || 0}</span>
                                         </div>
-                                        <div style={{ display: 'flex', gap: 12, fontSize: '0.85rem' }}>
-                                            <span className="berry-badge info">Basic: ₹{p.pricingTiers?.basic?.price || 0}</span>
-                                            <span className="berry-badge warning">Silver: ₹{p.pricingTiers?.silver?.price || 0}</span>
-                                            <span className="berry-badge success">Gold: ₹{p.pricingTiers?.gold?.price || 0}</span>
-                                        </div>
-                                        <div style={{ display: 'flex', gap: 8 }}>
-                                            <button className="berry-btn-outline" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => {
-                                                setSelectedProductId(p.id);
-                                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                                            }}>Edit</button>
-                                            <button className="berry-btn-outline" style={{ padding: '4px 8px', fontSize: '0.75rem', borderColor: '#ef5350', color: '#ef5350' }} onClick={() => setDeleteId(p.id)}>
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
+                                    </div>
+                                    
+                                    <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
+                                        <button className="berry-btn-outline" style={{ flex: 1, padding: '8px 16px', fontSize: '0.85rem' }} onClick={() => {
+                                            setSelectedProductId(p.id);
+                                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                                        }}>Edit</button>
+                                        <button className="berry-btn-outline" style={{ flex: 1, padding: '8px 16px', fontSize: '0.85rem', borderColor: '#ef5350', color: '#ef5350' }} onClick={() => setDeleteId(p.id)}>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
                             {projects.filter(p => p.pricingTiers && p.pricingTiers.basic).length > itemsPerPage && (
-                                <Pagination
-                                    currentPage={currentPage}
-                                    totalItems={projects.filter(p => p.pricingTiers && p.pricingTiers.basic).length}
-                                    itemsPerPage={itemsPerPage}
-                                    onPageChange={setCurrentPage}
-                                />
+                                <div style={{ marginTop: 24 }}>
+                                    <Pagination
+                                        currentPage={currentPage}
+                                        totalItems={projects.filter(p => p.pricingTiers && p.pricingTiers.basic).length}
+                                        itemsPerPage={itemsPerPage}
+                                        onPageChange={setCurrentPage}
+                                    />
+                                </div>
                             )}
-                        </>
+                        </div>
                     )}
                 </div>
 

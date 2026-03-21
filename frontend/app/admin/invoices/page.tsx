@@ -112,33 +112,32 @@ export default function AdminInvoicesPage() {
                             initial={{ y: 50, opacity: 0 }} 
                             animate={{ y: 0, opacity: 1 }} 
                             exit={{ y: 50, opacity: 0 }}
-                            className="berry-card modal-container" 
-                            style={{ maxWidth: 1000, width: '95%' }}
+                            className="berry-modal-container" 
+                            style={{ maxWidth: 1100, width: '95%', maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: 20 }}
                         >
-                            <div className="modal-header" style={{ padding: '24px 32px', borderBottom: '1px solid #e2e8f0', background: 'linear-gradient(45deg, #f8fafc 0%, #ffffff 100%)', borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                                    <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(94, 53, 177, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5e35b1' }}>
+                            <div className="modal-header" style={{ padding: '24px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', background: '#fff' }}>
+                                <div style={{ display: 'flex', gap: 14 }}>
+                                    <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--berry-secondary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--berry-secondary-dark)', flexShrink: 0 }}>
                                         <FiFileText size={22} />
                                     </div>
-                                    <div>
-                                        <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, color: '#1e293b' }}>
-                                            Create New Invoice
-                                        </h3>
-                                        <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b' }}>Generate professional invoice for your client</p>
+                                    <div style={{ minWidth: 0 }}>
+                                        <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#121926', marginBottom: 2 }}>Create New Invoice</h3>
+                                        <p style={{ margin: 0, fontSize: '0.82rem', color: '#64748b', fontWeight: 500, lineHeight: 1.4 }}>Generate professional invoice for your business clients</p>
                                     </div>
                                 </div>
-                                <button onClick={() => setShowFormModal(false)} className="close-btn" style={{ background: '#f1f5f9', border: 'none', width: 32, height: 32, borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: '0.2s' }}>
-                                    <FiX />
+                                <button onClick={() => setShowFormModal(false)} className="close-btn" style={{ background: '#f8fafc', border: 'none', width: 36, height: 36, borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: -4, marginRight: -8 }}>
+                                    <FiX size={20} />
                                 </button>
                             </div>
 
-                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 0, overflow: 'hidden' }}>
-                                {/* Left Column: Form */}
-                                <div style={{ padding: '32px', maxHeight: '70vh', overflowY: 'auto', background: '#fff' }}>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-                                        
-                                        {/* Autofill Section */}
-                                        <div style={{ background: 'linear-gradient(135deg, #f5f3ff 0%, #f0f9ff 100%)', padding: 20, borderRadius: 16, border: '1px solid rgba(94, 53, 177, 0.1)', position: 'relative', overflow: 'hidden' }}>
+                            <div className="berry-modal-main" style={{ flex: 1, overflowY: 'auto' }}>
+                                <div className="berry-responsive-grid" style={{ minHeight: '100%', gap: 0 }}>
+                                    {/* Left Column: Form */}
+                                     <div style={{ padding: '24px', background: '#fff' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                                            
+                                            {/* Autofill Section */}
+                                            <div style={{ background: 'linear-gradient(135deg, #f5f3ff 0%, #f0f9ff 100%)', padding: 16, borderRadius: 16, border: '1px solid rgba(94, 53, 177, 0.1)' }}>
                                             <div style={{ position: 'absolute', top: -10, right: -10, opacity: 0.05, transform: 'rotate(15deg)' }}>
                                                 <FiZap size={100} />
                                             </div>
@@ -159,7 +158,7 @@ export default function AdminInvoicesPage() {
                                         </div>
 
                                         {/* Basic Info */}
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+                                        <div className="berry-form-grid-2">
                                             <div className="field-group">
                                                 <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiList size={14} /> Invoice Number</label>
                                                 <input className="berry-input" value={inv.invoiceNo} onChange={e => setInv(p => ({ ...p, invoiceNo: e.target.value }))} style={{ height: 46 }} />
@@ -185,7 +184,7 @@ export default function AdminInvoicesPage() {
                                             <h4 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: 20, color: '#1e293b', display: 'flex', alignItems: 'center', gap: 10, paddingBottom: 10, borderBottom: '2px solid #f1f5f9' }}>
                                                 <FiUser /> Client Information
                                             </h4>
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+                                            <div className="berry-form-grid-2">
                                                 <div className="field-group">
                                                     <label className="input-label">Client Name *</label>
                                                     <input className="berry-input" value={inv.clientName} onChange={e => setInv(p => ({ ...p, clientName: e.target.value }))} placeholder="Rajesh Kumar" style={{ height: 46 }} />
@@ -218,7 +217,7 @@ export default function AdminInvoicesPage() {
                                                 <label className="input-label">Task Description</label>
                                                 <textarea className="berry-input" rows={2} value={inv.description} onChange={e => setInv(p => ({ ...p, description: e.target.value }))} placeholder="What was delivered..." style={{ resize: 'none' }} />
                                             </div>
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', gap: 20, background: '#f8fafc', padding: 16, borderRadius: 12, border: '1px solid #e3e8ef' }}>
+                                            <div className="berry-form-grid-3" style={{ background: '#f8fafc', padding: 16, borderRadius: 12, border: '1px solid #e3e8ef' }}>
                                                 <div className="field-group" style={{ marginBottom: 0 }}>
                                                     <label className="input-label">Base Amount (₹) *</label>
                                                     <input type="number" className="berry-input" value={inv.amount || ''} onChange={e => setInv(p => ({ ...p, amount: +e.target.value }))} style={{ height: 44, fontSize: '1.1rem', fontWeight: 700 }} />
@@ -236,9 +235,8 @@ export default function AdminInvoicesPage() {
                                     </div>
                                 </div>
 
-                                {/* Right Column: Summary */}
                                  {/* Right Column: Summary Sidebar */}
-                                <div style={{ background: '#f8fafc', borderLeft: '1px solid #e2e8f0', padding: '32px' }}>
+                                <div className="berry-modal-sidebar" style={{ background: 'var(--berry-grey-50)', padding: '32px' }}>
                                     <div style={{ position: 'sticky', top: 0 }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 28 }}>
                                             <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e293b' }}>Bill Summary</h4>
@@ -289,6 +287,7 @@ export default function AdminInvoicesPage() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
                         </motion.div>
                     </div>
                 )}
@@ -384,7 +383,7 @@ export default function AdminInvoicesPage() {
                             </div>
                         </div>
 
-                        <div ref={printRef} style={{ background: 'white', padding: 48, borderRadius: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.05)', maxWidth: 850, margin: '0 auto', color: '#121926', border: '1px solid #e3e8ef' }}>
+                        <div ref={printRef} className="invoice-preview" style={{ background: 'white', padding: '40px 32px', borderRadius: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.05)', maxWidth: 850, margin: '0 auto', color: '#121926', border: '1px solid #e3e8ef' }}>
                             {previewInvoice && (
                                 <>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '3px solid #5e35b1', paddingBottom: 24, marginBottom: 32 }}>
@@ -402,7 +401,7 @@ export default function AdminInvoicesPage() {
                                         </div>
                                     </div>
 
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, marginBottom: 48 }}>
+                                    <div className="invoice-header-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, marginBottom: 48 }}>
                                         <div>
                                             <label style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800, marginBottom: 10, display: 'block', letterSpacing: '1px' }}>Billed To</label>
                                             <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#121926' }}>{previewInvoice.clientName}</div>
@@ -485,8 +484,8 @@ export default function AdminInvoicesPage() {
             />
 
             <style jsx>{`
-                .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.4); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; z-index: 10000; padding: 20px; }
-                .modal-container { border: none; box-shadow: 0 40px 100px -20px rgba(0,0,0,0.4); position: relative; border-radius: 20px; overflow: hidden; background: #fff; }
+                .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: flex-start; z-index: 10000; padding: 60px 20px; overflow-y: auto; }
+                .modal-container { border: none; box-shadow: 0 40px 100px rgba(0,0,0,0.3); width: 100%; position: relative; margin-bottom: 60px; border-radius: 20px; overflow: hidden; background: #fff; }
                 .modal-header h3 { margin: 0; font-size: 1.4rem; color: #1e293b; letter-spacing: -0.5px; }
                 .close-btn:hover { background: #fee2e2 !important; color: #ef4444 !important; }
                 .input-label { display: block; font-size: 0.82rem; font-weight: 700; color: #475569; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -496,6 +495,16 @@ export default function AdminInvoicesPage() {
                     :global(body *) { visibility: hidden; }
                     #print-section, #print-section * { visibility: visible; }
                     #print-section { position: absolute; left: 0; top: 0; width: 100%; }
+                }
+
+                @media (max-width: 768px) {
+                    .modal-container { width: 100% !important; height: 100vh !important; border-radius: 0 !important; }
+                    .modal-header { padding: 16px 20px !important; }
+                    .invoice-preview { padding: 24px 16px !important; }
+                    .invoice-header-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+                    .invoice-header-grid > div:last-child { text-align: left !important; }
+                    .invoice-summary { width: 100% !important; margin-top: 24px !important; }
+                    .invoice-action-btns { flex-direction: column !important; }
                 }
 
                 @font-face {

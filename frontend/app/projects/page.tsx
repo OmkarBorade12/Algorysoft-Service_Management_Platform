@@ -19,6 +19,8 @@ function ProjectsContent() {
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000]);
     const [sortBy, setSortBy] = useState('relevant');
 
+    const [showSidebar, setShowSidebar] = useState(false);
+
     const filteredProjects = useMemo(() => {
         let result = [...projects];
 
@@ -56,10 +58,13 @@ function ProjectsContent() {
     }, [activeCategory, searchQuery, priceRange, sortBy, projects, categories]);
 
     return (
-        <div className="container" style={{ padding: '40px 24px', display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+        <div className="container projects-listing-container" style={{ padding: '40px 24px' }}>
             {/* Filters Sidebar */}
-            <aside className="sidebar" style={{ width: '280px', flexShrink: 0, background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
-                <h3 style={{ fontSize: '1.2rem', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid var(--border-color)' }}>Filters</h3>
+            <aside className={`sidebar ${showSidebar ? 'show' : ''}`} style={{ width: '280px', flexShrink: 0, background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid var(--border-color)' }}>
+                    <h3 style={{ fontSize: '1.2rem', margin: 0 }}>Filters</h3>
+                    <button onClick={() => setShowSidebar(false)} className="mobile-only" style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text-muted)' }}>×</button>
+                </div>
 
                 <div style={{ marginBottom: '24px' }}>
                     <h4 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Search</h4>
@@ -77,7 +82,7 @@ function ProjectsContent() {
                     <h4 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Categories</h4>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '300px', overflowY: 'auto' }}>
                         <button
-                            onClick={() => setActiveCategory('all')}
+                            onClick={() => { setActiveCategory('all'); setShowSidebar(false); }}
                             style={{ textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.95rem', color: activeCategory === 'all' ? 'var(--dark-pista-bright)' : 'var(--text-secondary)', fontWeight: activeCategory === 'all' ? '600' : '400', padding: '4px 0' }}
                         >
                             All Categories
@@ -85,7 +90,7 @@ function ProjectsContent() {
                         {categories.map(c => (
                             <button
                                 key={c.slug}
-                                onClick={() => setActiveCategory(c.slug)}
+                                onClick={() => { setActiveCategory(c.slug); setShowSidebar(false); }}
                                 style={{ textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.95rem', color: activeCategory === c.slug ? 'var(--dark-pista-bright)' : 'var(--text-secondary)', fontWeight: activeCategory === c.slug ? '600' : '400', padding: '4px 0' }}
                             >
                                 {c.name}
@@ -114,6 +119,11 @@ function ProjectsContent() {
 
             {/* Main Content */}
             <main style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ marginBottom: '20px' }} className="mobile-only">
+                    <button className="btn-secondary" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }} onClick={() => setShowSidebar(true)}>
+                         🔍 Filter & Search
+                    </button>
+                </div>
                 <div className="section-header" style={{ marginBottom: '24px' }}>
                     <div>
                         <h1 className="section-title" style={{ fontSize: '1.8rem', marginBottom: '8px' }}>

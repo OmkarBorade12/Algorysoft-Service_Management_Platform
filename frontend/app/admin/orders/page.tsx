@@ -246,9 +246,8 @@ export default function AdminOrdersPage() {
             {/* Modal for Order Tracking & Chat */}
             {selectedOrder && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(18,25,38,0.5)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 24 }}>
-                    <div style={{ background: '#ffffff', borderRadius: 16, width: '100%', maxWidth: 900, display: 'flex', overflow: 'hidden', height: 600, boxShadow: '0 24px 48px rgba(0,0,0,0.1)' }}>
-                        {/* Progress Panel */}
-                        <div style={{ width: '38%', padding: 32, borderRight: '1px solid #e3e8ef', backgroundColor: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
+                <div className="berry-modal-container" style={{ background: '#ffffff', borderRadius: 16, width: '100%', maxWidth: 900, display: 'flex', overflow: 'hidden', minHeight: 600, maxHeight: '90vh', boxShadow: '0 24px 48px rgba(0,0,0,0.1)' }}>
+                    <div className="berry-modal-sidebar" style={{ width: '35%', padding: 32, borderRight: '1px solid #e3e8ef', backgroundColor: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
                             <h3 style={{ fontSize: '1.25rem', margin: '0 0 8px', color: '#121926', display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <FiCode /> Order {selectedOrder.order_id || `#${selectedOrder.id}`}
                             </h3>
@@ -282,8 +281,7 @@ export default function AdminOrdersPage() {
                             </select>
                         </div>
 
-                        {/* Chat Panel */}
-                        <div style={{ width: '62%', display: 'flex', flexDirection: 'column', background: '#ffffff', position: 'relative' }}>
+                        <div className="berry-modal-main" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#ffffff', position: 'relative', minHeight: 400 }}>
                             {/* Chat Header */}
                             <div style={{ padding: '20px 32px', borderBottom: '1px solid #e3e8ef', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>

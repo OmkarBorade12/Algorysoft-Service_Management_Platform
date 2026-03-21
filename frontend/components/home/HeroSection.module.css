@@ -56,7 +56,6 @@
     z-index: 1;
 }
 
-.left {}
 
 /* Top badge */
 .badge {
@@ -171,8 +170,8 @@
 
 .heroVisual {
     position: relative;
-    width: 420px;
-    height: 420px;
+    width: min(420px, 100%);
+    aspect-ratio: 1 / 1;
 }
 
 .logoCard {
@@ -320,28 +319,81 @@
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+    .left {
+        order: 1;
+    }
+    .right {
+        order: 2;
+    }
     .heroContent {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 60px;
+        text-align: center;
     }
-
-    .right {
-        display: none;
+    .badge, .heading, .subHeading, .features, .ctaRow, .tags, .trustRow {
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
     }
+    .features, .tags {
+        justify-content: center;
+    }
+}
 
+@media (max-width: 900px) {
     .hero {
         min-height: auto;
         padding: 60px 0 40px;
     }
+    .heroContent {
+        gap: 40px;
+    }
+    .heroVisual {
+        width: 320px;
+    }
+    .floatCard {
+        padding: 8px 12px;
+    }
+    .cardTitle {
+        font-size: 0.75rem;
+    }
+    .cardSub {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .heroVisual {
+        width: 280px;
+    }
+    .floatCard {
+        transform: scale(0.9);
+    }
+    .card1 { left: -10px; }
+    .card2 { right: -10px; }
+    .card3 { left: -10px; }
+    .card4 { right: -10px; }
 }
 
 @media (max-width: 480px) {
     .ctaRow {
         flex-direction: column;
     }
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
 
     .heading {
-        font-size: 2rem;
+        font-size: clamp(1.8rem, 8vw, 2.4rem);
+    }
+    
+    .heroVisual {
+        width: 240px;
+    }
+    
+    .floatCard {
+        display: none; /* Hide floating cards on very small screens to avoid clutter */
     }
 }

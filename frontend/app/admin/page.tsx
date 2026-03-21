@@ -35,14 +35,14 @@ export default function AdminDashboard() {
 
     if (oStatus === 'loading' || rStatus === 'loading') return (
         <div style={{ padding: 24 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24, marginBottom: 32 }}>
+            <div className="berry-stats-grid" style={{ marginBottom: 32 }}>
                 {[1, 2, 3, 4].map(i => (
-                    <div key={i} style={{ height: 120, backgroundColor: '#f0f0f0', borderRadius: 12 }} />
+                    <div key={i} style={{ height: 120, backgroundColor: '#f0f0f0', borderRadius: 12 }} className="skeleton" />
                 ))}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 24 }}>
-                <div style={{ height: 400, backgroundColor: '#f5f5f5', borderRadius: 16 }} />
-                <div style={{ height: 400, backgroundColor: '#f5f5f5', borderRadius: 16 }} />
+            <div className="berry-responsive-grid">
+                <div style={{ height: 400, backgroundColor: '#f5f5f5', borderRadius: 16 }} className="skeleton" />
+                <div style={{ height: 400, backgroundColor: '#f5f5f5', borderRadius: 16 }} className="skeleton" />
             </div>
         </div>
     );
@@ -56,17 +56,19 @@ export default function AdminDashboard() {
         >
             <div className="berry-animate-in">
                 {/* Stats Overview */}
-                <div className="berry-stats-grid">
+                <div className="berry-stats-grid" style={{ marginBottom: 32 }}>
                     {STATS.map(stat => (
-                        <div key={stat.label} className={`berry-stat ${stat.color}`} style={{ position: 'relative', overflow: 'hidden' }}>
-                            <div style={{ position: 'absolute', right: -20, top: -20, opacity: 0.2, fontSize: '8rem' }}>{stat.icon}</div>
-                            <div className="berry-stat-value">{stat.value}</div>
-                            <div className="berry-stat-label">{stat.label}</div>
+                        <div key={stat.label} className={`berry-stat ${stat.color}`} style={{ position: 'relative', overflow: 'hidden', padding: '20px' }}>
+                            <div style={{ position: 'absolute', right: -15, top: -15, opacity: 0.1, fontSize: '5rem' }}>{stat.icon}</div>
+                            <div style={{ position: 'relative', zIndex: 1 }}>
+                                <div className="berry-stat-value" style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: 4 }}>{stat.value}</div>
+                                <div className="berry-stat-label" style={{ opacity: 0.9, fontWeight: 600, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{stat.label}</div>
+                            </div>
                         </div>
                     ))}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 24, alignItems: 'start' }}>
+                <div className="berry-responsive-grid" style={{ alignItems: 'start' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                         {/* Recent Orders Tracker */}
                         <div className="berry-card">

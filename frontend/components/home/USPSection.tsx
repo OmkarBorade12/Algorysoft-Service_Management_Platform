@@ -105,7 +105,7 @@ export default function USPSection() {
                     <h3 style={{ textAlign: 'center', fontWeight: '800', fontSize: '1.4rem', marginBottom: '36px', color: 'var(--text-primary)' }}>
                         How It <span style={{ color: 'var(--pista-primary)' }}>Works</span>
                     </h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0' }}>
+                    <div className="process-grid">
                         {[
                             { step: '01', icon: PROCESS_ICONS[0], title: 'Consultation', desc: 'Tell us about your business & goals' },
                             { step: '02', icon: PROCESS_ICONS[1], title: 'Design & Proposal', desc: 'We send a design mockup + quote' },
@@ -114,7 +114,7 @@ export default function USPSection() {
                         ].map((step, i) => (
                             <div key={i} style={{ textAlign: 'center', padding: '16px', position: 'relative' }}>
                                 {i < 3 && (
-                                    <div style={{
+                                    <div className="process-step-line" style={{
                                         position: 'absolute', right: '0', top: '28px',
                                         width: '30px', height: '2px',
                                         background: 'var(--pista-border)',

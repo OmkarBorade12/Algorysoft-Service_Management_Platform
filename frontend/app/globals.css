@@ -2328,6 +2328,71 @@ main {
   border: 1px solid var(--border-solid);
 }
 
+/* Helper Classes for Responsive Grids */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.pricing-tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.reviews-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+}
+
+.requirement-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 32px;
+}
+
+.checkout-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Berry Responsive Helpers */
+.berry-responsive-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (max-width: 1024px) {
+  .checkout-grid {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 650px) {
+  .berry-responsive-list-item {
+      flex-direction: column;
+      align-items: stretch !important;
+  }
+  
+  .checkout-form-grid {
+      grid-template-columns: 1fr !important;
+  }
+}
+
+
+
 /* ===== INVOICE ===== */
 .invoice-print {
   background: white;
@@ -2447,10 +2512,41 @@ main {
 
   .hero-carousel-content {
     grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 24px 16px 40px;
+    text-align: center;
+  }
+
+  .hero-carousel-left {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100% !important;
   }
 
   .hero-carousel-right {
-    display: none;
+    display: flex !important;
+    width: 100%;
+    justify-content: center !important;
+    margin-top: 10px;
+  }
+
+  .hero-carousel-visual {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center !important;
+    margin: 0 auto;
+  }
+
+  .hero-carousel-title {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+
+  .hero-carousel-sub {
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    max-width: 100% !important;
   }
 }
 
@@ -2497,8 +2593,11 @@ main {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  /* Admin layout: inline styles from layout.tsx handle margin-left */
+  
+  .reviews-grid-container {
+      grid-template-columns: 1fr;
+      gap: 32px;
+  }
 }
 
 /* ---- MOBILE (≤ 768px) ---- */
@@ -2574,6 +2673,14 @@ main {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
+  
+  .pricing-tiers-grid {
+      grid-template-columns: 1fr !important;
+  }
+  
+  .requirement-form-grid {
+      grid-template-columns: 1fr !important;
+  }
 
   /* Invoice print */
   .invoice-print {
@@ -2641,6 +2748,14 @@ main {
   /* Section headings */
   .section-title {
     font-size: 1.4rem;
+  }
+
+  .requirement-form-grid {
+      grid-template-columns: 1fr !important;
+  }
+  
+  .checkout-form-grid {
+      grid-template-columns: 1fr !important;
   }
 
   /* CTA buttons */
@@ -2810,4 +2925,81 @@ main {
 
 .scroll-underline.in-view::after {
   animation: underline-draw 0.6s 0.3s ease forwards;
-}
+}
+
+/* More Responsive Grids */
+@media (max-width: 1024px) {
+  .checkout-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .projects-listing-container {
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .projects-listing-container .sidebar {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px !important;
+    height: 100vh;
+    z-index: 2000;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    box-shadow: 20px 0 40px rgba(0,0,0,0.1);
+  }
+  
+  .projects-listing-container .sidebar.show {
+    left: 0;
+  }
+  
+  .mobile-only {
+    display: flex !important;
+  }
+}
+
+.mobile-only {
+    display: none !important;
+}
+
+
+@media (max-width: 768px) {
+  .checkout-form-grid,
+  .responsive-3-col {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0;
+}
+
+.responsive-3-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 32px;
+}
+
+.checkout-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.projects-listing-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+

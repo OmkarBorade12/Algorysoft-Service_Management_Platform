@@ -8,7 +8,7 @@ export default function StatsSection() {
     const reviews = useAppSelector(s => s.reviews.reviews);
 
     const websitesDelivered = orders.length;
-    const happyBusinesses = new Set(orders.map(o => o.clientEmail)).size;
+    const happyBusinesses = new Set(orders.map(o => (o as any).client_email || (o as any).clientEmail)).size;
     const avgRating = reviews.length ? (reviews.reduce((acc: number, rv) => acc + rv.rating, 0) / reviews.length).toFixed(1) : '5.0';
 
     const stats = [
@@ -32,10 +32,7 @@ export default function StatsSection() {
                 pointerEvents: 'none',
             }} />
             <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(4, 1fr)',
-                }}>
+                <div className="stats-grid">
                     {stats.map((s, i) => (
                         <div key={i} style={{
                             textAlign: 'center',
