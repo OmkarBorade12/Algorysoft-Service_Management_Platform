@@ -38,17 +38,23 @@ jobs:
         run: |
           rsync -avz --delete ./frontend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/frontend
 
-      # 6. Restart Nginx and Finalize
-      - name: Restart Nginx
+      # 6. Restart Services (Django, Next.js, Nginx)
+      - name: Restart Services
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            # Ensure target directories exist (optional safety check)
-            sudo mkdir -p /var/www/algorysoft
-            sudo mkdir -p /var/www/frontend
-            
-            # Restart Nginx
+            echo "Starting Django..."
+            sudo systemctl start django
+            sudo systemctl enable django
+
+            echo "Starting Next.js..."
+            sudo systemctl start nextjs
+            sudo systemctl enable nextjs
+
+            echo "Restarting Nginx..."
             sudo systemctl restart nginx
-            
-            # Optional: Print status to logs to confirm it worked
+
+            echo "--- Service Status ---"
+            sudo systemctl status django --no-pager
+            sudo systemctl status nextjs --no-pager
             sudo systemctl status nginx --no-pager
           EOF
