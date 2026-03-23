@@ -1,0 +1,54 @@
+name: Deploy to Production Server
+
+# Trigger on push to main branch
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Setup SSH Private Key
+      - name: Setup SSH Key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # 3. Add Server IP to Known Hosts
+      - name: Add Server to Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      # 4. Deploy Backend
+      # Local: ./backend/ -> Server: /var/www/algorysoft
+      - name: Deploy Backend
+        run: |
+          rsync -avz --delete ./backend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/algorysoft
+
+      # 5. Deploy Frontend
+      # Local: ./frontend/ -> Server: /var/www/frontend
+      - name: Deploy Frontend
+        run: |
+          rsync -avz --delete ./frontend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/frontend
+
+      # 6. Restart Nginx and Finalize
+      - name: Restart Nginx
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            # Ensure target directories exist (optional safety check)
+            sudo mkdir -p /var/www/algorysoft
+            sudo mkdir -p /var/www/frontend
+            
+            # Restart Nginx
+            sudo systemctl restart nginx
+            
+            # Optional: Print status to logs to confirm it worked
+            sudo systemctl status nginx --no-pager
+          EOF
