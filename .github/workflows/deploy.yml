@@ -27,68 +27,65 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      # 4. Deploy backend
+      # 4. Deploy backend (SAFE)
       - name: Deploy Backend
         run: |
-          rsync -avz --delete ./backend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/algorysoft/
+          rsync -avz ./backend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/algorysoft/ \
+          --exclude 'venv' \
+          --exclude '__pycache__' \
+          --exclude '.env'
 
       # 5. Deploy frontend
       - name: Deploy Frontend
         run: |
-          rsync -avz --delete ./frontend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/frontend/
+          rsync -avz ./frontend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/frontend/ \
+          --exclude 'node_modules'
 
       # 6. Setup + Restart services
       - name: Setup and Restart Services
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          set -e   # ❗ stop on error
 
-            echo "===== BACKEND SETUP ====="
-            cd /var/www/algorysoft
+          echo "===== BACKEND SETUP ====="
+          cd /var/www/algorysoft
 
-            # Create venv if not exists
-            if [ ! -d "venv" ]; then
-              python3 -m venv venv
-            fi
+          # Create venv if not exists
+          if [ ! -d "venv" ]; then
+            python3 -m venv venv
+          fi
 
-            source venv/bin/activate
+          source venv/bin/activate
 
-            echo "Installing backend dependencies..."
-            pip install --upgrade pip
-            pip install -r requirements.txt
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-            echo "Ensuring gunicorn..."
-            pip install gunicorn
+          echo "Running migrations..."
+          python manage.py migrate
 
-            echo "Running migrations..."
-            python manage.py migrate
+          echo "Collecting static..."
+          python manage.py collectstatic --noinput
 
-            echo "Collecting static..."
-            python manage.py collectstatic --noinput
-
-            echo "Restarting Django..."
-            sudo systemctl restart django
+          echo "Restarting Django..."
+          sudo systemctl restart django
 
 
-            echo "===== FRONTEND SETUP ====="
-            cd /var/www/frontend
+          echo "===== FRONTEND SETUP ====="
+          cd /var/www/frontend
 
-            echo "Installing frontend dependencies..."
-            npm install
+          npm install
+          npm run build
 
-            echo "Building Next.js..."
-            npm run build
-
-            echo "Restarting Next.js..."
-            sudo systemctl restart nextjs
+          echo "Restarting Next.js..."
+          sudo systemctl restart nextjs
 
 
-            echo "===== NGINX ====="
-            sudo systemctl restart nginx
+          echo "===== NGINX ====="
+          sudo systemctl restart nginx
 
-
-            echo "===== STATUS ====="
-            sudo systemctl status django --no-pager
-            sudo systemctl status nextjs --no-pager
-            sudo systemctl status nginx --no-pager
+          echo "===== STATUS ====="
+          sudo systemctl status django --no-pager
+          sudo systemctl status nextjs --no-pager
+          sudo systemctl status nginx --no-pager
 
           EOF
