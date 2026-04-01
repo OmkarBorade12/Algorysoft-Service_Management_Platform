@@ -1,84 +1,94 @@
 name: Deploy to Production Server
 
-# Trigger on push to main branch
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+
       # 1. Checkout code
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Setup SSH Private Key
+      # 2. Setup SSH
       - name: Setup SSH Key
         uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # 3. Add Server IP to Known Hosts
+      # 3. Add server to known hosts
       - name: Add Server to Known Hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      # 4. Deploy Backend
-      # Local: ./backend/ -> Server: /var/www/algorysoft
+      # 4. Deploy backend
       - name: Deploy Backend
         run: |
-          rsync -avz --delete \
-            --exclude="db.sqlite3" \
-            --exclude="venv/" \
-            --exclude="__pycache__/" \
-            --exclude="*.pyc" \
-            --exclude=".env" \
-            ./backend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/algorysoft
+          rsync -avz --delete ./backend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/algorysoft/
 
-      # 5. Deploy Frontend
-      # Local: ./frontend/ -> Server: /var/www/frontend
+      # 5. Deploy frontend
       - name: Deploy Frontend
         run: |
-          rsync -avz --delete \
-            --exclude="node_modules/" \
-            --exclude=".next/" \
-            --exclude=".env" \
-            ./frontend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/frontend
+          rsync -avz --delete ./frontend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/frontend/
 
-      # 6. Run Migrations & Restart Services
-      - name: Server Commands
+      # 6. Setup + Restart services
+      - name: Setup and Restart Services
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            echo "Moving to backend directory..."
+
+            echo "===== BACKEND SETUP ====="
             cd /var/www/algorysoft
 
-            # Check if venv exists, if so run migrations
-            if [ -d "venv" ]; then
-              echo "Running migrations..."
-              ./venv/bin/python manage.py migrate --noinput
-            else
-              echo "Warning: venv not found at /var/www/algorysoft/venv. Skipping migrate."
+            # Create venv if not exists
+            if [ ! -d "venv" ]; then
+              python3 -m venv venv
             fi
 
-            echo "Ensuring DB permissions (SQLite)..."
-            # Allow the app to write to its own folder and the DB file
-            # Assuming group 'www-data' or similar runs the service
-            sudo chmod 664 db.sqlite3 || true
-            sudo chmod 775 /var/www/algorysoft || true
+            source venv/bin/activate
+
+            echo "Installing backend dependencies..."
+            pip install --upgrade pip
+            pip install -r requirements.txt
+
+            echo "Ensuring gunicorn..."
+            pip install gunicorn
+
+            echo "Running migrations..."
+            python manage.py migrate
+
+            echo "Collecting static..."
+            python manage.py collectstatic --noinput
 
             echo "Restarting Django..."
             sudo systemctl restart django
 
+
+            echo "===== FRONTEND SETUP ====="
+            cd /var/www/frontend
+
+            echo "Installing frontend dependencies..."
+            npm install
+
+            echo "Building Next.js..."
+            npm run build
+
             echo "Restarting Next.js..."
             sudo systemctl restart nextjs
 
-            echo "Restarting Nginx..."
+
+            echo "===== NGINX ====="
             sudo systemctl restart nginx
 
-            echo "--- Service Status ---"
+
+            echo "===== STATUS ====="
             sudo systemctl status django --no-pager
             sudo systemctl status nextjs --no-pager
+            sudo systemctl status nginx --no-pager
+
           EOF
