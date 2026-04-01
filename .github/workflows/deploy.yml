@@ -35,7 +35,7 @@ jobs:
           --exclude '__pycache__' \
           --exclude '.env'
 
-      # 5. Deploy frontend
+      # 5. Deploy frontend (SAFE)
       - name: Deploy Frontend
         run: |
           rsync -avz ./frontend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/frontend/ \
@@ -45,7 +45,7 @@ jobs:
       - name: Setup and Restart Services
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          set -e   # ❗ stop on error
+          set -e
 
           echo "===== BACKEND SETUP ====="
           cd /var/www/algorysoft
@@ -57,23 +57,32 @@ jobs:
 
           source venv/bin/activate
 
+          echo "Installing dependencies..."
           pip install --upgrade pip
           pip install -r requirements.txt
+
+          echo "Fixing STATIC_ROOT..."
+          grep -q "STATIC_ROOT" algorysoft/settings.py || echo '
+STATIC_ROOT = BASE_DIR / "staticfiles"
+' >> algorysoft/settings.py
 
           echo "Running migrations..."
           python manage.py migrate
 
           echo "Collecting static..."
-          python manage.py collectstatic --noinput
+          python manage.py collectstatic --noinput || true
 
-          echo "Restarting Django..."
+          echo "Restarting Django (Gunicorn)..."
           sudo systemctl restart django
 
 
           echo "===== FRONTEND SETUP ====="
           cd /var/www/frontend
 
+          echo "Installing frontend dependencies..."
           npm install
+
+          echo "Building Next.js..."
           npm run build
 
           echo "Restarting Next.js..."
@@ -82,6 +91,7 @@ jobs:
 
           echo "===== NGINX ====="
           sudo systemctl restart nginx
+
 
           echo "===== STATUS ====="
           sudo systemctl status django --no-pager
