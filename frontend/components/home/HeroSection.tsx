@@ -52,7 +52,7 @@ export default function HeroSection() {
                     </div>
 
                     <h1 className={styles.heading}>
-                        <span className={styles.highlight}>Stunning Websites</span><br />
+                        <span className={styles.highlight}>Stunning</span><br />
                         That Grow Your<br />
                         <span className={styles.highlight}>Business Online</span>
                     </h1>
