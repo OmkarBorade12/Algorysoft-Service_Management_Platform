@@ -11,23 +11,19 @@ jobs:
 
     steps:
 
-      # 1. Checkout code
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Setup SSH
       - name: Setup SSH Key
         uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # 3. Add server to known hosts
       - name: Add Server to Known Hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      # 4. Deploy backend (SAFE)
       - name: Deploy Backend
         run: |
           rsync -avz ./backend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/algorysoft/ \
@@ -35,13 +31,11 @@ jobs:
           --exclude '__pycache__' \
           --exclude '.env'
 
-      # 5. Deploy frontend (SAFE)
       - name: Deploy Frontend
         run: |
           rsync -avz ./frontend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/frontend/ \
           --exclude 'node_modules'
 
-      # 6. Setup + Restart services
       - name: Setup and Restart Services
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
@@ -50,21 +44,19 @@ jobs:
           echo "===== BACKEND SETUP ====="
           cd /var/www/algorysoft
 
-          # Create venv if not exists
           if [ ! -d "venv" ]; then
             python3 -m venv venv
           fi
 
           source venv/bin/activate
 
-          echo "Installing dependencies..."
           pip install --upgrade pip
           pip install -r requirements.txt
 
           echo "Fixing STATIC_ROOT..."
-          grep -q "STATIC_ROOT" algorysoft/settings.py || echo '
-STATIC_ROOT = BASE_DIR / "staticfiles"
-' >> algorysoft/settings.py
+          if ! grep -q STATIC_ROOT algorysoft/settings.py; then
+            echo 'STATIC_ROOT = BASE_DIR / "staticfiles"' >> algorysoft/settings.py
+          fi
 
           echo "Running migrations..."
           python manage.py migrate
@@ -72,17 +64,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
           echo "Collecting static..."
           python manage.py collectstatic --noinput || true
 
-          echo "Restarting Django (Gunicorn)..."
+          echo "Restarting Django..."
           sudo systemctl restart django
 
 
           echo "===== FRONTEND SETUP ====="
           cd /var/www/frontend
 
-          echo "Installing frontend dependencies..."
           npm install
-
-          echo "Building Next.js..."
           npm run build
 
           echo "Restarting Next.js..."
