@@ -8,9 +8,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      SERVER_IP: ${{ secrets.SERVER_IP }}
+      SERVER_USER: ${{ secrets.SERVER_USER }}
 
     steps:
-
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -19,26 +21,81 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Debug - Verify Secrets
+        run: |
+          echo "Checking if secrets are set..."
+          if [ -z "$SERVER_IP" ]; then
+            echo "❌ ERROR: SERVER_IP secret is not set!"
+            exit 1
+          fi
+          if [ -z "$SERVER_USER" ]; then
+            echo "❌ ERROR: SERVER_USER secret is not set!"
+            exit 1
+          fi
+          echo "✅ SERVER_IP is set: ${SERVER_IP:0:5}***"
+          echo "✅ SERVER_USER is set: $SERVER_USER"
+
+      - name: Test Server Connectivity
+        run: |
+          echo "Testing connection to $SERVER_IP..."
+          if ! ping -c 3 -W 5 "$SERVER_IP" > /dev/null 2>&1; then
+            echo "⚠️ Ping failed (might be blocked by firewall, continuing...)"
+          else
+            echo "✅ Ping successful"
+          fi
+          
+          echo "Testing SSH port..."
+          if ! nc -z -w 5 "$SERVER_IP" 22 2>/dev/null; then
+            echo "❌ ERROR: SSH port 22 is not reachable!"
+            echo "   - Check if server IP is correct"
+            echo "   - Check if SSH service is running"
+            echo "   - Check firewall rules"
+            exit 1
+          fi
+          echo "✅ SSH port is reachable"
+
       - name: Add Server to Known Hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          chmod 700 ~/.ssh
+          
+          echo "Running ssh-keyscan..."
+          ssh-keyscan -H -T 30 "$SERVER_IP" >> ~/.ssh/known_hosts 2>&1
+          
+          if [ $? -ne 0 ]; then
+            echo "❌ ssh-keyscan failed!"
+            echo "Trying with verbose output..."
+            ssh-keyscan -v -H -T 30 "$SERVER_IP" 2>&1 || true
+            exit 1
+          fi
+          
+          chmod 644 ~/.ssh/known_hosts
+          echo "✅ Server added to known_hosts"
+          cat ~/.ssh/known_hosts
+
+      - name: Test SSH Connection
+        run: |
+          ssh -o ConnectTimeout=10 -o BatchMode=yes "$SERVER_USER@$SERVER_IP" "echo '✅ SSH connection successful!'"
 
       - name: Deploy Backend
         run: |
-          rsync -avz ./backend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/algorysoft/ \
+          rsync -avz --delete \
+          ./backend/ "$SERVER_USER@$SERVER_IP":/var/www/algorysoft/ \
           --exclude 'venv' \
           --exclude '__pycache__' \
-          --exclude '.env'
+          --exclude '.env' \
+          --exclude '*.pyc'
 
       - name: Deploy Frontend
         run: |
-          rsync -avz ./frontend/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/frontend/ \
-          --exclude 'node_modules'
+          rsync -avz --delete \
+          ./frontend/ "$SERVER_USER@$SERVER_IP":/var/www/frontend/ \
+          --exclude 'node_modules' \
+          --exclude '.next'
 
       - name: Setup and Restart Services
         run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          ssh "$SERVER_USER@$SERVER_IP" << 'EOF'
           set -e
 
           echo "===== BACKEND SETUP ====="
@@ -49,7 +106,6 @@ jobs:
           fi
 
           source venv/bin/activate
-
           pip install --upgrade pip
           pip install -r requirements.txt
 
@@ -58,13 +114,9 @@ jobs:
             echo 'STATIC_ROOT = BASE_DIR / "staticfiles"' >> algorysoft/settings.py
           fi
 
-          echo "Running migrations..."
           python manage.py migrate
-
-          echo "Collecting static..."
           python manage.py collectstatic --noinput || true
 
-          echo "Restarting Django..."
           sudo systemctl restart django
 
 
@@ -74,7 +126,6 @@ jobs:
           npm install
           npm run build
 
-          echo "Restarting Next.js..."
           sudo systemctl restart nextjs
 
 
