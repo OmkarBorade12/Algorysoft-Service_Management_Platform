@@ -17,6 +17,7 @@ import categoriesReducer from './slices/categoriesSlice';
 import requestsReducer from './slices/requestsSlice';
 import invoicesReducer from './slices/invoicesSlice';
 import featuresReducer from './slices/featuresSlice';
+import pricingCardsReducer from './slices/pricingCardsSlice';
 
 const rootReducer = combineReducers({
   cart: cartReducer,
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   requests: requestsReducer,
   invoices: invoicesReducer,
   features: featuresReducer,
+  pricingCards: pricingCardsReducer,
 });
 
 // v2 migration: wipe cart to remove stale items that had combined base+tier pricing
@@ -48,7 +50,7 @@ const persistConfig = {
   version: 2,
   storage,
   migrate: createMigrate(migrations, { debug: false }),
-  whitelist: ['cart', 'wishlist', 'auth', 'currency', 'carousel', 'reviews', 'orders', 'products', 'categories', 'requests', 'invoices', 'features'],
+  whitelist: ['cart', 'wishlist', 'auth', 'currency', 'carousel', 'reviews', 'orders', 'products', 'categories', 'requests', 'invoices', 'features', 'pricingCards'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

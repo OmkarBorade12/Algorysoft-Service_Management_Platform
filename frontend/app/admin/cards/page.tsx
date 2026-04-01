@@ -2,16 +2,27 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '@/hooks/useRedux';
 import toast from 'react-hot-toast';
-import { updateProductThunk } from '@/store/slices/productsSlice';
-import Pagination from '@/components/ui/Pagination';
+import {
+    fetchBasicCard, saveBasicCard, fetchPricingCards,
+    addPricingCard, updatePricingCard, deletePricingCard,
+    PricingCard, BasicCard
+} from '@/store/slices/pricingCardsSlice';
+import { fetchFeatures } from '@/store/slices/featuresSlice';
 import ConfirmModal from '@/components/ui/ConfirmModal';
-import { FiCreditCard, FiTag, FiAward, FiCheck } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { FiCreditCard, FiPlus, FiEdit2, FiTrash2, FiCheck, FiX, FiAward, FiStar, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
+import '../admin-custom.css';
 
-const MultiSelectFeatures = ({ value, onChange, options }: { value: string, onChange: (val: string, addedPrice: number, removedPrice: number) => void, options: { id: number, name: string, price: number }[] }) => {
+/* ── MultiSelectFeatures ─────────────────────────────────────── */
+const MultiSelectFeatures = ({
+    value, onChange, options
+}: {
+    value: string;
+    onChange: (val: string, ap: number, rp: number) => void;
+    options: { id: number; name: string; price: number }[];
+}) => {
     const selectedNames = value.split('\n').filter(Boolean);
-    const availableOptions = options.filter(o => !selectedNames.includes(o.name));
-
+    const available = options.filter(o => !selectedNames.includes(o.name));
     return (
         <div style={{ border: '1px solid #e3e8ef', padding: 8, borderRadius: 8, background: '#fff' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8, minHeight: 28 }}>
@@ -20,285 +31,380 @@ const MultiSelectFeatures = ({ value, onChange, options }: { value: string, onCh
                         {name}
                         <button type="button" onClick={() => {
                             const removed = options.find(o => o.name === name);
-                            onChange(selectedNames.filter(n => n !== name).join('\n'), 0, removed?.price || 0)
+                            onChange(selectedNames.filter(n => n !== name).join('\n'), 0, removed?.price || 0);
                         }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#5e35b1', fontSize: '1rem', lineHeight: 1, padding: 0 }}>×</button>
                     </span>
                 ))}
             </div>
-            <select
-                className="berry-input"
-                style={{ padding: '8px', fontSize: '0.85rem' }}
-                value=""
-                onChange={(e) => {
-                    if (e.target.value) {
-                        const added = options.find(o => o.name === e.target.value);
-                        onChange(selectedNames.concat(e.target.value).join('\n'), added?.price || 0, 0);
-                    }
-                }}
-            >
+            <select className="berry-input" style={{ padding: '8px', fontSize: '0.85rem' }} value="" onChange={e => {
+                if (e.target.value) {
+                    const added = options.find(o => o.name === e.target.value);
+                    onChange(selectedNames.concat(e.target.value).join('\n'), added?.price || 0, 0);
+                }
+            }}>
                 <option value="" disabled>+ Add feature...</option>
-                {availableOptions.map(o => (
-                    <option key={o.id} value={o.name}>{o.name} (+₹{o.price.toLocaleString('en-IN')})</option>
-                ))}
+                {available.map(o => <option key={o.id} value={o.name}>{o.name} (+₹{o.price.toLocaleString('en-IN')})</option>)}
             </select>
         </div>
     );
 };
 
+/* ── CardFormModal ───────────────────────────────────────────── */
+type CardFormData = { name: string; tier: 'silver' | 'gold'; price: number; features: string };
+const EMPTY_FORM: CardFormData = { name: '', tier: 'silver', price: 0, features: '' };
+
+const CardFormModal = ({
+    initial, onSave, onClose, catalogFeatures
+}: {
+    initial?: PricingCard | null;
+    onSave: (d: CardFormData) => void;
+    onClose: () => void;
+    catalogFeatures: { id: number; name: string; price: number }[];
+}) => {
+    const [form, setForm] = useState<CardFormData>(
+        initial ? { name: initial.name, tier: initial.tier, price: initial.price, features: initial.features } : EMPTY_FORM
+    );
+    return (
+        <div className="pc-overlay">
+            <motion.div
+                initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+                className="berry-card pc-modal-box"
+            >
+                <div className="pc-modal-header">
+                    <h3><FiCreditCard /> {initial ? 'Edit Card' : 'Create New Card'}</h3>
+                    <button onClick={onClose} className="pc-close-btn"><FiX /></button>
+                </div>
+
+                <div className="pc-field">
+                    <label className="pc-label">Tier</label>
+                    <div style={{ display: 'flex', gap: 12 }}>
+                        {(['silver', 'gold'] as const).map(t => (
+                            <button key={t} type="button" onClick={() => setForm(p => ({ ...p, tier: t }))}
+                                className={`pc-tier-btn ${form.tier === t ? t : ''}`}>
+                                {t === 'silver' ? '🥈 Silver' : '🥇 Gold'}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="pc-field">
+                    <label className="pc-label">Card Name</label>
+                    <input className="berry-input" placeholder="e.g. Silver Standard, Gold Premium…"
+                        value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} />
+                </div>
+
+                <div className="pc-field">
+                    <label className="pc-label">Price (₹)</label>
+                    <div style={{ position: 'relative' }}>
+                        <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: '#94a3b8' }}>₹</span>
+                        <input type="number" className="berry-input" style={{ paddingLeft: 28 }}
+                            value={form.price || ''} onChange={e => setForm(p => ({ ...p, price: Number(e.target.value) }))} />
+                    </div>
+                </div>
+
+                <div className="pc-field">
+                    <label className="pc-label">Features Included</label>
+                    <MultiSelectFeatures value={form.features}
+                        onChange={(val, ap, rp) => setForm(p => ({ ...p, features: val, price: Math.max(0, Number(p.price) + ap - rp) }))}
+                        options={catalogFeatures} />
+                </div>
+
+                <div className="pc-modal-footer">
+                    <button className="berry-btn-primary" style={{ flex: 1 }} onClick={() => {
+                        if (!form.name.trim()) { toast.error('Card name is required'); return; }
+                        onSave(form);
+                    }}>
+                        <FiCheck /> {initial ? 'Update Card' : 'Create Card'}
+                    </button>
+                    <button className="berry-btn-outline" style={{ flex: 1, borderColor: '#ffccbc', color: '#d84315' }} onClick={onClose}>Cancel</button>
+                </div>
+            </motion.div>
+        </div>
+    );
+};
+
+/* ── Pricing Card Visual Component ──────────────────────────── */
+const PricingCardTile = ({ card, onEdit, onDelete }: { card: PricingCard; onEdit: () => void; onDelete: () => void }) => {
+    const isSilver = card.tier === 'silver';
+    const features = card.features.split('\n').filter(Boolean);
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+            className={`pc-card-tile ${isSilver ? 'silver' : 'gold'}`}
+        >
+            {/* Top accent bar */}
+            <div className={`pc-card-accent ${isSilver ? 'silver' : 'gold'}`} />
+
+            {/* Tier badge */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                <span className={`pc-tier-badge ${isSilver ? 'silver' : 'gold'}`}>
+                    {isSilver ? '🥈 Silver' : '🥇 Gold'}
+                </span>
+                <div style={{ display: 'flex', gap: 6 }}>
+                    <button className="pc-icon-btn edit" onClick={onEdit} title="Edit"><FiEdit2 size={13} /></button>
+                    <button className="pc-icon-btn delete" onClick={onDelete} title="Delete"><FiTrash2 size={13} /></button>
+                </div>
+            </div>
+
+            {/* Card name */}
+            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#121926', marginBottom: 6 }}>{card.name}</div>
+
+            {/* Price */}
+            <div style={{ fontWeight: 800, fontSize: '1.5rem', color: isSilver ? '#5e35b1' : '#f57f17', marginBottom: 12 }}>
+                ₹{Number(card.price).toLocaleString('en-IN')}
+            </div>
+
+            {/* Features */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                {features.length === 0
+                    ? <span style={{ color: '#94a3b8', fontSize: '0.78rem', fontStyle: 'italic' }}>No features added</span>
+                    : features.map((f, i) => (
+                        <span key={i} className={`pc-feat-pill ${isSilver ? 'silver' : 'gold'}`}>{f}</span>
+                    ))
+                }
+            </div>
+        </motion.div>
+    );
+};
+
+/* ── Simple Pagination ───────────────────────────────────────── */
+const SimplePagination = ({ page, total, perPage, onChange }: { page: number; total: number; perPage: number; onChange: (p: number) => void }) => {
+    const pages = Math.ceil(total / perPage);
+    if (pages <= 1) return null;
+    return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 24 }}>
+            <button onClick={() => onChange(page - 1)} disabled={page === 1} className="berry-btn-outline" style={{ width: 36, height: 36, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: page === 1 ? 0.4 : 1 }}>
+                <FiChevronLeft />
+            </button>
+            {Array.from({ length: pages }).map((_, i) => (
+                <button key={i} onClick={() => onChange(i + 1)}
+                    className={page === i + 1 ? 'berry-btn-primary' : 'berry-btn-outline'}
+                    style={{ width: 36, height: 36, padding: 0 }}>{i + 1}</button>
+            ))}
+            <button onClick={() => onChange(page + 1)} disabled={page === pages} className="berry-btn-outline" style={{ width: 36, height: 36, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: page === pages ? 0.4 : 1 }}>
+                <FiChevronRight />
+            </button>
+        </div>
+    );
+};
+
+const CARDS_PER_PAGE = 8;
+
+/* ── MAIN PAGE ───────────────────────────────────────────────── */
 export default function PricingCardsAdmin() {
     const dispatch = useAppDispatch();
-    const projects = useAppSelector(s => s.products.items);
-    const pStatus = useAppSelector(s => s.products.status);
-    const catalogFeatures = useAppSelector(s => s.features?.items || []);
-    
-    const [selectedProductId, setSelectedProductId] = useState<number>(0);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [deleteId, setDeleteId] = useState<number | null>(null);
-    const itemsPerPage = 6;
+    const { basicCard, cards, status } = useAppSelector(s => (s as any).pricingCards);
+    const catalogFeatures = useAppSelector(s => (s as any).features?.items || []);
 
-    const selectedProduct = projects.find(p => p.id === selectedProductId);
+    const [basicForm, setBasicForm] = useState({ price: 0, features: '' });
+    const [basicEdited, setBasicEdited] = useState(false);
+    const [showCardModal, setShowCardModal] = useState(false);
+    const [editingCard, setEditingCard] = useState<PricingCard | null>(null);
+    const [deleteCardId, setDeleteCardId] = useState<number | null>(null);
+    const [tierFilter, setTierFilter] = useState<'all' | 'silver' | 'gold'>('all');
+    const [cardPage, setCardPage] = useState(1);
 
-    const defaultTiers = {
-        basic: { price: 0, features: '' },
-        silver: { price: 0, features: '' },
-        gold: { price: 0, features: '' }
+    useEffect(() => {
+        dispatch(fetchBasicCard() as any);
+        dispatch(fetchPricingCards() as any);
+        dispatch(fetchFeatures() as any);
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (basicCard) setBasicForm({ price: basicCard.price, features: basicCard.features || '' });
+    }, [basicCard]);
+
+    const handleSaveBasic = async () => {
+        try {
+            await dispatch(saveBasicCard({ ...(basicCard || {}), price: basicForm.price, features: basicForm.features }) as any).unwrap();
+            toast.success('Basic card saved!');
+            setBasicEdited(false);
+        } catch { toast.error('Error saving basic card'); }
     };
 
-    const [tiers, setTiers] = useState({
-        basic: { price: 0, features: '' },
-        silver: { price: 0, features: '' },
-        gold: { price: 0, features: '' }
-    });
-
-    useEffect(() => {
-        if (projects.length > 0 && selectedProductId === 0) {
-            setSelectedProductId(projects[0].id);
-        }
-    }, [projects, selectedProductId]);
-
-    useEffect(() => {
-        if (selectedProduct) {
-            setTiers({ ...defaultTiers, ...selectedProduct.pricingTiers });
-        }
-    }, [selectedProductId, projects.length]);
-
-    const executeDelete = () => {
-        if (deleteId !== null) {
-            const product = projects.find(p => p.id === deleteId);
-            if (product) {
-                dispatch(updateProductThunk({ ...product, pricingTiers: undefined }));
-                toast.success('Tiers reset to global defaults.');
+    const handleSaveCard = async (data: CardFormData) => {
+        try {
+            if (editingCard) {
+                await dispatch(updatePricingCard({ ...editingCard, ...data }) as any).unwrap();
+                toast.success('Card updated!');
+            } else {
+                await dispatch(addPricingCard(data) as any).unwrap();
+                toast.success('Card created!');
             }
-            setDeleteId(null);
+            setShowCardModal(false);
+            setEditingCard(null);
+            setCardPage(1);
+        } catch { toast.error('Error saving card'); }
+    };
+
+    const executeDelete = async () => {
+        if (deleteCardId !== null) {
+            try {
+                await dispatch(deletePricingCard(deleteCardId) as any).unwrap();
+                toast.success('Card deleted');
+                setCardPage(1);
+            } catch { toast.error('Error deleting card'); }
+            setDeleteCardId(null);
         }
     };
 
-    const handleSave = () => {
-        if (selectedProduct) {
-            dispatch(updateProductThunk({
-                ...selectedProduct,
-                pricingTiers: {
-                    basic: tiers.basic,
-                    silver: tiers.silver,
-                    gold: tiers.gold
-                }
-            }));
-            toast.success('Pricing tiers updated successfully!');
-        }
-    };
+    const filteredCards: PricingCard[] = tierFilter === 'all' ? cards : cards.filter((c: PricingCard) => c.tier === tierFilter);
+    const pagedCards = filteredCards.slice((cardPage - 1) * CARDS_PER_PAGE, cardPage * CARDS_PER_PAGE);
+    const silverCount = cards.filter((c: PricingCard) => c.tier === 'silver').length;
+    const goldCount = cards.filter((c: PricingCard) => c.tier === 'gold').length;
 
-    const handleFeatureChange = (tier: 'basic' | 'silver' | 'gold', val: string, addedPrice = 0, removedPrice = 0) => {
-        setTiers(prev => {
-            const currentPrice = Number(prev[tier].price) || 0;
-            const newPrice = Math.max(0, currentPrice + addedPrice - removedPrice);
-            return {
-                ...prev,
-                [tier]: { ...prev[tier], features: val, price: newPrice }
-            };
-        });
-    };
-
-    const handlePriceChange = (tier: 'basic' | 'silver' | 'gold', val: number) => {
-        setTiers((prev: any) => ({ ...prev, [tier]: { ...prev[tier], price: val } }));
-    };
-
-    if (pStatus === 'loading') return (
+    if (status === 'loading') return (
         <div style={{ padding: 24 }}>
             <div className="berry-card" style={{ opacity: 0.6 }}>
                 <div style={{ height: 32, width: '40%', backgroundColor: '#f0f0f0', borderRadius: 8, marginBottom: 16 }} />
-                <div style={{ height: 60, width: '100%', backgroundColor: '#f0f0f0', borderRadius: 8, marginBottom: 32 }} />
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
-                    {[1, 2, 3].map(i => (
-                        <div key={i} style={{ height: 400, backgroundColor: '#f5f5f5', borderRadius: 12 }} />
-                    ))}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+                    {[1, 2, 3, 4].map(i => <div key={i} style={{ height: 200, backgroundColor: '#f5f5f5', borderRadius: 14 }} />)}
                 </div>
             </div>
         </div>
     );
 
     return (
-        <motion.div 
-            initial={{ opacity: 0, scale: 0.99 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            transition={{ duration: 0.4 }}
-            style={{ width: '100%', maxWidth: '100%' }}
-        >
-            <div className="berry-animate-in">
-                <div className="berry-card">
-                    <h2 className="berry-title" style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: 8 }}><FiCreditCard /> Assign Pricing Cards (Tiers)</h2>
-                    <p style={{ color: '#697586', marginBottom: 24 }}>Select a product to configure its customized Basic, Silver, and Gold pricing cards.</p>
+        <>
+            <AnimatePresence>
+                {showCardModal && (
+                    <CardFormModal
+                        key="card-form"
+                        initial={editingCard}
+                        onSave={handleSaveCard}
+                        onClose={() => { setShowCardModal(false); setEditingCard(null); }}
+                        catalogFeatures={catalogFeatures}
+                    />
+                )}
+            </AnimatePresence>
 
-                    <div style={{ marginBottom: 32, maxWidth: 450 }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10, fontWeight: 700, color: '#121926' }}><FiTag /> Working on Product:</label>
-                        <select
-                            className="berry-input"
-                            style={{ fontSize: '1rem', padding: '12px 16px' }}
-                            value={selectedProductId}
-                            onChange={e => setSelectedProductId(Number(e.target.value))}
-                        >
-                            {projects.map(p => (
-                                <option key={p.id} value={p.id}>{p.title} (ID: {p.id})</option>
-                            ))}
-                        </select>
-                    </div>
+            <motion.div initial={{ opacity: 0, scale: 0.99 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}
+                style={{ width: '100%', maxWidth: '100%' }}>
+                <div className="berry-animate-in">
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
-                        {/* Basic Card */}
-                        <div style={{ padding: 24, border: '1px solid #e3e8ef', borderRadius: 16, background: '#f8fafc', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-                            <h3 style={{ margin: '0 0 20px', color: '#2196f3', display: 'flex', alignItems: 'center', gap: 10, fontSize: '1.2rem' }}>
-                                <FiAward /> Basic Tier
-                            </h3>
-                            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: 8, fontWeight: 600, color: '#364152' }}>Price (₹)</label>
-                            <div style={{ position: 'relative', marginBottom: 20 }}>
-                                <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: '#94a3b8' }}>₹</span>
-                                <input
-                                    type="number"
-                                    className="berry-input"
-                                    style={{ paddingLeft: 28 }}
-                                    value={tiers.basic.price || ''}
-                                    onChange={e => handlePriceChange('basic', Number(e.target.value))}
-                                />
+                    {/* ── BASIC CARD ── */}
+                    <div className="berry-card">
+                        <h2 className="berry-title" style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <FiAward color="#2196f3" /> Basic Card
+                            <span style={{ fontSize: '0.72rem', background: '#e3f2fd', color: '#1565c0', padding: '3px 10px', borderRadius: 20, fontWeight: 700, marginLeft: 4 }}>
+                                Auto-applied to all products
+                            </span>
+                        </h2>
+                        <p style={{ color: '#697586', marginBottom: 20, fontSize: '0.88rem' }}>
+                            The Basic card is automatically assigned to every product. Edit its features and price here.
+                        </p>
+
+                        <div className="pc-basic-grid">
+                            {/* Preview card */}
+                            <div className="pc-basic-preview">
+                                <div className="pc-card-accent blue" />
+                                <span className="pc-tier-badge blue">⭐ Basic</span>
+                                <div style={{ fontWeight: 800, fontSize: '1.4rem', color: '#2196f3', margin: '12px 0 8px' }}>
+                                    ₹{Number(basicForm.price).toLocaleString('en-IN')}
+                                </div>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                                    {basicForm.features.split('\n').filter(Boolean).map((f, i) => (
+                                        <span key={i} className="pc-feat-pill blue">{f}</span>
+                                    ))}
+                                    {!basicForm.features && <span style={{ color: '#94a3b8', fontSize: '0.78rem', fontStyle: 'italic' }}>No features yet</span>}
+                                </div>
                             </div>
 
-                            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: 8, fontWeight: 600, color: '#364152' }}>Features Included</label>
-                            <MultiSelectFeatures
-                                value={tiers.basic.features}
-                                onChange={(val, ap, rp) => handleFeatureChange('basic', val, ap, rp)}
-                                options={catalogFeatures}
-                            />
-                        </div>
-
-                        {/* Silver Card */}
-                        <div style={{ padding: 24, border: '1px solid #ede7f6', borderRadius: 16, background: '#ffffff', boxShadow: '0 8px 24px rgba(103, 58, 183, 0.08)' }}>
-                            <h3 style={{ margin: '0 0 20px', color: '#673ab7', display: 'flex', alignItems: 'center', gap: 10, fontSize: '1.2rem' }}>
-                                <FiAward /> Silver Tier
-                            </h3>
-                            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: 8, fontWeight: 600, color: '#364152' }}>Price (₹)</label>
-                            <div style={{ position: 'relative', marginBottom: 20 }}>
-                                <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: '#94a3b8' }}>₹</span>
-                                <input
-                                    type="number"
-                                    className="berry-input"
-                                    style={{ paddingLeft: 28 }}
-                                    value={tiers.silver.price || ''}
-                                    onChange={e => handlePriceChange('silver', Number(e.target.value))}
-                                />
-                            </div>
-
-                            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: 8, fontWeight: 600, color: '#364152' }}>Features Included</label>
-                            <MultiSelectFeatures
-                                value={tiers.silver.features}
-                                onChange={(val, ap, rp) => handleFeatureChange('silver', val, ap, rp)}
-                                options={catalogFeatures}
-                            />
-                        </div>
-
-                        {/* Gold Card */}
-                        <div style={{ padding: 24, border: '1px solid #ffd54f', borderRadius: 16, background: '#fffde7', position: 'relative', overflow: 'hidden', boxShadow: '0 8px 24px rgba(255, 193, 7, 0.15)' }}>
-                            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 6, background: '#ffb300' }} />
-                            <h3 style={{ margin: '0 0 20px', color: '#f57f17', display: 'flex', alignItems: 'center', gap: 10, fontSize: '1.2rem' }}>
-                                <FiAward /> Gold Tier
-                            </h3>
-                            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: 8, fontWeight: 600, color: '#364152' }}>Price (₹)</label>
-                            <div style={{ position: 'relative', marginBottom: 20 }}>
-                                <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: '#94a3b8' }}>₹</span>
-                                <input
-                                    type="number"
-                                    className="berry-input"
-                                    style={{ paddingLeft: 28 }}
-                                    value={tiers.gold.price || ''}
-                                    onChange={e => handlePriceChange('gold', Number(e.target.value))}
-                                />
-                            </div>
-
-                            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: 8, fontWeight: 600, color: '#364152' }}>Features Included</label>
-                            <MultiSelectFeatures
-                                value={tiers.gold.features}
-                                onChange={(val, ap, rp) => handleFeatureChange('gold', val, ap, rp)}
-                                options={catalogFeatures}
-                            />
-                        </div>
-                    </div>
-
-                    <div style={{ marginTop: 32, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-                        <button className="berry-btn-primary" onClick={handleSave} style={{ padding: '14px 32px', fontSize: '1.1rem' }}>
-                            <FiCheck /> Save Tiers for {selectedProduct?.title}
-                        </button>
-                    </div>
-                </div>
-
-                <div className="berry-card">
-                    <h3 className="berry-title">Products with Customized Tiers</h3>
-                    {projects.filter(p => p.pricingTiers && p.pricingTiers.basic).length === 0 ? (
-                        <p style={{ color: '#697586', fontStyle: 'italic' }}>No products have customized tiers saved yet. They are using global defaults.</p>
-                    ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                            {projects.filter(p => p.pricingTiers && p.pricingTiers.basic).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(p => (
-                                <div key={p.id} className="berry-responsive-list-item" style={{ border: '1px solid #e3e8ef', borderRadius: 12, padding: 16, background: '#fff' }}>
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                        <div style={{ fontWeight: 800, fontSize: '1rem', color: '#121926' }}>{p.title}</div>
-                                        <div style={{ color: '#64748b', fontSize: '0.75rem', marginBottom: 12 }}>Product ID: {p.id}</div>
-                                        
-                                        <div className="berry-responsive-flex-group" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
-                                            <span className="berry-badge info" style={{ padding: '4px 10px' }}>Basic: ₹{p.pricingTiers?.basic?.price?.toLocaleString('en-IN') || 0}</span>
-                                            <span className="berry-badge warning" style={{ padding: '4px 10px' }}>Silver: ₹{p.pricingTiers?.silver?.price?.toLocaleString('en-IN') || 0}</span>
-                                            <span className="berry-badge success" style={{ padding: '4px 10px' }}>Gold: ₹{p.pricingTiers?.gold?.price?.toLocaleString('en-IN') || 0}</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
-                                        <button className="berry-btn-outline" style={{ flex: 1, padding: '8px 16px', fontSize: '0.85rem' }} onClick={() => {
-                                            setSelectedProductId(p.id);
-                                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                                        }}>Edit</button>
-                                        <button className="berry-btn-outline" style={{ flex: 1, padding: '8px 16px', fontSize: '0.85rem', borderColor: '#ef5350', color: '#ef5350' }} onClick={() => setDeleteId(p.id)}>
-                                            Delete
-                                        </button>
+                            {/* Edit form */}
+                            <div>
+                                <div className="pc-field">
+                                    <label className="pc-label">Price (₹)</label>
+                                    <div style={{ position: 'relative' }}>
+                                        <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontWeight: 700, color: '#94a3b8' }}>₹</span>
+                                        <input type="number" className="berry-input" style={{ paddingLeft: 28 }}
+                                            value={basicForm.price || ''}
+                                            onChange={e => { setBasicForm(p => ({ ...p, price: Number(e.target.value) })); setBasicEdited(true); }} />
                                     </div>
                                 </div>
-                            ))}
-                            {projects.filter(p => p.pricingTiers && p.pricingTiers.basic).length > itemsPerPage && (
-                                <div style={{ marginTop: 24 }}>
-                                    <Pagination
-                                        currentPage={currentPage}
-                                        totalItems={projects.filter(p => p.pricingTiers && p.pricingTiers.basic).length}
-                                        itemsPerPage={itemsPerPage}
-                                        onPageChange={setCurrentPage}
+                                <div className="pc-field">
+                                    <label className="pc-label">Features Included</label>
+                                    <MultiSelectFeatures
+                                        value={basicForm.features}
+                                        onChange={(val, ap, rp) => { setBasicForm(p => ({ ...p, features: val, price: Math.max(0, Number(p.price) + ap - rp) })); setBasicEdited(true); }}
+                                        options={catalogFeatures}
                                     />
                                 </div>
-                            )}
+                                {basicEdited && (
+                                    <button className="berry-btn-primary" onClick={handleSaveBasic} style={{ padding: '11px 28px', marginTop: 4 }}>
+                                        <FiCheck style={{ marginRight: 6 }} /> Save Basic Card
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                    )}
-                </div>
+                    </div>
 
-                <ConfirmModal
-                    isOpen={!!deleteId}
-                    title="Reset Pricing Tiers"
-                    message="Are you sure you want to delete these custom pricing tiers? This product will instantly revert to using the global pricing defaults."
-                    onConfirm={executeDelete}
-                    onCancel={() => setDeleteId(null)}
-                />
-            </div>
-        </motion.div>
+                    {/* ── SILVER & GOLD CARDS ── */}
+                    <div className="berry-card">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
+                            <div>
+                                <h2 className="berry-title" style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                    <FiCreditCard /> Silver & Gold Cards
+                                </h2>
+                                <p style={{ color: '#697586', fontSize: '0.88rem', margin: 0 }}>
+                                    Create reusable cards — assign them to products when adding or editing a product.
+                                </p>
+                            </div>
+                            <button className="berry-btn-primary" onClick={() => { setEditingCard(null); setShowCardModal(true); }}
+                                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 22px', whiteSpace: 'nowrap' }}>
+                                <FiPlus /> Create Card
+                            </button>
+                        </div>
+
+                        {/* Stats chips */}
+                        <div style={{ display: 'flex', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
+                            <span className="pc-stat-chip silver"><FiStar size={13} /> {silverCount} Silver</span>
+                            <span className="pc-stat-chip gold"><FiAward size={13} /> {goldCount} Gold</span>
+                        </div>
+
+                        {/* Filter tabs */}
+                        <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+                            {(['all', 'silver', 'gold'] as const).map(t => (
+                                <button key={t} onClick={() => { setTierFilter(t); setCardPage(1); }}
+                                    className={`pc-filter-tab ${t} ${tierFilter === t ? 'active' : ''}`}>
+                                    {t === 'all' ? 'All Cards' : t === 'silver' ? '🥈 Silver' : '🥇 Gold'}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Cards grid */}
+                        {filteredCards.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '52px 0', color: '#94a3b8' }}>
+                                <FiCreditCard size={42} style={{ marginBottom: 12, opacity: 0.35 }} />
+                                <p style={{ fontWeight: 600, fontSize: '1rem', margin: '0 0 4px' }}>No cards yet</p>
+                                <p style={{ fontSize: '0.85rem', margin: 0 }}>Click "Create Card" to build your first Silver or Gold pricing card.</p>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="pc-cards-grid">
+                                    {pagedCards.map((card: PricingCard) => (
+                                        <PricingCardTile
+                                            key={card.id}
+                                            card={card}
+                                            onEdit={() => { setEditingCard(card); setShowCardModal(true); }}
+                                            onDelete={() => setDeleteCardId(card.id)}
+                                        />
+                                    ))}
+                                </div>
+                                <SimplePagination page={cardPage} total={filteredCards.length} perPage={CARDS_PER_PAGE} onChange={setCardPage} />
+                            </>
+                        )}
+                    </div>
+
+                </div>
+            </motion.div>
+
+            <ConfirmModal
+                isOpen={!!deleteCardId}
+                title="Delete Pricing Card"
+                message="Are you sure you want to delete this card? Products assigned to it will lose their Silver/Gold card."
+                onConfirm={executeDelete}
+                onCancel={() => setDeleteCardId(null)}
+            />
+        </>
     );
 }

@@ -7,12 +7,6 @@ import { toggleCart, toggleWishlist, toggleMobileMenu, openLogin, openRegister, 
 import { logout } from '@/store/slices/authSlice';
 import { setCartUser } from '@/store/slices/cartSlice';
 import { setWishlistUser } from '@/store/slices/wishlistSlice';
-import CartSidebar from '@/components/cart/CartSidebar';
-import WishlistSidebar from '@/components/wishlist/WishlistSidebar';
-import LoginModal from '@/components/auth/LoginModal';
-import RegisterModal from '@/components/auth/RegisterModal';
-import FreeQuoteModal from '@/components/auth/FreeQuoteModal';
-import SearchOverlay from '@/components/search/SearchOverlay';
 import CurrencyToggle from '@/components/ui/CurrencyToggle';
 import { PHONE } from '@/lib/data';
 import styles from './Header.module.css';
@@ -302,14 +296,6 @@ export default function Header() {
                     </div>
                 </div>
             </header>
-
-            {/* Sidebars & Modals */}
-            {cartOpen && <CartSidebar />}
-            {wishlistOpen && <WishlistSidebar />}
-            {loginModalOpen && <LoginModal />}
-            {registerModalOpen && <RegisterModal />}
-            {quoteModalOpen && <FreeQuoteModal />}
-            {searchOpen && <SearchOverlay />}
         </>
     );
 }

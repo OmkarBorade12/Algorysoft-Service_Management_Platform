@@ -25,6 +25,10 @@ export interface Product {
         silver: { price: number; features: string };
         gold: { price: number; features: string };
     };
+    silverCard?: number | null;   // PricingCard id
+    goldCard?: number | null;     // PricingCard id
+    silverCardData?: { id: number; name: string; tier: string; price: number; features: string } | null;
+    goldCardData?: { id: number; name: string; tier: string; price: number; features: string } | null;
 }
 
 interface ProductsState {
@@ -56,6 +60,10 @@ const mapProduct = (p: any): Product => ({
     mainImage: p.main_image,
     images: p.images || [],
     pricingTiers: p.pricing_tiers || {},
+    silverCard: p.silver_card ?? null,
+    goldCard: p.gold_card ?? null,
+    silverCardData: p.silver_card_data ?? null,
+    goldCardData: p.gold_card_data ?? null,
     tags: [], // Placeholder since it's not in BE model yet
 });
 
@@ -84,6 +92,8 @@ const mapToBackend = (p: Partial<Product>) => {
             silver: { price: 0, features: '' },
             gold: { price: 0, features: '' }
         },
+        silver_card: p.silverCard ?? null,
+        gold_card: p.goldCard ?? null,
     };
 };
 

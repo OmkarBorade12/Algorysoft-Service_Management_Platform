@@ -1,23 +1,41 @@
+# pyre-ignore-all-errors
 """
 Views for the projects app. These views handle API requests.
 """
-from rest_framework import viewsets
-from .models import Category, Project, CustomRequest, Order, Feature
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from .models import Category, Project, CustomRequest, Order, Feature, BasicCard, PricingCard
 from .serializers import (
-    CategorySerializer, 
-    ProjectSerializer, 
-    CustomRequestSerializer, 
+    CategorySerializer,
+    ProjectSerializer,
+    CustomRequestSerializer,
     OrderSerializer,
-    FeatureSerializer
+    FeatureSerializer,
+    BasicCardSerializer,
+    PricingCardSerializer,
 )
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+
 class FeatureViewSet(viewsets.ModelViewSet):
     queryset = Feature.objects.all()
     serializer_class = FeatureSerializer
+
+
+class BasicCardViewSet(viewsets.ModelViewSet):
+    """Singleton-style BasicCard – only one record used (id=1)."""
+    queryset = BasicCard.objects.all()
+    serializer_class = BasicCardSerializer
+
+
+class PricingCardViewSet(viewsets.ModelViewSet):
+    queryset = PricingCard.objects.all().order_by('-created_at')
+    serializer_class = PricingCardSerializer
+
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
@@ -26,9 +44,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
     search_fields = ['title', 'description', 'tech']
     ordering_fields = ['price', 'views', 'discount']
 
+
 class CustomRequestViewSet(viewsets.ModelViewSet):
     queryset = CustomRequest.objects.all()
     serializer_class = CustomRequestSerializer
+
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()

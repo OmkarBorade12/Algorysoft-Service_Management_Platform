@@ -10,6 +10,7 @@ import { addRequestThunk } from '@/store/slices/requestsSlice';
 import { formatPrice } from '@/store/slices/currencySlice';
 import { Product } from '@/store/slices/productsSlice';
 import { fetchFeatures } from '@/store/slices/featuresSlice';
+import { fetchBasicCard } from '@/store/slices/pricingCardsSlice';
 import toast from 'react-hot-toast';
 import { FiSettings, FiCpu } from 'react-icons/fi';
 
@@ -238,8 +239,8 @@ export default function ProjectDetailPage() {
     const dispatch = useAppDispatch();
     const { currency, usdRate } = useAppSelector(s => s.currency);
     const { items: wishlistItems } = useAppSelector(s => s.wishlist);
-
     const { items: projects } = useAppSelector(s => s.products);
+    const { basicCard } = useAppSelector(s => (s as any).pricingCards);
 
     const project = projects.find(p => p.slug === slug);
     const [showRequirement, setShowRequirement] = useState(false);
@@ -257,11 +258,10 @@ export default function ProjectDetailPage() {
         : defaultMediaItems;
     const isWishlisted = wishlistItems.some(i => i.id === project?.id);
 
-    // Auto-open requirement modal after 4s
+    // Fetch essential data on mount
     useEffect(() => {
         dispatch(fetchFeatures());
-        const timer = setTimeout(() => setShowRequirement(true), 4000);
-        return () => clearTimeout(timer);
+        dispatch(fetchBasicCard() as any);
     }, [dispatch]);
 
     // Auto-scroll gallery every 3s
@@ -343,7 +343,7 @@ export default function ProjectDetailPage() {
             border: '#93c5fd',
             glow: 'rgba(59,130,246,0.18)',
             accentBar: '#3b82f6',
-            data: (project.pricingTiers as any)?.basic || { price: Math.floor(project.price * 0.5), features: 'Static Frontend\nContact Form\nDomain Setup\nBasic SEO' },
+            data: basicCard || { price: 0, features: 'No features configured' },
         },
         {
             key: 'Silver' as const,
@@ -354,7 +354,7 @@ export default function ProjectDetailPage() {
             border: '#c4b5fd',
             glow: 'rgba(139,92,246,0.18)',
             accentBar: '#8b5cf6',
-            data: (project.pricingTiers as any)?.silver || { price: project.price, features: 'Dynamic Frontend\nAdmin Panel\nDatabase (MongoDB)\nUser Authentication' },
+            data: project.silverCardData || { price: 0, features: 'No Silver package' },
         },
         {
             key: 'Gold' as const,
@@ -365,7 +365,7 @@ export default function ProjectDetailPage() {
             border: '#fcd34d',
             glow: 'rgba(245,158,11,0.18)',
             accentBar: '#f59e0b',
-            data: (project.pricingTiers as any)?.gold || { price: Math.floor(project.price * 1.5), features: 'Full Stack App\nAWS Deployment\nPayment Gateway\nPriority Support' },
+            data: project.goldCardData || { price: 0, features: 'No Gold package' },
         },
     ];
 
@@ -598,7 +598,7 @@ export default function ProjectDetailPage() {
                         <div className="pricing-tiers-grid">
                             {TIER_CONFIG.map(tier => {
                                 const isSelected = selectedTier === tier.key;
-                                const features = tier.data.features.split('\n').filter(Boolean);
+                                const features = (tier.data.features || '').split('\n').filter(Boolean);
                                 return (
                                     <div
                                         key={tier.key}

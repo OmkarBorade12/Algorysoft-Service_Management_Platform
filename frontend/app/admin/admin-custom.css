@@ -1,0 +1,142 @@
+/* =========================================================
+   COMBINED CUSTOM STYLES FOR ADMIN PAGES (Cards & Products)
+   ========================================================= */
+
+/* ── overlay ── */
+.pc-overlay {
+    position: fixed; inset: 0;
+    background: rgba(18,25,38,0.65);
+    backdrop-filter: blur(8px);
+    display: flex; justify-content: center; align-items: flex-start;
+    z-index: 12000; padding: 60px 20px 40px; overflow-y: auto;
+}
+.pc-modal-box { max-width: 520px; width: 100%; margin: 0 auto; }
+.pc-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+.pc-modal-header h3 { margin: 0; font-size: 1.3rem; color: #121926; display: flex; align-items: center; gap: 8px; }
+.pc-close-btn { background: #f1f5f9; border: none; width: 34px; height: 34px; border-radius: 10px; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.pc-modal-footer { display: flex; gap: 14px; margin-top: 24px; }
+.pc-field { margin-bottom: 18px; }
+.pc-label { display: block; font-size: 0.82rem; font-weight: 700; color: #364152; margin-bottom: 8px; }
+
+/* ── tier button in form ── */
+.pc-tier-btn { flex: 1; padding: 10px; border-radius: 10px; border: 2px solid #e3e8ef; background: #f8fafc; color: #64748b; font-weight: 700; cursor: pointer; font-size: 0.9rem; transition: all .15s; }
+.pc-tier-btn.silver { border-color: #673ab7; background: #ede7f6; color: #5e35b1; }
+.pc-tier-btn.gold   { border-color: #ffb300; background: #fff8e1; color: #f57f17; }
+
+/* ── basic card layout ── */
+.pc-basic-grid { display: grid; grid-template-columns: 240px 1fr; gap: 28px; align-items: start; }
+@media (max-width: 720px) { .pc-basic-grid { grid-template-columns: 1fr; } }
+
+.pc-basic-preview {
+    padding: 20px; border-radius: 14px; border: 2px solid #90caf9;
+    background: linear-gradient(145deg, #f0f9ff 0%, #e3f2fd 100%);
+    position: relative; overflow: hidden;
+}
+
+/* ── cards grid – 4 across ── */
+.pc-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+@media (max-width: 1100px) { .pc-cards-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 780px)  { .pc-cards-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .pc-cards-grid { grid-template-columns: 1fr; } }
+
+/* ── card tile ── */
+.pc-card-tile {
+    border-radius: 14px; border: 2px solid;
+    padding: 18px 16px 16px;
+    position: relative; overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+    display: flex; flex-direction: column;
+    min-height: 200px;
+}
+.pc-card-tile:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+.pc-card-tile.silver { border-color: #d1c4e9; background: linear-gradient(145deg, #faf8ff 0%, #f3e5f5 100%); }
+.pc-card-tile.gold   { border-color: #ffd54f; background: linear-gradient(145deg, #fffde7 0%, #fff8e1 100%); }
+
+/* ── card accent bar ── */
+.pc-card-accent { height: 4px; border-radius: 2px; margin-bottom: 14px; position: absolute; top: 0; left: 0; right: 0; }
+.pc-card-accent.silver { background: linear-gradient(90deg, #9c27b0, #673ab7); }
+.pc-card-accent.gold   { background: linear-gradient(90deg, #ffb300, #ff8f00); }
+.pc-card-accent.blue   { background: linear-gradient(90deg, #42a5f5, #1976d2); }
+
+/* ── tier badge ── */
+.pc-tier-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; }
+.pc-tier-badge.silver { background: #ede7f6; color: #5e35b1; }
+.pc-tier-badge.gold   { background: #fff8e1; color: #f57f17; }
+.pc-tier-badge.blue   { background: #e3f2fd; color: #1565c0; }
+
+/* ── feature pill ── */
+.pc-feat-pill { padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
+.pc-feat-pill.silver { background: #ede7f6; color: #5e35b1; }
+.pc-feat-pill.gold   { background: #fff8e1; color: #f57f17; }
+.pc-feat-pill.blue   { background: #e3f2fd; color: #1565c0; }
+
+/* ── icon action buttons on card ── */
+.pc-icon-btn { border: 1px solid; border-radius: 7px; padding: 5px 7px; cursor: pointer; background: #fff; display: flex; align-items: center; transition: all .15s; font-size: 0.75rem; }
+.pc-icon-btn.edit   { color: #673ab7; border-color: #d1c4e9; }
+.pc-icon-btn.edit:hover   { background: #ede7f6; }
+.pc-icon-btn.delete { color: #ef5350; border-color: #ffcdd2; }
+.pc-icon-btn.delete:hover { background: #ffebee; }
+
+/* ── stat chips ── */
+.pc-stat-chip { display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 30px; font-weight: 700; font-size: 0.82rem; }
+.pc-stat-chip.silver { background: #ede7f6; color: #5e35b1; }
+.pc-stat-chip.gold   { background: #fff8e1; color: #f57f17; }
+
+/* ── filter tabs ── */
+.pc-filter-tab { padding: 6px 16px; border-radius: 20px; border: 2px solid #e3e8ef; background: #fff; color: #64748b; font-weight: 600; cursor: pointer; font-size: 0.82rem; transition: all .15s; }
+.pc-filter-tab.silver.active { border-color: #673ab7; background: #ede7f6; color: #5e35b1; }
+.pc-filter-tab.gold.active   { border-color: #ffb300; background: #fff8e1; color: #f57f17; }
+.pc-filter-tab.all.active    { border-color: #5e35b1; background: #ede7f6; color: #5e35b1; }
+
+/* =========================================================
+   PRODUCTS PAGE MODAL STYLES
+   ========================================================= */
+.modal-overlay { position: fixed; inset: 0; background: rgba(18,25,38,0.6); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: flex-start; z-index: 10000; padding: 100px 20px 60px; overflow-y: auto; }
+.modal-container { border: none; box-shadow: 0 40px 100px rgba(0,0,0,0.3); width: 100%; position: relative; margin-bottom: 60px; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.modal-header h3 { margin: 0; font-size: 1.5rem; color: #121926; }
+.close-btn { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.input-label { display: block; font-size: 0.85rem; font-weight: 600; color: #364152; margin-bottom: 8px; }
+.field-group { margin-bottom: 20px; }
+.modal-footer { display: flex; gap: 16px; margin-top: 32px; }
+
+.icon-dropdown-box { position: relative; }
+.dropdown-trigger { background: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.icon-grid-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #e3e8ef; border-radius: 12px; margin-top: 8px; z-index: 1200; padding: 8px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-height: 200px; overflow-y: auto; }
+.icon-item { height: 40px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; border-radius: 8px; cursor: pointer; font-size: 1.4rem; color: #64748b; }
+.icon-item:hover { background: #f8fafc; color: #5e35b1; transform: scale(1.1); }
+.icon-item.active { background: #ede7f6; color: #5e35b1; }
+
+.upload-preview-box { width: 100%; height: 180px; border: 2px dashed #e3e8ef; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: #f8fafc; overflow: hidden; position: relative; }
+.full-cover { width: 100%; height: 100%; object-fit: cover; }
+.sub-text { font-size: 0.85rem; color: #94a3b8; margin-top: 8px; }
+.gallery-upload-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
+.gallery-item-admin { height: 80px; border-radius: 8px; overflow: hidden; border: 1px solid #e3e8ef; position: relative; }
+.gallery-item-admin img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+.del-img { position: absolute; top: 4px; right: 4px; background: rgba(239, 68, 68, 0.8); border: none; color: #fff; border-radius: 4px; padding: 2px; cursor: pointer; }
+.add-gallery-btn { height: 80px; border: 2px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; cursor: pointer; color: #64748b; }
+
+/* ====== Assign Cards UI ====== */
+.assigned-cards-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.assigned-card-chip { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; border: 2px solid transparent; }
+.assigned-card-chip.basic { background: #e3f2fd; color: #1565c0; border-color: #90caf9; }
+.assigned-card-chip.silver.active { background: #ede7f6; color: #5e35b1; border-color: #ce93d8; }
+.assigned-card-chip.gold.active { background: #fff8e1; color: #f57f17; border-color: #ffd54f; }
+.assigned-card-chip.silver.empty, .assigned-card-chip.gold.empty { background: #f1f5f9; color: #94a3b8; border-color: #e3e8ef; }
+.chip-auto-tag { background: #2196f3; color: #fff; padding: 1px 7px; border-radius: 10px; font-size: 0.65rem; margin-left: 4px; }
+
+.assign-cards-btn { display: flex; align-items: center; justify-content: center; width: 100%; padding: 13px; border: 2px dashed #673ab7; border-radius: 12px; background: #faf8ff; color: #673ab7; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
+.assign-cards-btn:hover { background: #ede7f6; border-style: solid; }
+
+/* ====== Popup 4-col card grid ====== */
+.popup-cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 720px)  { .popup-cards-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 460px)  { .popup-cards-grid { grid-template-columns: 1fr; } }
+
+@media (max-width: 600px) {
+    .assigned-cards-preview { flex-direction: column; }
+}

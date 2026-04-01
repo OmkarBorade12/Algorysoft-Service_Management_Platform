@@ -206,23 +206,23 @@ export default function ProjectDetail() {
                         <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', color: 'var(--text-secondary)' }}>
                             <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                                 <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓</div>
-                                Complete Source Code
+                                Scalable & Professional Source Code
                             </li>
                             <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                                 <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓</div>
-                                IEEE Base Paper
+                                Full Admin Control Panel & CRM
                             </li>
                             <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                                 <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓</div>
-                                Project Documentation (Synopsis, PPT, Report)
+                                Responsive & SEO Optimised Design
                             </li>
                             <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                                 <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓</div>
-                                Installation Guide & Video
+                                1 Year Technical Priority Support
                             </li>
                             <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                                 <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓</div>
-                                Free Online Installation Support
+                                Free Cloud Deployment & Configuration
                             </li>
                         </ul>
                     </div>

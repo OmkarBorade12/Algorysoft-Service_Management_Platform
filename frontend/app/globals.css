@@ -702,7 +702,7 @@ img {
   inset: 0;
   background: rgba(26, 36, 16, 0.45);
   backdrop-filter: blur(6px);
-  z-index: 1000;
+  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;

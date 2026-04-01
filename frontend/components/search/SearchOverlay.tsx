@@ -65,7 +65,7 @@ export default function SearchOverlay() {
                     <div className={styles.results}>
                         <p className={styles.resultLabel}>Projects</p>
                         {suggestions.map((p) => (
-                            <Link key={p.id} href={`/project/${p.slug}`} className={styles.resultItem} onClick={() => { dispatch(addRecentSearch(localQuery)); dispatch(toggleSearch()); }}>
+                            <Link key={p.id} href={`/projects/${p.slug}`} className={styles.resultItem} onClick={() => { dispatch(addRecentSearch(localQuery)); dispatch(toggleSearch()); }}>
                                 <span className={styles.resultIcon} style={{ color: 'var(--pista-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{CATEGORY_ICON_MAP[p.icon?.replace(/[^a-z-]/g, '')] || <FiGlobe size={18} />}</span>
                                 <div>
                                     <p className={styles.resultTitle}>{p.title}</p>

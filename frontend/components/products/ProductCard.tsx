@@ -64,59 +64,63 @@ export default function ProductCard({ product }: { product: Product }) {
     };
 
     return (
-        <Link href={`/projects/${product.slug}`} className={styles.card}>
-            {/* Badges */}
-            <div className={styles.badges}>
-                <span className="badge badge-discount">{product.discount}% OFF</span>
-                {product.isNew && <span className="badge badge-new">NEW</span>}
-            </div>
-
-            {/* Visual area */}
-            <div className={styles.visual} style={{ overflow: 'hidden', position: 'relative' }}>
-                {product.mainImage ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={product.mainImage} alt={product.title} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, zIndex: 1 }} />
-                ) : (
-                    <div className={styles.iconContainer} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--pista-primary)' }}>
-                        {CATEGORY_ICON_MAP[product.slug?.split('-')[0]] || CATEGORY_ICON_MAP.ecommerce}
-                    </div>
-                )}
-                <div className={styles.bgDecor} style={{ zIndex: 0 }} />
-            </div>
-
-            {/* Body */}
-            <div className={styles.body}>
-                {/* Category */}
-                <span className="badge badge-category" style={{ marginBottom: '8px' }}>
-                    {product.category}
-                </span>
-
-                <h3 className={styles.title}>{product.title}</h3>
-
-                {/* Tech tags (max 3) */}
-                {product.tech && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '10px' }}>
-                        {product.tech.slice(0, 3).map((t) => (
-                            <span key={t} style={{
-                                fontSize: '0.68rem', fontWeight: 600,
-                                background: 'var(--bg-secondary)',
-                                border: '1px solid var(--border-solid)',
-                                borderRadius: '4px',
-                                padding: '2px 7px',
-                                color: 'var(--text-muted)',
-                            }}>{t}</span>
-                        ))}
-                    </div>
-                )}
-
-                {/* Pricing — currency-aware */}
-                <div className={styles.priceRow}>
-                    <span className={styles.price}>{formatPrice(product.price, currency, usdRate)}</span>
-                    <span className={styles.originalPrice}>{formatPrice(product.originalPrice, currency, usdRate)}</span>
-                    <span className={styles.discountBadge}>Save {product.discount}%</span>
+        <div className={styles.card}>
+            <Link href={`/projects/${product.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                {/* Badges */}
+                <div className={styles.badges}>
+                    <span className="badge badge-discount">{product.discount}% OFF</span>
+                    {product.isNew && <span className="badge badge-new">NEW</span>}
                 </div>
 
-                {/* Actions */}
+                {/* Visual area */}
+                <div className={styles.visual} style={{ overflow: 'hidden', position: 'relative' }}>
+                    {product.mainImage ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={product.mainImage} alt={product.title} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, zIndex: 1 }} />
+                    ) : (
+                        <div className={styles.iconContainer} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--pista-primary)' }}>
+                            {CATEGORY_ICON_MAP[product.slug?.split('-')[0]] || CATEGORY_ICON_MAP.ecommerce}
+                        </div>
+                    )}
+                    <div className={styles.bgDecor} style={{ zIndex: 0 }} />
+                </div>
+
+                {/* Body for details */}
+                <div className={styles.body}>
+                    {/* Category */}
+                    <span className="badge badge-category" style={{ marginBottom: '8px' }}>
+                        {product.category}
+                    </span>
+
+                    <h3 className={styles.title}>{product.title}</h3>
+
+                    {/* Tech tags (max 3) */}
+                    {product.tech && (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '10px' }}>
+                            {product.tech.slice(0, 3).map((t) => (
+                                <span key={t} style={{
+                                    fontSize: '0.68rem', fontWeight: 600,
+                                    background: 'var(--bg-secondary)',
+                                    border: '1px solid var(--border-solid)',
+                                    borderRadius: '4px',
+                                    padding: '2px 7px',
+                                    color: 'var(--text-muted)',
+                                }}>{t}</span>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Pricing — currency-aware */}
+                    <div className={styles.priceRow}>
+                        <span className={styles.price}>{formatPrice(product.price, currency, usdRate)}</span>
+                        <span className={styles.originalPrice}>{formatPrice(product.originalPrice, currency, usdRate)}</span>
+                        <span className={styles.discountBadge}>Save {product.discount}%</span>
+                    </div>
+                </div>
+            </Link>
+
+            {/* Actions footer (Outside the Link) */}
+            <div className={styles.body} style={{ paddingTop: 0 }}>
                 <div className={styles.actions}>
                     <button className={styles.cartBtn} onClick={handleAddToCart} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', justifyContent: 'center' }}>
                         <HiOutlineRocketLaunch size={15} /> Get This Website
@@ -130,6 +134,6 @@ export default function ProductCard({ product }: { product: Product }) {
                     </button>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 }

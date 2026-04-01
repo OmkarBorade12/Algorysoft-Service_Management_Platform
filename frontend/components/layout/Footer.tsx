@@ -18,8 +18,9 @@ export default function Footer() {
                     <Image src="/logo.jpeg" alt="AlgorySoft" width={48} height={48} className={styles.logo} />
                     <h3 className={styles.brandName}>AlgorySoft</h3>
                     <p className={styles.brandDesc}>
-                        India's largest platform for final year engineering projects. 10,000+ IEEE projects
-                        with complete documentation, source code, and live support.
+                        India's premier digital solution partner for businesses. We deliver premium, 
+                        scalable web applications, custom software solutions, and end-to-end 
+                        digital transformation to help your brand lead in the modern era.
                     </p>
                     <div className={styles.socialLinks}>
                         <a href={`https://wa.me/${WHATSAPP}`} target="_blank" rel="noreferrer" className={`${styles.socialBtn} ${styles.socialWa}`} title="WhatsApp"><FaWhatsapp size={18} /></a>
