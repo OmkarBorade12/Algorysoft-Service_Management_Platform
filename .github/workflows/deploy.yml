@@ -84,9 +84,6 @@ jobs:
           --exclude 'venv' \
           --exclude '__pycache__' \
           --exclude '.env' \
-          --exclude 'db.sqlite3' \
-          --exclude 'staticfiles' \
-          --exclude 'media' \
           --exclude '*.pyc'
 
       - name: Deploy Frontend
