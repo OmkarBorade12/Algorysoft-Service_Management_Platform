@@ -129,9 +129,15 @@ const productsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(fetchProducts.pending, (state) => {
+                state.status = 'loading';
+            })
             .addCase(fetchProducts.fulfilled, (state, action) => {
                 state.items = action.payload;
                 state.status = 'succeeded';
+            })
+            .addCase(fetchProducts.rejected, (state) => {
+                state.status = 'failed';
             })
             .addCase(addProductThunk.fulfilled, (state, action) => {
                 state.items.push(action.payload);

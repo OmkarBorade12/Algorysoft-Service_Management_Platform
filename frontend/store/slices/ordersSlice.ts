@@ -102,9 +102,15 @@ const ordersSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(fetchOrders.pending, (state) => {
+                state.status = 'loading';
+            })
             .addCase(fetchOrders.fulfilled, (state, action) => {
                 state.items = action.payload;
                 state.status = 'succeeded';
+            })
+            .addCase(fetchOrders.rejected, (state) => {
+                state.status = 'failed';
             })
             .addCase(addOrderThunk.fulfilled, (state, action) => {
                 state.items.unshift(action.payload);

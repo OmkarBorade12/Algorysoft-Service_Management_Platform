@@ -100,6 +100,9 @@ const pricingCardsSlice = createSlice({
                 state.basicCard = action.payload;
                 state.status = 'succeeded';
             })
+            .addCase(fetchBasicCard.rejected, (state) => {
+                state.status = 'failed';
+            })
             .addCase(saveBasicCard.fulfilled, (state, action) => {
                 state.basicCard = action.payload;
             })
@@ -108,6 +111,9 @@ const pricingCardsSlice = createSlice({
             .addCase(fetchPricingCards.fulfilled, (state, action) => {
                 state.cards = action.payload;
                 state.status = 'succeeded';
+            })
+            .addCase(fetchPricingCards.rejected, (state) => {
+                state.status = 'failed';
             })
             .addCase(addPricingCard.fulfilled, (state, action) => {
                 state.cards.unshift(action.payload);

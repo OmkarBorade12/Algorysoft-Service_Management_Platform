@@ -25,7 +25,8 @@ export default function RegisterModal() {
 
         try {
             // 1. Try real backend first
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register/`, {
+            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://api.algorysoft.com';
+            const res = await fetch(`${apiBase}/api/auth/register/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...form, name: `${form.firstName} ${form.lastName}` }),

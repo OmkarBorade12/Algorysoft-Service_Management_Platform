@@ -22,7 +22,8 @@ export default function LoginModal() {
 
         try {
             // 1. Try the real backend first
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login/`, {
+            const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://api.algorysoft.com';
+            const res = await fetch(`${apiBase}/api/auth/login/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
