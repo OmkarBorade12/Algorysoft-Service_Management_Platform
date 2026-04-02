@@ -60,7 +60,7 @@ export default function HomePage() {
 
       {/* Latest Work — wireframe reveal */}
       <ScrollReveal direction="wireframe" delay={0} duration={0.7}>
-        <section style={{ padding: '70px 0', background: 'var(--bg-secondary)' }}>
+        <section style={{ padding: '50px 0', background: 'var(--bg-secondary)' }}>
           <div className="container">
             <Suspense fallback={<ProductSkeleton />}>
               <ProductSection
@@ -74,14 +74,9 @@ export default function HomePage() {
         </section>
       </ScrollReveal>
 
-      {/* USP — slide from left */}
-      <ScrollReveal direction="left" delay={0} duration={0.65}>
-        <USPSection />
-      </ScrollReveal>
-
       {/* Most Popular — wireframe reveal */}
       <ScrollReveal direction="wireframe" delay={0} duration={0.7}>
-        <section style={{ padding: '70px 0', background: 'var(--bg-primary)' }}>
+        <section style={{ padding: '50px 0', background: 'var(--bg-primary)' }}>
           <div className="container">
             <Suspense fallback={<ProductSkeleton />}>
               <ProductSection
@@ -94,6 +89,12 @@ export default function HomePage() {
           </div>
         </section>
       </ScrollReveal>
+
+      {/* Removed USP Section to eliminate white space between Most Popular and Testimonials 
+      <ScrollReveal direction="left" delay={0} duration={0.65}>
+        <USPSection />
+      </ScrollReveal>
+      */}
 
       {/* Testimonials — zoom in */}
       <ScrollReveal direction="zoom" delay={0} duration={0.6}>

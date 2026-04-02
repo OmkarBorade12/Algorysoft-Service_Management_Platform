@@ -323,20 +323,31 @@
     .left {
         order: 1;
     }
+
     .right {
         order: 2;
     }
+
     .heroContent {
         grid-template-columns: 1fr;
         gap: 60px;
         text-align: center;
     }
-    .badge, .heading, .subHeading, .features, .ctaRow, .tags, .trustRow {
+
+    .badge,
+    .heading,
+    .subHeading,
+    .features,
+    .ctaRow,
+    .tags,
+    .trustRow {
         justify-content: center;
         margin-left: auto;
         margin-right: auto;
     }
-    .features, .tags {
+
+    .features,
+    .tags {
         justify-content: center;
     }
 }
@@ -346,41 +357,97 @@
         min-height: auto;
         padding: 60px 0 40px;
     }
+
     .heroContent {
         gap: 40px;
     }
+}
+
+/* ===== MOBILE VISUAL REDESIGN (≤ 768px) =====
+   Switch from absolute-position layout (which clips via overflow:hidden)
+   to a grid layout so all cards remain fully within the page bounds.
+*/
+@media (max-width: 768px) {
+
+    /* Make the visual a grid: logo spans full width, then 2x2 card grid */
     .heroVisual {
-        width: 320px;
+        width: min(92vw, 360px);
+        aspect-ratio: unset;
+        height: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        align-items: stretch;
     }
+
+    /* Logo card: spans both columns, no longer absolutely positioned */
+    .logoCard {
+        grid-column: 1 / -1;
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        justify-self: center;
+        padding: 20px 28px;
+    }
+
+    /* Float cards: in-flow, each takes one grid cell */
     .floatCard {
-        padding: 8px 12px;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: none;
+        width: 100%;
+        font-size: 1rem;
+        padding: 10px 12px;
+        gap: 8px;
+        animation: float 4s ease-in-out infinite;
+        display: flex;
     }
+
+    /* Clear per-card absolute offsets */
+    .card1,
+    .card2,
+    .card3,
+    .card4 {
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+
+    /* Hide the decorative rings — they rely on the old circular layout */
+    .ringOuter,
+    .ringInner {
+        display: none;
+    }
+
     .cardTitle {
         font-size: 0.75rem;
     }
+
     .cardSub {
         font-size: 0.65rem;
     }
 }
 
-@media (max-width: 600px) {
-    .heroVisual {
-        width: 280px;
-    }
-    .floatCard {
-        transform: scale(0.9);
-    }
-    .card1 { left: -10px; }
-    .card2 { right: -10px; }
-    .card3 { left: -10px; }
-    .card4 { right: -10px; }
-}
-
 @media (max-width: 480px) {
+    .hero {
+        padding: 50px 0 30px;
+    }
+
+    .heroContent {
+        gap: 32px;
+    }
+
     .ctaRow {
         flex-direction: column;
     }
-    .btn-primary, .btn-secondary {
+
+    .btn-primary,
+    .btn-secondary {
         width: 100%;
         justify-content: center;
     }
@@ -388,12 +455,14 @@
     .heading {
         font-size: clamp(1.8rem, 8vw, 2.4rem);
     }
-    
+
     .heroVisual {
-        width: 240px;
+        width: min(95vw, 340px);
+        gap: 8px;
     }
-    
+
     .floatCard {
-        display: none; /* Hide floating cards on very small screens to avoid clutter */
+        padding: 8px 10px;
+        gap: 6px;
     }
 }

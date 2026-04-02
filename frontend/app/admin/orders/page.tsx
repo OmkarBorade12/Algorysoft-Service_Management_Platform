@@ -42,8 +42,9 @@ export default function AdminOrdersPage() {
         if (search && !o.client_name.toLowerCase().includes(search.toLowerCase()) && !o.product.toLowerCase().includes(search.toLowerCase())) return false;
         return true;
     });
-
-    const paginatedOrders = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    
+    const sortedFiltered = [...filtered].sort((a, b) => Number(b.id) - Number(a.id));
+    const paginatedOrders = sortedFiltered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     // Reset pagination when searching/filtering
     useEffect(() => setCurrentPage(1), [filter, search]);

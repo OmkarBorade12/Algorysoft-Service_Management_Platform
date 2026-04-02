@@ -75,7 +75,8 @@ export default function FeaturesAdmin() {
         setPrice('');
     };
 
-    const displayedFeatures = (features || []).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const sortedFeatures = [...(features || [])].sort((a, b) => Number(b.id) - Number(a.id));
+    const displayedFeatures = sortedFeatures.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
         <div style={{ maxWidth: 1000 }} className="berry-animate-in">

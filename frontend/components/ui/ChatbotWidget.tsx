@@ -215,6 +215,7 @@ export default function ChatbotWidget() {
                 onClick={() => setOpen(o => !o)}
                 aria-label="Open AlgoBot Chat"
                 id="chatbot-toggle-btn"
+                style={{ display: open ? 'none' : 'flex' }}
             >
                 {open ? <FiX size={20} /> : <FiMessageSquare size={22} />}
                 {!open && <span className="chatbot-notif">1</span>}

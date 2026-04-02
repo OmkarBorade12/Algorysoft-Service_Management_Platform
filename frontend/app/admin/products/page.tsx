@@ -173,7 +173,7 @@ function CardAssignmentPopup({ silverCardId, goldCardId, onSave, onClose }: Card
                     {silverCards.length === 0 ? (
                         <p style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.83rem', margin: 0 }}>No silver cards yet — create them in the Cards section.</p>
                     ) : (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }} className="popup-cards-grid">
+                        <div className="popup-cards-grid">
                             {silverCards.map((c: PricingCard) => (
                                 <SelectorCard key={c.id} card={c} selected={selectedSilver === c.id}
                                     onToggle={() => setSelectedSilver(selectedSilver === c.id ? null : c.id)} />
@@ -191,7 +191,7 @@ function CardAssignmentPopup({ silverCardId, goldCardId, onSave, onClose }: Card
                     {goldCards.length === 0 ? (
                         <p style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.83rem', margin: 0 }}>No gold cards yet — create them in the Cards section.</p>
                     ) : (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }} className="popup-cards-grid">
+                        <div className="popup-cards-grid">
                             {goldCards.map((c: PricingCard) => (
                                 <SelectorCard key={c.id} card={c} selected={selectedGold === c.id}
                                     onToggle={() => setSelectedGold(selectedGold === c.id ? null : c.id)} />
