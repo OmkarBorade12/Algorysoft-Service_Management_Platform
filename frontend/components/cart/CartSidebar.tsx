@@ -15,6 +15,12 @@ const TIER_COLORS: Record<string, { color: string; bg: string; border: string }>
     Gold:   { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)',  border: 'rgba(245,158,11,0.25)' },
 };
 
+const getTierColor = (tier: string | undefined) => {
+    if (!tier) return null;
+    const key = tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase();
+    return TIER_COLORS[key] || TIER_COLORS.Basic;
+};
+
 export default function CartSidebar() {
     const dispatch = useAppDispatch();
     const { items, totalItems, totalPrice } = useAppSelector((s) => s.cart);
@@ -56,7 +62,7 @@ export default function CartSidebar() {
                         <div className={styles.items}>
                             {items.map((item) => {
                                 const isTierItem = !!item.tier;
-                                const tc = item.tier ? TIER_COLORS[item.tier] : null;
+                                const tc = getTierColor(item.tier);
 
                                 return (
                                     <div key={item.id} className={styles.item} style={{
@@ -181,7 +187,7 @@ export default function CartSidebar() {
                                             🏷️ Selected Tiers
                                         </div>
                                         {items.filter(i => i.tier).map(i => {
-                                            const tc = i.tier ? TIER_COLORS[i.tier] : null;
+                                            const tc = getTierColor(i.tier);
                                             return (
                                                 <div key={i.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                                                     <span style={{ fontWeight: 600, fontSize: '0.75rem', color: 'var(--text-primary)' }}>

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { signOut } from 'next-auth/react';
 import { toggleCart, toggleWishlist, toggleMobileMenu, openLogin, openRegister, openQuote, closeModals, toggleSearch } from '@/store/slices/uiSlice';
 import { logout } from '@/store/slices/authSlice';
 import { setCartUser } from '@/store/slices/cartSlice';
@@ -44,10 +45,11 @@ export default function Header() {
     }, []);
 
     const handleLogout = () => {
-        dispatch(logout()); 
+        dispatch(logout());
         dispatch(setCartUser('guest'));
         dispatch(setWishlistUser('guest'));
         setUserMenuOpen(false);
+        signOut({ redirect: false });
     };
 
     return (
@@ -212,19 +214,19 @@ export default function Header() {
                             <FiX size={24} />
                         </button>
                     </div>
-                    
+
                     <div className={styles.sidebarContent}>
                         <div className={styles.sidebarSection}>
-                             <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
                                 <button className={styles.sidebarAction} onClick={() => { dispatch(toggleSearch()); dispatch(toggleMobileMenu()); }}>
                                     <FiSearch size={18} /> Search
                                 </button>
                                 <button className={styles.sidebarAction} onClick={() => { dispatch(toggleWishlist()); dispatch(toggleMobileMenu()); }}>
                                     <FiHeart size={18} /> Wishlist
                                 </button>
-                             </div>
+                            </div>
                         </div>
-                        
+
                         <div className={styles.sidebarSection}>
                             <h4 className={styles.sidebarSecTitle}>Navigation</h4>
                             <Link href="/" className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())}><FiHome size={18} /> Home</Link>
@@ -254,27 +256,27 @@ export default function Header() {
                         </div>
 
                         {isAuthenticated ? (
-                             <div className={styles.sidebarAccount}>
+                            <div className={styles.sidebarAccount}>
                                 <div className={styles.sidebarUser}>
-                                     <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--pista-primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
+                                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--pista-primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
                                         {user?.name?.charAt(0).toUpperCase()}
-                                     </div>
-                                     <div style={{ minWidth: 0 }}>
+                                    </div>
+                                    <div style={{ minWidth: 0 }}>
                                         <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--pista-dark)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.name}</div>
                                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{(user?.role as string) === 'admin' ? 'Administrator' : 'Client Account'}</div>
-                                     </div>
+                                    </div>
                                 </div>
                                 <Link href={(user?.role as string) === 'admin' ? "/admin" : "/dashboard"} className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())} style={{ background: 'linear-gradient(90deg,#ede7f6,#f3e5f5)', color: '#5e35b1', fontWeight: 700, borderRadius: 12 }}>
                                     <FiGrid size={18} /> My Dashboard
                                 </Link>
                                 <button className={styles.mobileNavLink} style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}
-                                    onClick={() => { 
+                                    onClick={() => {
                                         handleLogout();
                                         dispatch(toggleMobileMenu());
                                     }}>
                                     <FiLogOut size={18} /> Logout
                                 </button>
-                             </div>
+                            </div>
                         ) : (
                             <div className={styles.sidebarSection}>
                                 <h4 className={styles.sidebarSecTitle}>Get Started</h4>

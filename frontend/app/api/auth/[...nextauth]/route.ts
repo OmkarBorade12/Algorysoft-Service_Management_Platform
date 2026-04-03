@@ -1,30 +1,20 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
-const hasGoogle =
-    !!process.env.GOOGLE_CLIENT_ID &&
-    process.env.GOOGLE_CLIENT_ID !== 'your_google_client_id_here' &&
-    !!process.env.GOOGLE_CLIENT_SECRET &&
-    process.env.GOOGLE_CLIENT_SECRET !== 'your_google_client_secret_here';
-
 export const authOptions: NextAuthOptions = {
     providers: [
         // ─── Google OAuth ─────────────────────────────────────────────
-        ...(hasGoogle
-            ? [
-                  GoogleProvider({
-                      clientId: process.env.GOOGLE_CLIENT_ID!,
-                      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-                      authorization: {
-                          params: {
-                              scope: 'openid email profile',
-                              access_type: 'offline',
-                              prompt: 'consent',
-                          },
-                      },
-                  }),
-              ]
-            : []),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID || '',
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+            authorization: {
+                params: {
+                    scope: 'openid email profile',
+                    access_type: 'offline',
+                    prompt: 'consent',
+                },
+            },
+        }),
     ],
 
     callbacks: {

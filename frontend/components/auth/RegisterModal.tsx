@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import styles from './AuthModal.module.css';
 import { FiX, FiUserPlus } from 'react-icons/fi';
 import { registerUser } from '@/lib/localUsers';
+import SocialAuthButtons from './SocialAuthButtons';
 
 export default function RegisterModal() {
     const dispatch = useAppDispatch();
@@ -117,6 +118,12 @@ export default function RegisterModal() {
                         {loading ? 'Creating Account...' : 'Create Account →'}
                     </button>
                 </form>
+
+                <div className={styles.divider}>
+                    <span>or continue with</span>
+                </div>
+
+                <SocialAuthButtons mode="register" />
 
                 <p className={styles.switchText}>
                     Already have an account?{' '}

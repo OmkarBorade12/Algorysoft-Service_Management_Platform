@@ -14,26 +14,26 @@
     font-weight: 500;
 }
 
-/* ── Row of 4 buttons ─────────────────────────────────────────── */
+/* ── Row of buttons ─────────────────────────────────────────── */
 .socialRow {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 /* ── Base button ───────────────────────────────────────────────── */
 .socialBtn {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 12px 6px 10px;
-    border-radius: 14px;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 12px;
     border: 1.5px solid transparent;
     cursor: pointer;
     font-family: 'Inter', sans-serif;
-    font-size: 0.7rem;
+    font-size: 0.95rem;
     font-weight: 600;
     transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
         box-shadow 0.2s ease,
@@ -41,6 +41,7 @@
         background 0.2s ease;
     position: relative;
     overflow: hidden;
+    width: 100%;
 }
 
 .socialBtn::before {
@@ -136,9 +137,4 @@
     box-shadow: 0 8px 24px #4285f430;
 }
 
-/* ── Responsive: collapse to 2 col on very narrow screens ─────── */
-@media (max-width: 380px) {
-    .socialRow {
-        grid-template-columns: 1fr 1fr;
-    }
-}
+/* ── No responsive col collapse needed anymore ─────── */

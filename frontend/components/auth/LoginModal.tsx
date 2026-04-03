@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import styles from './AuthModal.module.css';
 import { FiX, FiLogIn } from 'react-icons/fi';
 import { loginUser } from '@/lib/localUsers';
+import SocialAuthButtons from './SocialAuthButtons';
 
 export default function LoginModal() {
     const dispatch = useAppDispatch();
@@ -75,10 +76,16 @@ export default function LoginModal() {
                     <div className={styles.forgot}>
                         <a href="/forgot-password" className={styles.forgotLink}>Forgot password?</a>
                     </div>
-                    <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} disabled={loading}>
+                    <button type="submit" className="btn-primary" style={{ ...{ width: '100%', justifyContent: 'center' } }} disabled={loading}>
                         {loading ? 'Signing In...' : 'Sign In →'}
                     </button>
                 </form>
+
+                <div className={styles.divider}>
+                    <span>or continue with</span>
+                </div>
+
+                <SocialAuthButtons mode="login" />
 
                 <p className={styles.switchText}>
                     Don&apos;t have an account?{' '}

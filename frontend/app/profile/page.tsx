@@ -36,6 +36,7 @@ export default function ProfilePage() {
     const handleLogout = () => {
         dispatch(logout());
         toast('Logged out successfully');
+        import('next-auth/react').then(mod => mod.signOut({ redirect: false }));
         router.push('/');
     };
 

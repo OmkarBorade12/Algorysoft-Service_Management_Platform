@@ -155,7 +155,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         </div>
                     </div>
                     <Link href="/" className="berry-nav-item" style={{ marginBottom: 4 }}><FiGlobe size={18} /> <span>Website</span></Link>
-                    <button onClick={() => { dispatch(logout()); router.push('/'); }} className="berry-nav-item" style={{ width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
+                    <button onClick={() => { 
+                        dispatch(logout()); 
+                        import('next-auth/react').then(mod => mod.signOut({ redirect: false }));
+                        router.push('/'); 
+                    }} className="berry-nav-item" style={{ width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
                         <FiLogOut size={18} /> <span>Logout</span>
                     </button>
                 </div>
