@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+*.py[cod]
+*$py.class
+
+# Node.js
+node_modules/
+.next/
+out/
+build/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# MacOS
+.DS_Store
+
+# Misc Assets (Keep them if they are in repo)
+# Add them to ignore ONLY if you are sure
+# *.pem
