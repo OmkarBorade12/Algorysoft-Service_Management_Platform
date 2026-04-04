@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
 
     pages: {
         signIn: '/',
-        error: '/',
+        // removing error: '/' so we can see what the actual nextauth error is during debugging
     },
 
     session: { strategy: 'jwt' },
