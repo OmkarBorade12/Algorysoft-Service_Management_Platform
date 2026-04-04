@@ -1,6 +1,13 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
+// Environment Check (logs only true/false to server console for security)
+console.log('[NextAuth] Env Check:', {
+    hasSecret: !!process.env.NEXTAUTH_SECRET,
+    hasUrl: !!process.env.NEXTAUTH_URL,
+    hasGoogleId: !!process.env.GOOGLE_CLIENT_ID,
+});
+
 export const authOptions: NextAuthOptions = {
     providers: [
         // ─── Google OAuth ─────────────────────────────────────────────
@@ -16,6 +23,19 @@ export const authOptions: NextAuthOptions = {
             },
         }),
     ],
+
+    // Added for debugging
+    logger: {
+        error(code, metadata) {
+            console.error('NextAuth Error:', code, metadata);
+        },
+        warn(code) {
+            console.warn('NextAuth Warning:', code);
+        },
+        debug(code, metadata) {
+            console.log('NextAuth Debug:', code, metadata);
+        },
+    },
 
     callbacks: {
         async jwt({ token, account }) {
@@ -42,7 +62,7 @@ export const authOptions: NextAuthOptions = {
 
     session: { strategy: 'jwt' },
     secret: process.env.NEXTAUTH_SECRET,
-    debug: process.env.NODE_ENV === 'development',
+    debug: true,
 };
 
 const handler = NextAuth(authOptions);
