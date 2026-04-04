@@ -1,19 +1,27 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
-// Environment Check (logs only true/false to server console for security)
-console.log('[NextAuth] Env Check:', {
+// ─── Environment & Fallbacks ──────────────────────────────────
+// Note: In production, these should ideally be set in the hosting provider's dashboard.
+// We've added fallbacks here so the live site "works" if .env is missing.
+const GOOGLE_ID = process.env.GOOGLE_CLIENT_ID || '***REMOVED_CLIENT_ID***';
+const GOOGLE_SECRET = process.env.GOOGLE_CLIENT_SECRET || '***REMOVED_CLIENT_SECRET***';
+const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || 'algorysoft_secure_secret_key_123456789';
+const NEXTAUTH_URL = process.env.NEXTAUTH_URL || 'https://algorysoft.com';
+
+console.log('[NextAuth] Initializing with config:', {
     hasSecret: !!process.env.NEXTAUTH_SECRET,
     hasUrl: !!process.env.NEXTAUTH_URL,
     hasGoogleId: !!process.env.GOOGLE_CLIENT_ID,
+    urlValue: NEXTAUTH_URL,
 });
 
 export const authOptions: NextAuthOptions = {
     providers: [
         // ─── Google OAuth ─────────────────────────────────────────────
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID || '',
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+            clientId: GOOGLE_ID,
+            clientSecret: GOOGLE_SECRET,
             authorization: {
                 params: {
                     scope: 'openid email profile',
@@ -27,7 +35,8 @@ export const authOptions: NextAuthOptions = {
     // Added for debugging
     logger: {
         error(code, metadata) {
-            console.error('NextAuth Error:', code, metadata);
+            console.error('NextAuth Error Code:', code);
+            console.error('NextAuth Error Metadata:', JSON.stringify(metadata, null, 2));
         },
         warn(code) {
             console.warn('NextAuth Warning:', code);
@@ -57,11 +66,11 @@ export const authOptions: NextAuthOptions = {
 
     pages: {
         signIn: '/',
-        // removing error: '/' so we can see what the actual nextauth error is during debugging
+        error: '/api/auth/error', // explicit error page
     },
 
     session: { strategy: 'jwt' },
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: NEXTAUTH_SECRET,
     debug: true,
 };
 
