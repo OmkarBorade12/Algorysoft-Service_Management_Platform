@@ -2,18 +2,22 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
 // ─── Environment & Fallbacks ──────────────────────────────────
-// Note: In production, these should ideally be set in the hosting provider's dashboard.
-// We've added fallbacks here so the live site "works" if .env is missing.
+// Note: NextAuth v4 reads NEXTAUTH_URL from process.env.
+// If it's missing on the server, we explicitly set it here to avoid "localhost:3000" redirects.
+if (!process.env.NEXTAUTH_URL) {
+    process.env.NEXTAUTH_URL = 'https://algorysoft.com';
+}
+
 const GOOGLE_ID = process.env.GOOGLE_CLIENT_ID || '***REMOVED_CLIENT_ID***';
 const GOOGLE_SECRET = process.env.GOOGLE_CLIENT_SECRET || '***REMOVED_CLIENT_SECRET***';
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || 'algorysoft_secure_secret_key_123456789';
-const NEXTAUTH_URL = process.env.NEXTAUTH_URL || 'https://algorysoft.com';
+const NEXTAUTH_URL = process.env.NEXTAUTH_URL; // Read from the one we just ensured exists
 
 console.log('[NextAuth] Initializing with config:', {
     hasSecret: !!process.env.NEXTAUTH_SECRET,
     hasUrl: !!process.env.NEXTAUTH_URL,
-    hasGoogleId: !!process.env.GOOGLE_CLIENT_ID,
     urlValue: NEXTAUTH_URL,
+    hasGoogleId: !!process.env.GOOGLE_CLIENT_ID,
 });
 
 export const authOptions: NextAuthOptions = {
