@@ -23,6 +23,11 @@ const MultiSelectFeatures = ({
 }) => {
     const selectedNames = value.split('\n').filter(Boolean);
     const available = options.filter(o => !selectedNames.includes(o.name));
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
+
+    const filtered = available.filter(o => o.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
     return (
         <div style={{ border: '1px solid #e3e8ef', padding: 8, borderRadius: 8, background: '#fff' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8, minHeight: 28 }}>
@@ -36,15 +41,47 @@ const MultiSelectFeatures = ({
                     </span>
                 ))}
             </div>
-            <select className="berry-input" style={{ padding: '8px', fontSize: '0.85rem' }} value="" onChange={e => {
-                if (e.target.value) {
-                    const added = options.find(o => o.name === e.target.value);
-                    onChange(selectedNames.concat(e.target.value).join('\n'), added?.price || 0, 0);
-                }
-            }}>
-                <option value="" disabled>+ Add feature...</option>
-                {available.map(o => <option key={o.id} value={o.name}>{o.name} (+₹{o.price.toLocaleString('en-IN')})</option>)}
-            </select>
+            <div style={{ position: 'relative' }}>
+                <input 
+                    type="text" 
+                    className="berry-input" 
+                    placeholder="+ Search and add feature..."
+                    value={searchTerm}
+                    onChange={e => {
+                        setSearchTerm(e.target.value);
+                        setIsOpen(true);
+                    }}
+                    onFocus={() => setIsOpen(true)}
+                    onBlur={() => setTimeout(() => setIsOpen(false), 200)}
+                    style={{ padding: '8px', fontSize: '0.85rem' }} 
+                />
+                
+                {isOpen && filtered.length > 0 && (
+                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e3e8ef', borderRadius: 8, marginTop: 4, maxHeight: 200, overflowY: 'auto', zIndex: 10, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                        {filtered.map(o => (
+                            <div 
+                                key={o.id} 
+                                style={{ padding: '8px 12px', cursor: 'pointer', fontSize: '0.85rem', borderBottom: '1px solid #eee' }}
+                                onMouseDown={(e) => {
+                                    e.preventDefault(); // prevent blur
+                                    onChange(selectedNames.concat(o.name).join('\n'), o.price, 0);
+                                    setSearchTerm('');
+                                    setIsOpen(false);
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8fafc'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                            >
+                                {o.name} <span style={{ color: '#10b981', fontWeight: 600 }}>(+₹{o.price.toLocaleString('en-IN')})</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
+                {isOpen && filtered.length === 0 && (
+                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e3e8ef', borderRadius: 8, marginTop: 4, padding: '8px 12px', fontSize: '0.85rem', color: '#697586', zIndex: 10 }}>
+                        No features found
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
