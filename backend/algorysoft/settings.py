@@ -94,3 +94,7 @@ CSRF_TRUSTED_ORIGINS = ['https://algorysoft.com', 'http://algorysoft.com']
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', 'rest_framework.filters.SearchFilter', 'rest_framework.filters.OrderingFilter'],
 }
+
+# ── Allow large image payloads (base64 images in JSON can be 5-20MB) ──
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50 MB

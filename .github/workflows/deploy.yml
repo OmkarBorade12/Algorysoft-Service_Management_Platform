@@ -117,6 +117,27 @@ jobs:
             echo 'STATIC_ROOT = BASE_DIR / "staticfiles"' >> algorysoft/settings.py
           fi
 
+          # ── Fix Django upload size limit (default is 2.5MB — too small for images) ──
+          if ! grep -q DATA_UPLOAD_MAX_MEMORY_SIZE algorysoft/settings.py; then
+            echo 'DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50MB' >> algorysoft/settings.py
+            echo 'FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50MB' >> algorysoft/settings.py
+            echo "✅ Django upload limits increased to 50MB"
+          fi
+
+          # ── Fix nginx upload size limit (default is 1MB — rejects large image payloads) ──
+          NGINX_CONF=$(nginx -t 2>&1 | grep -o '/etc/nginx/sites-enabled/[^ ]*' | head -1 || echo "/etc/nginx/sites-enabled/algorysoft")
+          if [ -f "$NGINX_CONF" ] && ! grep -q "client_max_body_size" "$NGINX_CONF"; then
+            sudo sed -i 's/server {/server {\n    client_max_body_size 50m;/' "$NGINX_CONF"
+            echo "✅ nginx client_max_body_size set to 50m in $NGINX_CONF"
+            sudo nginx -t && sudo systemctl reload nginx || true
+          elif ! sudo grep -r "client_max_body_size" /etc/nginx/ > /dev/null 2>&1; then
+            sudo sed -i 's/http {/http {\n    client_max_body_size 50m;/' /etc/nginx/nginx.conf
+            echo "✅ nginx client_max_body_size set globally to 50m"
+            sudo nginx -t && sudo systemctl reload nginx || true
+          else
+            echo "✅ nginx client_max_body_size already set"
+          fi
+
           # ── BACKUP DATABASE BEFORE MIGRATE (protects all data) ──
           if [ -f db.sqlite3 ]; then
             BACKUP_FILE="db_backup_$(date +%Y%m%d_%H%M%S).sqlite3"

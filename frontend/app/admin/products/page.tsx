@@ -230,6 +230,27 @@ function CardAssignmentPopup({ silverCardId, goldCardId, onSave, onClose }: Card
 /* ============================================================
    MAIN PAGE
    ============================================================ */
+// ── Image compression utility ─────────────────────────────────────────────
+// Resizes to max 900px and compresses to JPEG 70% — reduces 3-8MB images to ~80-150KB
+function compressImage(file: File, maxSize = 900, quality = 0.7): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+            const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+            const canvas = document.createElement('canvas');
+            canvas.width  = Math.round(img.width  * scale);
+            canvas.height = Math.round(img.height * scale);
+            const ctx = canvas.getContext('2d')!;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            URL.revokeObjectURL(url);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = reject;
+        img.src = url;
+    });
+}
+
 export default function AdminProductsPage() {
     const dispatch = useAppDispatch();
     const { items: projects, status: pStatus } = useAppSelector(state => state.products);
@@ -270,12 +291,14 @@ export default function AdminProductsPage() {
         }
     }, [form.price, form.originalPrice, form.discount]);
 
-    const handleMainImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleMainImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => { setForm(p => ({ ...p, mainImage: reader.result as string })); };
-            reader.readAsDataURL(file);
+        if (!file) return;
+        try {
+            const compressed = await compressImage(file);
+            setForm(p => ({ ...p, mainImage: compressed }));
+        } catch {
+            toast.error('Failed to process image. Try a different file.');
         }
     };
 
@@ -286,13 +309,13 @@ export default function AdminProductsPage() {
             e.target.value = '';
             return;
         }
-        Promise.all(files.map(file => new Promise<string>(resolve => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(file);
-        }))).then(base64Images => {
-            setForm((p: any) => ({ ...p, images: [...(form.images || []), ...base64Images].slice(0, 10) }));
-        });
+        const toastId = toast.loading('Compressing images...');
+        Promise.all(files.map(file => compressImage(file)))
+            .then(compressed => {
+                setForm((p: any) => ({ ...p, images: [...(p.images || []), ...compressed].slice(0, 10) }));
+                toast.success('Images added!', { id: toastId });
+            })
+            .catch(() => toast.error('Image processing failed.', { id: toastId }));
     };
 
     const itemsPerPage = 8;
