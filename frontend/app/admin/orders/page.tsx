@@ -38,11 +38,17 @@ export default function AdminOrdersPage() {
     }, [selectedOrder?.chat]);
 
     const filtered = orders.filter(o => {
+        // Only show orders that have a payment ID or are Custom Requests
+        const isPaid = !!o.razorpay_payment_id && o.razorpay_payment_id.trim() !== '';
+        const isCustom = o.tier === 'Custom Request';
+        if (!isPaid && !isCustom) return false;
+
         if (filter !== 'All' && o.status !== filter) return false;
         if (search && !o.client_name.toLowerCase().includes(search.toLowerCase()) && !o.product.toLowerCase().includes(search.toLowerCase())) return false;
         return true;
     });
     
+    // Changed sort to descending by ID to show newest first properly
     const sortedFiltered = [...filtered].sort((a, b) => Number(b.id) - Number(a.id));
     const paginatedOrders = sortedFiltered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
