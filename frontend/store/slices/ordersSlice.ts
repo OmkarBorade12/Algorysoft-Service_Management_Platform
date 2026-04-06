@@ -37,6 +37,8 @@ const mapOrder = (o: any): OrderItem => ({
     status: o.status as OrderStatus,
     progress: o.progress,
     date: o.date,
+    razorpay_order_id: o.razorpay_order_id,
+    razorpay_payment_id: o.razorpay_payment_id,
     chat: o.chat || [],
 });
 
