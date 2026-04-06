@@ -9,12 +9,14 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { setUser } from '@/store/slices/authSlice';
 import { fetchCategories } from '@/store/slices/categoriesSlice';
 import { fetchProducts } from '@/store/slices/productsSlice';
+import { fetchOrders } from '@/store/slices/ordersSlice';
 
 function DataSync() {
     const dispatch = useAppDispatch();
     useEffect(() => {
         dispatch(fetchCategories());
         dispatch(fetchProducts());
+        dispatch(fetchOrders());
     }, [dispatch]);
     return null;
 }

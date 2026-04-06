@@ -7,13 +7,13 @@ export default function StatsSection() {
     const orders = useAppSelector(s => s.orders.items);
     const reviews = useAppSelector(s => s.reviews.reviews);
 
-    const websitesDelivered = orders.length;
-    const happyBusinesses = new Set(orders.map(o => (o as any).client_email || (o as any).clientEmail)).size;
+    const websitesDelivered = 500 + orders.length;
+    const happyBusinesses = 200 + new Set(orders.map(o => (o as any).client_email || (o as any).clientEmail)).size;
     const avgRating = reviews.length ? (reviews.reduce((acc: number, rv) => acc + rv.rating, 0) / reviews.length).toFixed(1) : '5.0';
 
     const stats = [
-        { num: websitesDelivered.toString(), label: 'Websites Delivered', icon: <FiGlobe size={28} /> },
-        { num: happyBusinesses.toString(), label: 'Happy Businesses', icon: <HiOutlineOfficeBuilding size={28} /> },
+        { num: `${websitesDelivered}+`, label: 'Websites Delivered', icon: <FiGlobe size={28} /> },
+        { num: `${happyBusinesses}+`, label: 'Happy Businesses', icon: <HiOutlineOfficeBuilding size={28} /> },
         { num: '7–14', label: 'Days Avg. Delivery', icon: <FiZap size={28} /> },
         { num: `${avgRating}★`, label: 'Client Satisfaction', icon: <FiAward size={28} /> },
     ];

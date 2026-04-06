@@ -101,11 +101,11 @@ export default function HeroSection() {
                                 ))}
                             </div>
                             <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                                {avgRating}/5 from {happyClients} Clients
+                                {avgRating}/5 from {200 + happyClients} Clients
                             </span>
                         </div>
                         <span style={{ color: 'var(--border-solid)' }}>|</span>
-                        <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><HiOutlineRocketLaunch size={14} style={{ color: 'var(--pista-primary)' }} /> {websitesDelivered} Websites Delivered</span>
+                        <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><HiOutlineRocketLaunch size={14} style={{ color: 'var(--pista-primary)' }} /> {500 + websitesDelivered}+ Websites Delivered</span>
                         <span style={{ color: 'var(--border-solid)' }}>|</span>
                         <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><FiMapPin size={13} style={{ color: 'var(--pista-primary)' }} /> Bangalore, India</span>
                     </div>
