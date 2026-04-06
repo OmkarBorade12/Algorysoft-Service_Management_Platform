@@ -7,7 +7,7 @@ import { setCartUser } from '@/store/slices/cartSlice';
 import { setWishlistUser } from '@/store/slices/wishlistSlice';
 import toast from 'react-hot-toast';
 import styles from './AuthModal.module.css';
-import { FiX, FiLogIn } from 'react-icons/fi';
+import { FiX, FiLogIn, FiEye, FiEyeOff } from 'react-icons/fi';
 import { loginUser } from '@/lib/localUsers';
 import SocialAuthButtons from './SocialAuthButtons';
 
@@ -15,6 +15,7 @@ export default function LoginModal() {
     const dispatch = useAppDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -69,9 +70,40 @@ export default function LoginModal() {
                         <label className="form-label">Email Address</label>
                         <input type="email" className="form-input" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
                     </div>
-                    <div className="form-group">
+                    <div className="form-group" style={{ position: 'relative' }}>
                         <label className="form-label">Password</label>
-                        <input type="password" className="form-input" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                className="form-input"
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                style={{ paddingRight: '45px' }}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={{
+                                    position: 'absolute',
+                                    right: '12px',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'var(--text-muted)',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '5px'
+                                }}
+                                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                            >
+                                {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                            </button>
+                        </div>
                     </div>
                     <div className={styles.forgot}>
                         <a href="/forgot-password" className={styles.forgotLink}>Forgot password?</a>
