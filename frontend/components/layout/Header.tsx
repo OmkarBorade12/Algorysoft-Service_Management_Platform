@@ -75,7 +75,7 @@ export default function Header() {
                 <div className={`container ${styles.headerInner}`}>
                     {/* Logo */}
                     <Link href="/" className={styles.logo}>
-                        <Image src="/logo.jpeg" alt="AlgorySoft" width={44} height={44} className={styles.logoImg} />
+                        <Image src="/algorysoft.jpeg" alt="AlgorySoft" width={44} height={44} className={styles.logoImg} />
                         <span className={styles.logoText}>AlgorySoft</span>
                     </Link>
 
@@ -207,7 +207,7 @@ export default function Header() {
                 <div className={`${styles.mobileSidebar} ${mobileMenuOpen ? styles.show : ''}`}>
                     <div className={styles.sidebarHeader}>
                         <Link href="/" className={styles.logo} onClick={() => dispatch(toggleMobileMenu())}>
-                            <Image src="/logo.jpeg" alt="AlgorySoft" width={38} height={38} className={styles.logoImg} />
+                            <Image src="/algorysoft.jpeg" alt="AlgorySoft" width={38} height={38} className={styles.logoImg} />
                             <span className={styles.logoText} style={{ display: 'block' }}>AlgorySoft</span>
                         </Link>
                         <button className={styles.sidebarClose} onClick={() => dispatch(toggleMobileMenu())} aria-label="Close Menu">

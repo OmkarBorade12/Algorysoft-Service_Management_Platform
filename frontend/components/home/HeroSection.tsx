@@ -115,7 +115,7 @@ export default function HeroSection() {
                 <div className={styles.right}>
                     <div className={styles.heroVisual}>
                         <div className={styles.logoCard}>
-                            <Image src="/logo.jpeg" alt="AlgorySoft" width={90} height={90} className={styles.heroLogo} />
+                            <Image src="/algorysoft.jpeg" alt="AlgorySoft" width={90} height={90} className={styles.heroLogo} />
                             <span className={styles.logoName}>AlgorySoft</span>
                             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 500, textAlign: 'center' }}>
                                 Business Web Solutions

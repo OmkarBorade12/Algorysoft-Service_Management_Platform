@@ -15,7 +15,7 @@ export default function Footer() {
             <div className={`container ${styles.footerGrid}`}>
                 {/* Brand */}
                 <div className={styles.brand}>
-                    <Image src="/logo.jpeg" alt="AlgorySoft" width={48} height={48} className={styles.logo} />
+                    <Image src="/algorysoft.jpeg" alt="AlgorySoft" width={48} height={48} className={styles.logo} />
                     <h3 className={styles.brandName}>AlgorySoft</h3>
                     <p className={styles.brandDesc}>
                         India's premier digital solution partner for businesses. We deliver premium, 

@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/hooks/useRedux';
 import { logout } from '@/store/slices/authSlice';
@@ -113,8 +114,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* Sidebar */}
             <aside className={`berry-sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
-                <div className="berry-logo">
-                    <FiCodepen size={28} style={{ color: '#673ab7' }} />
+                <div className="berry-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Image src="/algorysoft.jpeg" alt="AlgorySoft" width={28} height={28} style={{ borderRadius: '6px' }} />
                     <span style={{ fontWeight: 700, letterSpacing: '-0.3px', color: '#121926' }}>AlgorySoft</span>
                     {isMobile && (
                         <button 
