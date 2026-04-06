@@ -51,7 +51,7 @@ const AVATAR_COLORS = ['#548f2b', '#3f6d20', '#6db03a', '#87c850'];
 export default function TestimonialsSection() {
     const { reviews } = useAppSelector(s => s.reviews);
     
-    // Convert redux reviews to testimonial format, use mock as fallback if empty
+    // Convert redux reviews to testimonial format, use mock as fallback if empty why 
     const approvedReviews = reviews.filter(r => r.status === 'approved');
     
     const displayItems = approvedReviews.length > 0 ? approvedReviews.map((r, idx) => ({
