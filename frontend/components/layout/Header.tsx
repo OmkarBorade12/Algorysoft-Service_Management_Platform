@@ -75,8 +75,16 @@ export default function Header() {
                 <div className={`container ${styles.headerInner}`}>
                     {/* Logo */}
                     <Link href="/" className={styles.logo}>
-                        <Image src="/algorysoft.jpeg" alt="AlgorySoft" width={44} height={44} className={styles.logoImg} />
-                        <span className={styles.logoText}>AlgorySoft</span>
+                        <Image 
+                            src="/algorysoft.jpeg" 
+                            alt="AlgorySoft" 
+                            width={54} 
+                            height={54} 
+                            className={styles.logoImg} 
+                            style={{ objectFit: 'contain' }}
+                            priority
+                            quality={100}
+                        />
                     </Link>
 
                     {/* Desktop Nav */}
@@ -207,8 +215,16 @@ export default function Header() {
                 <div className={`${styles.mobileSidebar} ${mobileMenuOpen ? styles.show : ''}`}>
                     <div className={styles.sidebarHeader}>
                         <Link href="/" className={styles.logo} onClick={() => dispatch(toggleMobileMenu())}>
-                            <Image src="/algorysoft.jpeg" alt="AlgorySoft" width={38} height={38} className={styles.logoImg} />
-                            <span className={styles.logoText} style={{ display: 'block' }}>AlgorySoft</span>
+                            <Image 
+                                src="/algorysoft.jpeg" 
+                                alt="AlgorySoft" 
+                                width={48} 
+                                height={48} 
+                                className={styles.logoImg} 
+                                style={{ objectFit: 'contain' }}
+                                priority
+                                quality={100}
+                            />
                         </Link>
                         <button className={styles.sidebarClose} onClick={() => dispatch(toggleMobileMenu())} aria-label="Close Menu">
                             <FiX size={24} />
