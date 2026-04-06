@@ -22,13 +22,22 @@ export default function AdminDashboard() {
         dispatch(fetchRequests());
     }, [dispatch]);
 
-    const paginatedOrders = orders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
     const pendingReviews = reviews ? reviews.filter(r => r.status === 'pending').length : 0;
+    
+    const validOrders = orders.filter(o => {
+        const isPaid = ['Paid', 'In Progress', 'Completed'].includes(o.status);
+        const isCustom = o.tier === 'Custom Request';
+        return isPaid || isCustom;
+    });
+
+    // Make sure we show newest first
+    const sortedValidOrders = [...validOrders].sort((a, b) => Number(b.id) - Number(a.id));
+    const paginatedOrders = sortedValidOrders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
     
     // Dynamic Stats
     const STATS = [
-        { label: 'Revenue (Active)', value: `₹${orders.filter(o => o.status !== 'Cancelled').reduce((sum, o) => sum + Number(o.amount), 0).toLocaleString('en-IN')}`, color: 'purple', icon: <FiDollarSign /> },
-        { label: 'Active Orders', value: orders.filter(o => o.status === 'In Progress' || o.status === 'Pending').length.toString(), color: 'blue', icon: <FiShoppingCart /> },
+        { label: 'Revenue (Active)', value: `₹${validOrders.filter(o => o.status !== 'Cancelled').reduce((sum, o) => sum + Number(o.amount), 0).toLocaleString('en-IN')}`, color: 'purple', icon: <FiDollarSign /> },
+        { label: 'Active Orders', value: validOrders.filter(o => o.status !== 'Completed' && o.status !== 'Cancelled').length.toString(), color: 'blue', icon: <FiShoppingCart /> },
         { label: 'Pending Requests', value: requests.filter(r => r.status === 'New').length.toString(), color: 'orange', icon: <FiFileText /> },
         { label: 'Total Products', value: projects.length.toString(), color: 'green', icon: <FiBox /> },
     ];
@@ -104,16 +113,16 @@ export default function AdminDashboard() {
                                                 <td style={{ color: '#697586', fontSize: '0.85rem' }}>{new Date(o.date).toLocaleDateString('en-IN')}</td>
                                             </tr>
                                         ))}
-                                        {orders.length === 0 && (
+                                        {validOrders.length === 0 && (
                                             <tr><td colSpan={5} style={{ textAlign: 'center', color: '#697586', padding: '24px 0' }}>No active orders</td></tr>
                                         )}
                                     </tbody>
                                 </table>
                             </div>
-                            {orders.length > itemsPerPage && (
+                            {validOrders.length > itemsPerPage && (
                                 <Pagination 
                                     currentPage={currentPage}
-                                    totalItems={orders.length}
+                                    totalItems={validOrders.length}
                                     itemsPerPage={itemsPerPage}
                                     onPageChange={setCurrentPage}
                                 />
