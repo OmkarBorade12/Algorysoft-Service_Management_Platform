@@ -33,6 +33,7 @@ const rootReducer = combineReducers({
   products: productsReducer,
   categories: categoriesReducer,
   requests: requestsReducer,
+  invoices: invoicesReducer,
   features: featuresReducer,
   pricingCards: pricingCardsReducer,
   stats: statsReducer,
