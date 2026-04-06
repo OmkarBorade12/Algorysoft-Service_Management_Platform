@@ -154,8 +154,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                 <div style={{ marginTop: 'auto', padding: '16px', borderTop: '1px solid #e3e8ef' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px', background: '#f8fafc', borderRadius: '12px', marginBottom: 12 }}>
-                        <div style={{ width: 34, height: 34, background: '#673ab7', color: '#fff', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.85rem', flexShrink: 0 }}>
-                            {user.name.charAt(0).toUpperCase()}
+                        <div style={{ width: 42, height: 42, borderRadius: '10px', overflow: 'hidden', flexShrink: 0, border: '1.5px solid #e3e8ef', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Image 
+                                src="/algorysoft.jpeg" 
+                                alt="Admin Avatar" 
+                                width={42} 
+                                height={42} 
+                                style={{ objectFit: 'cover', objectPosition: 'top' }} 
+                            />
                         </div>
                         <div style={{ overflow: 'hidden' }}>
                             <div style={{ fontSize: '0.85rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</div>
