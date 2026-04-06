@@ -11,10 +11,15 @@ interface SocialAuthButtonsProps {
 export default function SocialAuthButtons({ mode }: SocialAuthButtonsProps) {
     const handleSocialLogin = async (provider: 'google') => {
         try {
-            toast.loading(`Connecting to Google…`, { id: 'social-auth', duration: 3000 });
-            await signIn(provider); // default redirect=true pushes browser cleanly to Google
+            toast.loading(`Connecting to Google…`, { id: 'social-auth', duration: 8000 });
+            // Pass explicit callbackUrl so NextAuth never falls back to localhost in production
+            await signIn(provider, {
+                callbackUrl: typeof window !== 'undefined' ? window.location.origin : '/',
+                redirect: true,
+            });
         } catch (err) {
-            toast.error(`Google Authentication Error.`, { id: 'social-auth' });
+            toast.error(`Google Authentication Error. Please try again.`, { id: 'social-auth' });
+            console.error('[Google Auth Error]', err);
         }
     };
 

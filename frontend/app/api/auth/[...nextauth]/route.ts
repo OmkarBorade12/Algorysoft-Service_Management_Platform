@@ -8,16 +8,22 @@ if (!process.env.NEXTAUTH_URL) {
     process.env.NEXTAUTH_URL = 'https://algorysoft.com';
 }
 
-const GOOGLE_ID = process.env.GOOGLE_CLIENT_ID || '***REMOVED_CLIENT_ID***';
-const GOOGLE_SECRET = process.env.GOOGLE_CLIENT_SECRET || '***REMOVED_CLIENT_SECRET***';
+const GOOGLE_ID = process.env.GOOGLE_CLIENT_ID!;
+const GOOGLE_SECRET = process.env.GOOGLE_CLIENT_SECRET!;
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || 'algorysoft_secure_secret_key_123456789';
-const NEXTAUTH_URL = process.env.NEXTAUTH_URL; // Read from the one we just ensured exists
+const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
+
+if (!GOOGLE_ID || !GOOGLE_SECRET) {
+    console.error('[NextAuth] CRITICAL: Google OAuth credentials are missing from environment variables!');
+    console.error('[NextAuth] Make sure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set in .env.local');
+}
 
 console.log('[NextAuth] Initializing with config:', {
     hasSecret: !!process.env.NEXTAUTH_SECRET,
     hasUrl: !!process.env.NEXTAUTH_URL,
     urlValue: NEXTAUTH_URL,
     hasGoogleId: !!process.env.GOOGLE_CLIENT_ID,
+    hasGoogleSecret: !!process.env.GOOGLE_CLIENT_SECRET,
 });
 
 export const authOptions: NextAuthOptions = {

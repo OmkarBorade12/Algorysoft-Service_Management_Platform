@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
         // Create Razorpay order via REST API (avoids SDK import issues in Next.js edge)
         const orderPayload = {
-            amount: Math.round(amount * 100), // amount in paise (Rupees * 100)
+            amount: Math.round(amount), // amount is already in paise (sent from client as INR * 100)
             currency,
             receipt: receipt || `rcpt_${Date.now()}`,
             notes: notes || {},
