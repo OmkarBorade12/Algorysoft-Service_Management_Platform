@@ -315,11 +315,21 @@ export default function AdminProductsPage() {
             toast.error('Please fill in title, price, category and description.');
             return;
         }
-        const catObj = categories.find(c => c.name === form.category);
-        const payload = {
+        // Resolve category to its numeric ID — form.category is the category name string
+        const catObj = categories.find(c => c.name === form.category || String(c.id) === String(form.category));
+        const categoryId = catObj ? Number(catObj.id) : null;
+
+        if (!categoryId) {
+            toast.error('Could not resolve the selected category. Please re-select it.');
+            return;
+        }
+
+        // Build a clean payload with the numeric category ID
+        const payload: any = {
             ...form,
-            category: catObj ? catObj.id : (typeof form.category === 'number' ? form.category : 1)
-        } as any;
+            category: categoryId,
+        };
+
         try {
             if (editProject) {
                 await dispatch(updateProductThunk(payload)).unwrap();
@@ -331,7 +341,9 @@ export default function AdminProductsPage() {
             setShowForm(false);
             setForm({});
         } catch (err: any) {
-            toast.error(err.message || 'Error saving product');
+            const msg = err?.message || err?.toString() || 'Error saving product';
+            toast.error(`❌ ${msg}`);
+            console.error('[Product Save Error]', err);
         }
     };
 

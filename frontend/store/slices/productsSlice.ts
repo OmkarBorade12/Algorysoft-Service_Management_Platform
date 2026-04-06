@@ -102,17 +102,35 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async ()
     return response.data.map(mapProduct);
 });
 
-export const addProductThunk = createAsyncThunk('products/addProduct', async (product: Partial<Product>) => {
-    // Note: We need a category ID to create a project on backend
-    // For now, let's assume we pass category ID or handle it carefully
-    const response = await api.post('/api/projects/', mapToBackend(product));
-    return mapProduct(response.data);
-});
+export const addProductThunk = createAsyncThunk(
+    'products/addProduct',
+    async (product: Partial<Product>, { rejectWithValue }) => {
+        try {
+            const response = await api.post('/api/projects/', mapToBackend(product));
+            return mapProduct(response.data);
+        } catch (err: any) {
+            const detail = err?.response?.data
+                ? JSON.stringify(err.response.data)
+                : err?.message || 'Network error — could not reach the server.';
+            return rejectWithValue(detail);
+        }
+    }
+);
 
-export const updateProductThunk = createAsyncThunk('products/updateProduct', async (product: Product) => {
-    const response = await api.put(`/api/projects/${product.id}/`, mapToBackend(product));
-    return mapProduct(response.data);
-});
+export const updateProductThunk = createAsyncThunk(
+    'products/updateProduct',
+    async (product: Product, { rejectWithValue }) => {
+        try {
+            const response = await api.put(`/api/projects/${product.id}/`, mapToBackend(product));
+            return mapProduct(response.data);
+        } catch (err: any) {
+            const detail = err?.response?.data
+                ? JSON.stringify(err.response.data)
+                : err?.message || 'Network error — could not reach the server.';
+            return rejectWithValue(detail);
+        }
+    }
+);
 
 export const deleteProductThunk = createAsyncThunk('products/deleteProduct', async (id: number) => {
     await api.delete(`/api/projects/${id}/`);
@@ -141,12 +159,20 @@ const productsSlice = createSlice({
             })
             .addCase(addProductThunk.fulfilled, (state, action) => {
                 state.items.push(action.payload);
+                state.status = 'succeeded';
+            })
+            .addCase(addProductThunk.rejected, (state) => {
+                state.status = 'failed';
             })
             .addCase(updateProductThunk.fulfilled, (state, action) => {
                 const index = state.items.findIndex((p) => p.id === action.payload.id);
                 if (index !== -1) {
                     state.items[index] = action.payload;
                 }
+                state.status = 'succeeded';
+            })
+            .addCase(updateProductThunk.rejected, (state) => {
+                state.status = 'failed';
             })
             .addCase(deleteProductThunk.fulfilled, (state, action) => {
                 state.items = state.items.filter((p) => p.id !== action.payload);

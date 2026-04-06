@@ -93,7 +93,8 @@ jobs:
           rsync -avz --delete \
           ./frontend/ "$SERVER_USER@$SERVER_IP":/var/www/frontend/ \
           --exclude 'node_modules' \
-          --exclude '.next'
+          --exclude '.next' \
+          --exclude '.env.local'
 
       - name: Setup and Restart Services
         run: |
@@ -116,7 +117,18 @@ jobs:
             echo 'STATIC_ROOT = BASE_DIR / "staticfiles"' >> algorysoft/settings.py
           fi
 
-          python manage.py migrate
+          # ── BACKUP DATABASE BEFORE MIGRATE (protects all data) ──
+          if [ -f db.sqlite3 ]; then
+            BACKUP_FILE="db_backup_$(date +%Y%m%d_%H%M%S).sqlite3"
+            cp db.sqlite3 "$BACKUP_FILE"
+            echo "✅ Database backed up to: $BACKUP_FILE"
+            # Keep only the 5 most recent backups to save disk space
+            ls -t db_backup_*.sqlite3 2>/dev/null | tail -n +6 | xargs rm -f || true
+          else
+            echo "⚠️ No existing database found — fresh install."
+          fi
+
+          python manage.py migrate --run-syncdb
           python manage.py collectstatic --noinput || true
 
           sudo systemctl restart django
