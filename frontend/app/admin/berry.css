@@ -28,7 +28,7 @@
   display: flex;
   min-height: 100vh;
   background-color: var(--berry-grey-50);
-  font-family: 'Roboto', 'Roboto', 'Assistant', 'Inter', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
   color: var(--berry-grey-900);
 }
 

@@ -94,7 +94,7 @@
 }
 
 .logoText {
-    font-family: 'Roboto', 'Assistant', 'Inter', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
     font-size: 1.35rem;
     font-weight: 900;
     background: var(--gradient-accent);
@@ -674,3 +674,4 @@
       font-size: 0.72rem;
     }
 }
+

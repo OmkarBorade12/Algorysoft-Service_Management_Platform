@@ -47,7 +47,7 @@ export default function StatsSection() {
                                 fontWeight: '900',
                                 color: '#a8dc78',
                                 lineHeight: '1',
-                                fontFamily: "'Roboto', 'Assistant', 'Inter', sans-serif",
+                                fontFamily: "'IBM Plex Sans', sans-serif",
                             }}>{s.num}</div>
                             <div style={{
                                 fontSize: '0.88rem',

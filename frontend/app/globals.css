@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Assistant:wght@300;400;500;600;700;800&family=Inter:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
 
 /* ===== CSS VARIABLES - Light Pista Theme ===== */
 :root {
@@ -391,7 +391,7 @@ html {
 }
 
 body {
-  font-family: 'Roboto', 'Assistant', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -425,7 +425,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Roboto', 'Assistant', 'Inter', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
   font-weight: 700;
   line-height: 1.15;
   color: var(--text-primary);
@@ -736,7 +736,7 @@ img {
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: 0.95rem;
-  font-family: 'Inter', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
   transition: all var(--transition-fast);
   outline: none;
 }
@@ -786,7 +786,7 @@ img {
 
 /* ===== TOAST ===== */
 .react-hot-toast {
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'IBM Plex Sans', sans-serif !important;
 }
 
 /* ===== MODAL ===== */
@@ -1266,7 +1266,7 @@ input[type="range"]::-webkit-slider-thumb {
   background: transparent;
   font-size: 0.92rem;
   color: var(--text-primary);
-  font-family: 'Inter', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
 }
 
 .search-box input::placeholder {
@@ -1926,7 +1926,7 @@ main {
   border-radius: var(--radius-full);
   font-size: 0.85rem;
   outline: none;
-  font-family: 'Inter', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
   color: var(--text-primary);
 }
 
