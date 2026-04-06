@@ -114,9 +114,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* Sidebar */}
             <aside className={`berry-sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
-                <div className="berry-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Image src="/algorysoft.jpeg" alt="AlgorySoft" width={28} height={28} style={{ borderRadius: '6px' }} />
-                    <span style={{ fontWeight: 700, letterSpacing: '-0.3px', color: '#121926' }}>AlgorySoft</span>
+                <div className="berry-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
+                    <Image 
+                        src="/algorysoft.jpeg" 
+                        alt="AlgorySoft" 
+                        width={120} 
+                        height={40} 
+                        style={{ objectFit: 'contain' }} 
+                        priority 
+                        quality={100} 
+                    />
                     {isMobile && (
                         <button 
                             onClick={() => setSidebarOpen(false)}
