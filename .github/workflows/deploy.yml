@@ -11,6 +11,14 @@ jobs:
     env:
       SERVER_IP: ${{ secrets.SERVER_IP }}
       SERVER_USER: ${{ secrets.SERVER_USER }}
+      # Frontend env vars (Razorpay + Google Auth + API URL)
+      RAZORPAY_KEY_ID: ${{ secrets.RAZORPAY_KEY_ID }}
+      RAZORPAY_KEY_SECRET: ${{ secrets.RAZORPAY_KEY_SECRET }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+      NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
     steps:
       - name: Checkout Code
@@ -95,6 +103,22 @@ jobs:
           --exclude 'node_modules' \
           --exclude '.next' \
           --exclude '.env.local'
+
+      - name: Write Production .env.local on Server
+        run: |
+          # Write all required env vars directly to the server's .env.local
+          # Uses printf to correctly handle special characters in secrets
+          ssh "$SERVER_USER@$SERVER_IP" "
+            printf 'RAZORPAY_KEY_ID=%s\n' '${{ secrets.RAZORPAY_KEY_ID }}' > /var/www/frontend/.env.local
+            printf 'RAZORPAY_KEY_SECRET=%s\n' '${{ secrets.RAZORPAY_KEY_SECRET }}' >> /var/www/frontend/.env.local
+            printf 'GOOGLE_CLIENT_ID=%s\n' '${{ secrets.GOOGLE_CLIENT_ID }}' >> /var/www/frontend/.env.local
+            printf 'GOOGLE_CLIENT_SECRET=%s\n' '${{ secrets.GOOGLE_CLIENT_SECRET }}' >> /var/www/frontend/.env.local
+            printf 'NEXTAUTH_SECRET=%s\n' '${{ secrets.NEXTAUTH_SECRET }}' >> /var/www/frontend/.env.local
+            printf 'NEXTAUTH_URL=%s\n' '${{ secrets.NEXTAUTH_URL }}' >> /var/www/frontend/.env.local
+            printf 'NEXT_PUBLIC_API_URL=%s\n' '${{ secrets.NEXT_PUBLIC_API_URL }}' >> /var/www/frontend/.env.local
+            chmod 600 /var/www/frontend/.env.local
+            echo '✅ .env.local written successfully on production server'
+          "
 
       - name: Setup and Restart Services
         run: |
