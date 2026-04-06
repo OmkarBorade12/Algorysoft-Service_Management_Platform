@@ -94,7 +94,7 @@
 }
 
 .logoText {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Copperplate Gothic Bold', 'Copperplate Gothic', 'Copperplate', serif;
     font-size: 1.35rem;
     font-weight: 900;
     background: var(--gradient-accent);
@@ -673,4 +673,4 @@
       padding: 3px 10px;
       font-size: 0.72rem;
     }
-}
+}

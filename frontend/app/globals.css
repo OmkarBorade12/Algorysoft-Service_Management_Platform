@@ -386,11 +386,12 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
-  overflow-x: hidden; /* Prevent horizontal scroll — on html NOT body to avoid clipping fixed elements */
+  overflow-x: hidden;
+  /* Prevent horizontal scroll — on html NOT body to avoid clipping fixed elements */
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Copperplate Gothic Bold', 'Copperplate Gothic', 'Copperplate', serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -424,7 +425,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Outfit', 'Inter', sans-serif;
+  font-family: 'Copperplate Gothic Bold', 'Copperplate Gothic', 'Copperplate', serif;
   font-weight: 700;
   line-height: 1.15;
   color: var(--text-primary);

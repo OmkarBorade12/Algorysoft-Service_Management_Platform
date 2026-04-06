@@ -108,11 +108,11 @@ export default function AdminInvoicesPage() {
             <AnimatePresence>
                 {showFormModal && (
                     <div className="modal-overlay">
-                        <motion.div 
-                            initial={{ y: 50, opacity: 0 }} 
-                            animate={{ y: 0, opacity: 1 }} 
+                        <motion.div
+                            initial={{ y: 50, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 50, opacity: 0 }}
-                            className="berry-modal-container" 
+                            className="berry-modal-container"
                             style={{ maxWidth: 1100, width: '95%', maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: 20 }}
                         >
                             <div className="modal-header" style={{ padding: '24px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', background: '#fff' }}>
@@ -133,169 +133,169 @@ export default function AdminInvoicesPage() {
                             <div className="berry-modal-main" style={{ flex: 1, overflowY: 'auto' }}>
                                 <div className="berry-responsive-grid" style={{ minHeight: '100%', gap: 0 }}>
                                     {/* Left Column: Form */}
-                                     <div style={{ padding: '24px', background: '#fff' }}>
+                                    <div style={{ padding: '24px', background: '#fff' }}>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                                            
+
                                             {/* Autofill Section */}
                                             <div style={{ background: 'linear-gradient(135deg, #f5f3ff 0%, #f0f9ff 100%)', padding: 16, borderRadius: 16, border: '1px solid rgba(94, 53, 177, 0.1)' }}>
-                                            <div style={{ position: 'absolute', top: -10, right: -10, opacity: 0.05, transform: 'rotate(15deg)' }}>
-                                                <FiZap size={100} />
-                                            </div>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.9rem', fontWeight: 700, color: '#5e35b1', marginBottom: 12 }}>
-                                                <FiZap /> Quick Autofill from Orders
-                                            </label>
-                                            <select 
-                                                className="berry-input" 
-                                                onChange={e => handleAutofill(e.target.value)} 
-                                                defaultValue=""
-                                                style={{ border: '2px solid #fff', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', height: 48 }}
-                                            >
-                                                <option value="" disabled>Select an Active Order...</option>
-                                                {orders.map(o => (
-                                                    <option key={o.id} value={o.id}>{o.order_id || `#${o.id}`} - {o.client_name} ({o.product})</option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        {/* Basic Info */}
-                                        <div className="berry-form-grid-2">
-                                            <div className="field-group">
-                                                <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiList size={14} /> Invoice Number</label>
-                                                <input className="berry-input" value={inv.invoiceNo} onChange={e => setInv(p => ({ ...p, invoiceNo: e.target.value }))} style={{ height: 46 }} />
-                                            </div>
-                                            <div className="field-group">
-                                                <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiClock size={14} /> Status</label>
-                                                <select className="berry-input" value={inv.status} onChange={e => setInv(p => ({ ...p, status: e.target.value as InvoiceData['status'] }))} style={{ height: 46 }}>
-                                                    <option>Draft</option><option>Sent</option><option>Paid</option>
+                                                <div style={{ position: 'absolute', top: -10, right: -10, opacity: 0.05, transform: 'rotate(15deg)' }}>
+                                                    <FiZap size={100} />
+                                                </div>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.9rem', fontWeight: 700, color: '#5e35b1', marginBottom: 12 }}>
+                                                    <FiZap /> Quick Autofill from Orders
+                                                </label>
+                                                <select
+                                                    className="berry-input"
+                                                    onChange={e => handleAutofill(e.target.value)}
+                                                    defaultValue=""
+                                                    style={{ border: '2px solid #fff', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', height: 48 }}
+                                                >
+                                                    <option value="" disabled>Select an Active Order...</option>
+                                                    {orders.map(o => (
+                                                        <option key={o.id} value={o.id}>{o.order_id || `#${o.id}`} - {o.client_name} ({o.product})</option>
+                                                    ))}
                                                 </select>
                                             </div>
-                                            <div className="field-group">
-                                                <label className="input-label">Invoice Date</label>
-                                                <input type="date" className="berry-input" value={inv.date} onChange={e => setInv(p => ({ ...p, date: e.target.value }))} style={{ height: 46 }} />
-                                            </div>
-                                            <div className="field-group">
-                                                <label className="input-label">Due Date</label>
-                                                <input type="date" className="berry-input" value={inv.dueDate} onChange={e => setInv(p => ({ ...p, dueDate: e.target.value }))} style={{ height: 46, color: '#ef4444', fontWeight: 600 }} />
-                                            </div>
-                                        </div>
 
-                                        {/* Client Info Section */}
-                                        <div style={{ padding: '4px' }}>
-                                            <h4 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: 20, color: '#1e293b', display: 'flex', alignItems: 'center', gap: 10, paddingBottom: 10, borderBottom: '2px solid #f1f5f9' }}>
-                                                <FiUser /> Client Information
-                                            </h4>
+                                            {/* Basic Info */}
                                             <div className="berry-form-grid-2">
                                                 <div className="field-group">
-                                                    <label className="input-label">Client Name *</label>
-                                                    <input className="berry-input" value={inv.clientName} onChange={e => setInv(p => ({ ...p, clientName: e.target.value }))} placeholder="Rajesh Kumar" style={{ height: 46 }} />
+                                                    <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiList size={14} /> Invoice Number</label>
+                                                    <input className="berry-input" value={inv.invoiceNo} onChange={e => setInv(p => ({ ...p, invoiceNo: e.target.value }))} style={{ height: 46 }} />
                                                 </div>
                                                 <div className="field-group">
-                                                    <label className="input-label">Email Address</label>
-                                                    <input type="email" className="berry-input" value={inv.clientEmail} onChange={e => setInv(p => ({ ...p, clientEmail: e.target.value }))} placeholder="client@example.com" style={{ height: 46 }} />
+                                                    <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiClock size={14} /> Status</label>
+                                                    <select className="berry-input" value={inv.status} onChange={e => setInv(p => ({ ...p, status: e.target.value as InvoiceData['status'] }))} style={{ height: 46 }}>
+                                                        <option>Draft</option><option>Sent</option><option>Paid</option>
+                                                    </select>
                                                 </div>
                                                 <div className="field-group">
-                                                    <label className="input-label">Phone Number</label>
-                                                    <input className="berry-input" value={inv.clientPhone} onChange={e => setInv(p => ({ ...p, clientPhone: e.target.value }))} placeholder="+91 9999999999" style={{ height: 46 }} />
+                                                    <label className="input-label">Invoice Date</label>
+                                                    <input type="date" className="berry-input" value={inv.date} onChange={e => setInv(p => ({ ...p, date: e.target.value }))} style={{ height: 46 }} />
                                                 </div>
                                                 <div className="field-group">
-                                                    <label className="input-label">Billing Address</label>
-                                                    <input className="berry-input" value={inv.clientAddress} onChange={e => setInv(p => ({ ...p, clientAddress: e.target.value }))} placeholder="City, State" style={{ height: 46 }} />
+                                                    <label className="input-label">Due Date</label>
+                                                    <input type="date" className="berry-input" value={inv.dueDate} onChange={e => setInv(p => ({ ...p, dueDate: e.target.value }))} style={{ height: 46, color: '#ef4444', fontWeight: 600 }} />
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        {/* Project Details Section */}
-                                        <div>
-                                            <h4 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: 20, color: '#1e293b', display: 'flex', alignItems: 'center', gap: 10, paddingBottom: 10, borderBottom: '2px solid #f1f5f9' }}>
-                                                <FiBox /> Project Scope & Pricing
-                                            </h4>
-                                            <div className="field-group">
-                                                <label className="input-label">Project / Product Name *</label>
-                                                <input className="berry-input" value={inv.projectName} onChange={e => setInv(p => ({ ...p, projectName: e.target.value }))} placeholder="e.g. Premium E-Commerce Store" style={{ height: 46 }} />
-                                            </div>
-                                            <div className="field-group">
-                                                <label className="input-label">Task Description</label>
-                                                <textarea className="berry-input" rows={2} value={inv.description} onChange={e => setInv(p => ({ ...p, description: e.target.value }))} placeholder="What was delivered..." style={{ resize: 'none' }} />
-                                            </div>
-                                            <div className="berry-form-grid-3" style={{ background: '#f8fafc', padding: 16, borderRadius: 12, border: '1px solid #e3e8ef' }}>
-                                                <div className="field-group" style={{ marginBottom: 0 }}>
-                                                    <label className="input-label">Base Amount (₹) *</label>
-                                                    <input type="number" className="berry-input" value={inv.amount || ''} onChange={e => setInv(p => ({ ...p, amount: +e.target.value }))} style={{ height: 44, fontSize: '1.1rem', fontWeight: 700 }} />
+                                            {/* Client Info Section */}
+                                            <div style={{ padding: '4px' }}>
+                                                <h4 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: 20, color: '#1e293b', display: 'flex', alignItems: 'center', gap: 10, paddingBottom: 10, borderBottom: '2px solid #f1f5f9' }}>
+                                                    <FiUser /> Client Information
+                                                </h4>
+                                                <div className="berry-form-grid-2">
+                                                    <div className="field-group">
+                                                        <label className="input-label">Client Name *</label>
+                                                        <input className="berry-input" value={inv.clientName} onChange={e => setInv(p => ({ ...p, clientName: e.target.value }))} placeholder="Rajesh Kumar" style={{ height: 46 }} />
+                                                    </div>
+                                                    <div className="field-group">
+                                                        <label className="input-label">Email Address</label>
+                                                        <input type="email" className="berry-input" value={inv.clientEmail} onChange={e => setInv(p => ({ ...p, clientEmail: e.target.value }))} placeholder="client@example.com" style={{ height: 46 }} />
+                                                    </div>
+                                                    <div className="field-group">
+                                                        <label className="input-label">Phone Number</label>
+                                                        <input className="berry-input" value={inv.clientPhone} onChange={e => setInv(p => ({ ...p, clientPhone: e.target.value }))} placeholder="+91 9999999999" style={{ height: 46 }} />
+                                                    </div>
+                                                    <div className="field-group">
+                                                        <label className="input-label">Billing Address</label>
+                                                        <input className="berry-input" value={inv.clientAddress} onChange={e => setInv(p => ({ ...p, clientAddress: e.target.value }))} placeholder="City, State" style={{ height: 46 }} />
+                                                    </div>
                                                 </div>
-                                                <div className="field-group" style={{ marginBottom: 0 }}>
-                                                    <label className="input-label">Discount (%)</label>
-                                                    <input type="number" className="berry-input" value={inv.discount || ''} onChange={e => setInv(p => ({ ...p, discount: +e.target.value }))} style={{ height: 44, color: '#ef4444' }} />
+                                            </div>
+
+                                            {/* Project Details Section */}
+                                            <div>
+                                                <h4 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: 20, color: '#1e293b', display: 'flex', alignItems: 'center', gap: 10, paddingBottom: 10, borderBottom: '2px solid #f1f5f9' }}>
+                                                    <FiBox /> Project Scope & Pricing
+                                                </h4>
+                                                <div className="field-group">
+                                                    <label className="input-label">Project / Product Name *</label>
+                                                    <input className="berry-input" value={inv.projectName} onChange={e => setInv(p => ({ ...p, projectName: e.target.value }))} placeholder="e.g. Premium E-Commerce Store" style={{ height: 46 }} />
                                                 </div>
-                                                <div className="field-group" style={{ marginBottom: 0 }}>
-                                                    <label className="input-label">GST (%)</label>
-                                                    <input type="number" className="berry-input" value={inv.gstPercent} onChange={e => setInv(p => ({ ...p, gstPercent: +e.target.value }))} style={{ height: 44, color: '#2563eb' }} />
+                                                <div className="field-group">
+                                                    <label className="input-label">Task Description</label>
+                                                    <textarea className="berry-input" rows={2} value={inv.description} onChange={e => setInv(p => ({ ...p, description: e.target.value }))} placeholder="What was delivered..." style={{ resize: 'none' }} />
+                                                </div>
+                                                <div className="berry-form-grid-3" style={{ background: '#f8fafc', padding: 16, borderRadius: 12, border: '1px solid #e3e8ef' }}>
+                                                    <div className="field-group" style={{ marginBottom: 0 }}>
+                                                        <label className="input-label">Base Amount (₹) *</label>
+                                                        <input type="number" className="berry-input" value={inv.amount || ''} onChange={e => setInv(p => ({ ...p, amount: +e.target.value }))} style={{ height: 44, fontSize: '1.1rem', fontWeight: 700 }} />
+                                                    </div>
+                                                    <div className="field-group" style={{ marginBottom: 0 }}>
+                                                        <label className="input-label">Discount (%)</label>
+                                                        <input type="number" className="berry-input" value={inv.discount || ''} onChange={e => setInv(p => ({ ...p, discount: +e.target.value }))} style={{ height: 44, color: '#ef4444' }} />
+                                                    </div>
+                                                    <div className="field-group" style={{ marginBottom: 0 }}>
+                                                        <label className="input-label">GST (%)</label>
+                                                        <input type="number" className="berry-input" value={inv.gstPercent} onChange={e => setInv(p => ({ ...p, gstPercent: +e.target.value }))} style={{ height: 44, color: '#2563eb' }} />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                 {/* Right Column: Summary Sidebar */}
-                                <div className="berry-modal-sidebar" style={{ background: 'var(--berry-grey-50)', padding: '32px' }}>
-                                    <div style={{ position: 'sticky', top: 0 }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 28 }}>
-                                            <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e293b' }}>Bill Summary</h4>
-                                            <div style={{ height: 2, flex: 1, background: '#e2e8f0' }} />
-                                        </div>
-                                        
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginBottom: 32 }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem' }}>
-                                                <span style={{ color: '#64748b', fontWeight: 500 }}>Subtotal</span>
-                                                <span style={{ fontWeight: 700, color: '#1e293b' }}>{f(subtotal)}</span>
+                                    {/* Right Column: Summary Sidebar */}
+                                    <div className="berry-modal-sidebar" style={{ background: 'var(--berry-grey-50)', padding: '32px' }}>
+                                        <div style={{ position: 'sticky', top: 0 }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 28 }}>
+                                                <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#1e293b' }}>Bill Summary</h4>
+                                                <div style={{ height: 2, flex: 1, background: '#e2e8f0' }} />
                                             </div>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', color: '#c2185b' }}>
-                                                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>Discount ({inv.discount}%)</span>
-                                                <span style={{ fontWeight: 700 }}>-{f(discountAmt)}</span>
-                                            </div>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', color: '#1565c0' }}>
-                                                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>GST ({inv.gstPercent}%)</span>
-                                                <span style={{ fontWeight: 700 }}>{f(gstAmt)}</span>
-                                            </div>
-                                            <div style={{ height: 1, borderTop: '2px dashed #e2e8f0', margin: '4px 0' }} />
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
-                                                <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e293b' }}>Grand Total</span>
-                                                <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#5e35b1', textShadow: '0 10px 20px rgba(94, 53, 177, 0.1)' }}>{f(total)}</span>
-                                            </div>
-                                        </div>
 
-                                        <div className="field-group" style={{ marginBottom: 24 }}>
-                                            <label className="input-label" style={{ fontSize: '0.8rem' }}>Additional Notes</label>
-                                            <textarea className="berry-input" rows={3} value={inv.notes} onChange={e => setInv(p => ({ ...p, notes: e.target.value }))} style={{ fontSize: '0.82rem', background: '#fff', borderStyle: 'solid', resize: 'none' }} />
-                                        </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginBottom: 32 }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem' }}>
+                                                    <span style={{ color: '#64748b', fontWeight: 500 }}>Subtotal</span>
+                                                    <span style={{ fontWeight: 700, color: '#1e293b' }}>{f(subtotal)}</span>
+                                                </div>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', color: '#c2185b' }}>
+                                                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>Discount ({inv.discount}%)</span>
+                                                    <span style={{ fontWeight: 700 }}>-{f(discountAmt)}</span>
+                                                </div>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', color: '#1565c0' }}>
+                                                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>GST ({inv.gstPercent}%)</span>
+                                                    <span style={{ fontWeight: 700 }}>{f(gstAmt)}</span>
+                                                </div>
+                                                <div style={{ height: 1, borderTop: '2px dashed #e2e8f0', margin: '4px 0' }} />
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+                                                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e293b' }}>Grand Total</span>
+                                                    <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#5e35b1', textShadow: '0 10px 20px rgba(94, 53, 177, 0.1)' }}>{f(total)}</span>
+                                                </div>
+                                            </div>
 
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                                            <button 
-                                                className="btn-primary" 
-                                                onClick={handleSave} 
-                                                style={{ width: '100%', height: 54, borderRadius: 14, background: 'linear-gradient(135deg, #673ab7 0%, #5e35b1 100%)', justifyContent: 'center', fontSize: '1rem', boxShadow: '0 12px 24px -8px rgba(94, 53, 177, 0.4)' }}
-                                            >
-                                                <FiSave size={20} /> Create & Save Invoice
-                                            </button>
-                                            <button 
-                                                className="berry-btn-outline" 
-                                                onClick={() => setShowFormModal(false)} 
-                                                style={{ width: '100%', height: 48, borderRadius: 12, border: '2px solid #e2e8f0', color: '#64748b' }}
-                                            >
-                                                Discard Changes
-                                            </button>
+                                            <div className="field-group" style={{ marginBottom: 24 }}>
+                                                <label className="input-label" style={{ fontSize: '0.8rem' }}>Additional Notes</label>
+                                                <textarea className="berry-input" rows={3} value={inv.notes} onChange={e => setInv(p => ({ ...p, notes: e.target.value }))} style={{ fontSize: '0.82rem', background: '#fff', borderStyle: 'solid', resize: 'none' }} />
+                                            </div>
+
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                                <button
+                                                    className="btn-primary"
+                                                    onClick={handleSave}
+                                                    style={{ width: '100%', height: 54, borderRadius: 14, background: 'linear-gradient(135deg, #673ab7 0%, #5e35b1 100%)', justifyContent: 'center', fontSize: '1rem', boxShadow: '0 12px 24px -8px rgba(94, 53, 177, 0.4)' }}
+                                                >
+                                                    <FiSave size={20} /> Create & Save Invoice
+                                                </button>
+                                                <button
+                                                    className="berry-btn-outline"
+                                                    onClick={() => setShowFormModal(false)}
+                                                    style={{ width: '100%', height: 48, borderRadius: 12, border: '2px solid #e2e8f0', color: '#64748b' }}
+                                                >
+                                                    Discard Changes
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         </motion.div>
                     </div>
                 )}
             </AnimatePresence>
 
-            <motion.div 
-                initial={{ opacity: 0, scale: 0.98 }} 
-                animate={{ opacity: 1, scale: 1 }} 
+            <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4 }}
                 style={{ width: '100%', maxWidth: '100%' }}
             >
@@ -342,7 +342,7 @@ export default function AdminInvoicesPage() {
                                                     <td>{new Date(i.date).toLocaleDateString('en-IN')}</td>
                                                     <td>{i.clientName}</td>
                                                     <td>{i.projectName}</td>
-                                                    <td>{f(i.amount * (1 - i.discount/100) * (1 + i.gstPercent/100))}</td>
+                                                    <td>{f(i.amount * (1 - i.discount / 100) * (1 + i.gstPercent / 100))}</td>
                                                     <td>
                                                         <span className={`berry-badge ${i.status === 'Paid' ? 'success' : i.status === 'Sent' ? 'info' : 'warning'}`}>
                                                             {i.status}
@@ -448,11 +448,11 @@ export default function AdminInvoicesPage() {
                                             )}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12, fontSize: '1rem' }}>
                                                 <span style={{ color: '#64748b' }}>GST ({previewInvoice.gstPercent}%)</span>
-                                                <span style={{ fontWeight: 600 }}>{f((previewInvoice.amount * (1 - previewInvoice.discount/100)) * previewInvoice.gstPercent / 100)}</span>
+                                                <span style={{ fontWeight: 600 }}>{f((previewInvoice.amount * (1 - previewInvoice.discount / 100)) * previewInvoice.gstPercent / 100)}</span>
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.6rem', fontWeight: 900, color: '#5e35b1', marginTop: 12, paddingTop: 12, borderTop: '2px dashed #cbd5e1' }}>
                                                 <span>Total</span>
-                                                <span>{f(previewInvoice.amount * (1 - previewInvoice.discount/100) * (1 + previewInvoice.gstPercent/100))}</span>
+                                                <span>{f(previewInvoice.amount * (1 - previewInvoice.discount / 100) * (1 + previewInvoice.gstPercent / 100))}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -475,15 +475,15 @@ export default function AdminInvoicesPage() {
                     </div>
                 )}
 
-            <ConfirmModal 
-                isOpen={!!deleteId} 
-                title="Delete Invoice" 
-                message="Are you sure you want to delete this invoice? This cannot be undone." 
-                onConfirm={handleDelete} 
-                onCancel={() => setDeleteId(null)} 
-            />
+                <ConfirmModal
+                    isOpen={!!deleteId}
+                    title="Delete Invoice"
+                    message="Are you sure you want to delete this invoice? This cannot be undone."
+                    onConfirm={handleDelete}
+                    onCancel={() => setDeleteId(null)}
+                />
 
-            <style jsx>{`
+                <style jsx>{`
                 .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: flex-start; z-index: 10000; padding: 60px 20px; overflow-y: auto; }
                 .modal-container { border: none; box-shadow: 0 40px 100px rgba(0,0,0,0.3); width: 100%; position: relative; margin-bottom: 60px; border-radius: 20px; overflow: hidden; background: #fff; }
                 .modal-header h3 { margin: 0; font-size: 1.4rem; color: #1e293b; letter-spacing: -0.5px; }
@@ -512,11 +512,11 @@ export default function AdminInvoicesPage() {
                     src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
                 }
             `}</style>
-            
-            {/* Hidden Print Container for Better Print Layout */}
-            <div id="print-section" style={{ display: 'none' }}>
-                <div ref={printRef} />
-            </div>
+
+                {/* Hidden Print Container for Better Print Layout */}
+                <div id="print-section" style={{ display: 'none' }}>
+                    <div ref={printRef} />
+                </div>
             </motion.div>
         </>
     );
