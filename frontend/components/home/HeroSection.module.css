@@ -196,7 +196,7 @@
 }
 
 .logoName {
-    font-family: 'Copperplate Gothic Bold', 'Copperplate Gothic', 'Copperplate', serif;
+    font-family: 'Roboto', 'Assistant', 'Inter', sans-serif;
     font-weight: 900;
     font-size: 1.1rem;
     background: var(--gradient-accent);

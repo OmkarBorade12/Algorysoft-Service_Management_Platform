@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Assistant:wght@300;400;500;600;700;800&family=Inter:wght@400;700;900&display=swap');
 
 /* ===== CSS VARIABLES - Light Pista Theme ===== */
 :root {
@@ -391,7 +391,7 @@ html {
 }
 
 body {
-  font-family: 'Copperplate Gothic Bold', 'Copperplate Gothic', 'Copperplate', serif;
+  font-family: 'Roboto', 'Assistant', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -425,7 +425,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Copperplate Gothic Bold', 'Copperplate Gothic', 'Copperplate', serif;
+  font-family: 'Roboto', 'Assistant', 'Inter', sans-serif;
   font-weight: 700;
   line-height: 1.15;
   color: var(--text-primary);

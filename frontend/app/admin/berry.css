@@ -28,7 +28,7 @@
   display: flex;
   min-height: 100vh;
   background-color: var(--berry-grey-50);
-  font-family: 'Roboto', 'Copperplate Gothic Bold', 'Copperplate Gothic', 'Copperplate', serif;
+  font-family: 'Roboto', 'Roboto', 'Assistant', 'Inter', sans-serif;
   color: var(--berry-grey-900);
 }
 

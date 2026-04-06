@@ -61,7 +61,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
                                 color: '#e8f5e9',
                                 border: '1px solid rgba(82, 183, 136, 0.3)',
                                 borderRadius: '12px',
-                                fontFamily: "'Copperplate Gothic Bold', 'Copperplate Gothic', 'Copperplate', serif",
+                                fontFamily: "'Roboto', 'Assistant', 'Inter', sans-serif",
                             },
                             success: {
                                 iconTheme: { primary: '#52b788', secondary: 'white' },

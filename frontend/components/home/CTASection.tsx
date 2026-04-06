@@ -86,7 +86,7 @@ export default function CTASection() {
                                     background: 'transparent', color: '#ffffff',
                                     border: '2px solid rgba(255,255,255,0.35)',
                                     borderRadius: '9999px', fontWeight: '700', fontSize: '1rem',
-                                    cursor: 'pointer', fontFamily: "'Copperplate Gothic Bold', 'Copperplate Gothic', 'Copperplate', serif",
+                                    cursor: 'pointer', fontFamily: "'Roboto', 'Assistant', 'Inter', sans-serif",
                                 }}
                             >
                                 Get Free Quote

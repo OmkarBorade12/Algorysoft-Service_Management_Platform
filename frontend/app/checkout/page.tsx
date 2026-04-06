@@ -66,7 +66,7 @@ function InputField({
                         width: '100%', padding: icon ? '12px 14px 12px 40px' : '12px 16px',
                         borderRadius: 12, border: `1.5px solid ${showError ? '#ef4444' : touched && value && isValid ? '#10b981' : '#e2e8f0'}`,
                         background: 'white', fontSize: '0.92rem', color: '#0f172a',
-                        outline: 'none', transition: 'all 0.2s', fontFamily: "'Copperplate Gothic Bold', 'Copperplate Gothic', 'Copperplate', serif",
+                        outline: 'none', transition: 'all 0.2s', fontFamily: "'Roboto', 'Assistant', 'Inter', sans-serif",
                     }}
                     onFocus={e => { e.target.style.borderColor = 'var(--pista-primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(109,176,58,0.12)'; }}
                 />
