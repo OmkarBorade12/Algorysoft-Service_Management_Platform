@@ -9,12 +9,21 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: 'Missing fields' }, { status: 400 });
         }
 
-        // Configuration for Gmail or any SMTP
+        if (!process.env.EMAIL_PASS) {
+            console.error('SERVER ERROR: EMAIL_PASS is not set in .env.local file. Cannot send email.');
+            return NextResponse.json({ 
+                message: 'Server configuration error: EMAIL_PASS is missing. Please add it to your .env.local file.' 
+            }, { status: 500 });
+        }
+
+        // Configuration for Gmail SMTP
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
                 user: process.env.EMAIL_USER || 'algorysoft@gmail.com',
-                pass: process.env.EMAIL_PASS, // App Password required
+                pass: process.env.EMAIL_PASS, // Google App Password
             },
         });
 
@@ -37,14 +46,6 @@ export async function POST(req: Request) {
                 </div>
             `,
         };
-
-        if (!process.env.EMAIL_PASS) {
-            console.warn('EMAIL_PASS is not set. Contact form will only log to console.');
-            console.log('Form submission:', { name, email, subject, message });
-            // For now, let's pretend it worked in dev, or return an error if we're serious
-            // But we should return success to the user and tell them to add the key
-            return NextResponse.json({ message: 'Success (but check server logs for EMAIL_PASS config)' }, { status: 200 });
-        }
 
         await transporter.sendMail(mailOptions);
         return NextResponse.json({ message: 'Email sent successfully!' }, { status: 200 });
