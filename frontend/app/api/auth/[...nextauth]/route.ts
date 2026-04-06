@@ -2,28 +2,31 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
 // ─── Environment & Fallbacks ──────────────────────────────────
-// Note: NextAuth v4 reads NEXTAUTH_URL from process.env.
-// If it's missing on the server, we explicitly set it here to avoid "localhost:3000" redirects.
+// CRITICAL: Set NEXTAUTH_URL at module level BEFORE NextAuth initialises.
+// On production servers, this MUST also be set in the hosting platform's
+// environment variable dashboard (Vercel/Railway/etc.) — .env.local is local-only.
 if (!process.env.NEXTAUTH_URL) {
     process.env.NEXTAUTH_URL = 'https://algorysoft.com';
 }
 
-const GOOGLE_ID = process.env.GOOGLE_CLIENT_ID!;
-const GOOGLE_SECRET = process.env.GOOGLE_CLIENT_SECRET!;
-const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || 'algorysoft_secure_secret_key_123456789';
-const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
+const GOOGLE_ID = process.env.GOOGLE_CLIENT_ID ?? '';
+const GOOGLE_SECRET = process.env.GOOGLE_CLIENT_SECRET ?? '';
+const NEXTAUTH_SECRET =
+    process.env.NEXTAUTH_SECRET || 'algorysoft_nextauth_secret_v2_xK9mLpQr7jN3wZeY';
 
 if (!GOOGLE_ID || !GOOGLE_SECRET) {
-    console.error('[NextAuth] CRITICAL: Google OAuth credentials are missing from environment variables!');
-    console.error('[NextAuth] Make sure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set in .env.local');
+    console.error(
+        '[NextAuth] CRITICAL: Google OAuth credentials are missing. ' +
+        'Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your hosting platform env vars.'
+    );
 }
 
-console.log('[NextAuth] Initializing with config:', {
+console.log('[NextAuth] Initialising with config:', {
     hasSecret: !!process.env.NEXTAUTH_SECRET,
     hasUrl: !!process.env.NEXTAUTH_URL,
-    urlValue: NEXTAUTH_URL,
-    hasGoogleId: !!process.env.GOOGLE_CLIENT_ID,
-    hasGoogleSecret: !!process.env.GOOGLE_CLIENT_SECRET,
+    urlValue: process.env.NEXTAUTH_URL,
+    hasGoogleId: !!GOOGLE_ID,
+    hasGoogleSecret: !!GOOGLE_SECRET,
 });
 
 export const authOptions: NextAuthOptions = {
@@ -42,17 +45,17 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
 
-    // Added for debugging
     logger: {
         error(code, metadata) {
-            console.error('NextAuth Error Code:', code);
-            console.error('NextAuth Error Metadata:', JSON.stringify(metadata, null, 2));
+            // Log the actual error message if available (helps diagnose OAuthSignin issues)
+            const err = metadata as Record<string, unknown>;
+            console.error('[NextAuth Error]', code, err?.message ?? '', JSON.stringify(err, null, 2));
         },
         warn(code) {
-            console.warn('NextAuth Warning:', code);
+            console.warn('[NextAuth Warning]', code);
         },
         debug(code, metadata) {
-            console.log('NextAuth Debug:', code, metadata);
+            console.log('[NextAuth Debug]', code, metadata);
         },
     },
 
@@ -76,12 +79,13 @@ export const authOptions: NextAuthOptions = {
 
     pages: {
         signIn: '/',
-        error: '/api/auth/error', // explicit error page
+        // ⚠️ NOTE: Do NOT set error to '/api/auth/error' — that's the API route itself
+        // and causes a redirect loop. Let NextAuth use its default error page instead.
     },
 
     session: { strategy: 'jwt' },
     secret: NEXTAUTH_SECRET,
-    debug: true,
+    debug: process.env.NODE_ENV === 'development',
 };
 
 const handler = NextAuth(authOptions);
