@@ -9,10 +9,12 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: 'Missing fields' }, { status: 400 });
         }
 
-        if (!process.env.EMAIL_PASS) {
-            console.error('SERVER ERROR: EMAIL_PASS is not set in .env.local file. Cannot send email.');
+        const emailPass = (process.env.EMAIL_PASS || '').trim();
+
+        if (!emailPass) {
+            console.error('SERVER ERROR: EMAIL_PASS is not set in environment variables. Cannot send email.');
             return NextResponse.json({ 
-                message: 'Server configuration error: EMAIL_PASS is missing. Please add it to your .env.local file.' 
+                message: 'Server configuration error: EMAIL_PASS is missing. Please check your environment variables.' 
             }, { status: 500 });
         }
 
@@ -22,8 +24,8 @@ export async function POST(req: Request) {
             port: 465,
             secure: true,
             auth: {
-                user: process.env.EMAIL_USER || 'algorysoft@gmail.com',
-                pass: process.env.EMAIL_PASS, // Google App Password
+                user: (process.env.EMAIL_USER || 'algorysoft@gmail.com').trim(),
+                pass: emailPass, // Google App Password
             },
         });
 

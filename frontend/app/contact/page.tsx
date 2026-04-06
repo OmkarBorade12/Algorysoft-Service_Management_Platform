@@ -27,10 +27,12 @@ export default function ContactPage() {
                 toast.success('Your message has been sent successfully! 📧');
                 setFormData({ name: '', email: '', subject: '', message: '' });
             } else {
-                toast.error('Failed to send message. Please try again.');
+                const errorData = await res.json().catch(() => null);
+                console.error('Contact Form Server Error:', errorData);
+                toast.error(errorData?.message || 'Failed to send message. Please try again.');
             }
         } catch (err) {
-            console.error('Contact Form Error:', err);
+            console.error('Contact Form Network Error:', err);
             toast.error('Something went wrong. Please check your connection.');
         } finally {
             setSubmitting(false);
