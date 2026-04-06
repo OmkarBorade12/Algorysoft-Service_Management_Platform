@@ -8,6 +8,9 @@ import HeroCarousel from '@/components/home/HeroCarousel';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { useEffect } from 'react';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { fetchLandingStats } from '@/store/slices/statsSlice';
 
 const ProductSection = lazy(() => import('@/components/home/ProductSection'));
 const TestimonialsSection = lazy(() => import('@/components/home/TestimonialsSection'));
@@ -26,6 +29,12 @@ const ProductSkeleton = () => (
 );
 
 export default function HomePage() {
+  const dispatch = useAppDispatch();
+  
+  useEffect(() => {
+    dispatch(fetchLandingStats());
+  }, [dispatch]);
+
   const projects = useSelector((state: RootState) => state.products.items);
   
   // Sort all by newest first (highest id = most recently added)

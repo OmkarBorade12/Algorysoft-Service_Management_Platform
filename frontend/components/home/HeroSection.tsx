@@ -13,11 +13,11 @@ const TECH_TAGS = ['E-Commerce', 'SaaS Dashboard', 'Landing Pages', 'Corporate S
 export default function HeroSection() {
     const dispatch = useAppDispatch();
     const products = useAppSelector(s => s.products.items);
-    const orders = useAppSelector(s => s.orders.items);
-    const websitesDelivered = orders.length;
-    const happyClients = new Set(orders.map(o => o.client_email)).size;
-    const reviews = useAppSelector(s => s.reviews.reviews);
-    const avgRating = reviews.length ? (reviews.reduce((acc: number, rv) => acc + rv.rating, 0) / reviews.length).toFixed(1) : '5.0';
+    const { landing } = useAppSelector(s => s.stats);
+    
+    const websitesDelivered = landing.websites_delivered;
+    const happyClients = landing.happy_businesses;
+    const avgRating = landing.avg_rating || '5.0';
 
     const getCount = (slug: string) => products.filter(p => 
         p.category?.toLowerCase() === slug || 
@@ -101,11 +101,11 @@ export default function HeroSection() {
                                 ))}
                             </div>
                             <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                                {avgRating}/5 from {200 + happyClients} Clients
+                                {avgRating}/5 from {happyClients} Clients
                             </span>
                         </div>
                         <span style={{ color: 'var(--border-solid)' }}>|</span>
-                        <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><HiOutlineRocketLaunch size={14} style={{ color: 'var(--pista-primary)' }} /> {500 + websitesDelivered}+ Websites Delivered</span>
+                        <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><HiOutlineRocketLaunch size={14} style={{ color: 'var(--pista-primary)' }} /> {websitesDelivered} Websites Delivered</span>
                         <span style={{ color: 'var(--border-solid)' }}>|</span>
                         <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><FiMapPin size={13} style={{ color: 'var(--pista-primary)' }} /> Bangalore, India</span>
                     </div>

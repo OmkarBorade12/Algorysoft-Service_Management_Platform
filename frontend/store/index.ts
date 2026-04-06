@@ -18,6 +18,7 @@ import requestsReducer from './slices/requestsSlice';
 import invoicesReducer from './slices/invoicesSlice';
 import featuresReducer from './slices/featuresSlice';
 import pricingCardsReducer from './slices/pricingCardsSlice';
+import statsReducer from './slices/statsSlice';
 
 const rootReducer = combineReducers({
   cart: cartReducer,
@@ -32,9 +33,9 @@ const rootReducer = combineReducers({
   products: productsReducer,
   categories: categoriesReducer,
   requests: requestsReducer,
-  invoices: invoicesReducer,
   features: featuresReducer,
   pricingCards: pricingCardsReducer,
+  stats: statsReducer,
 });
 
 // v2 migration: wipe cart to remove stale items that had combined base+tier pricing

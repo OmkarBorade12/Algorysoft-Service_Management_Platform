@@ -4,16 +4,18 @@ import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import { useAppSelector } from '@/hooks/useRedux';
 
 export default function StatsSection() {
-    const orders = useAppSelector(s => s.orders.items);
-    const reviews = useAppSelector(s => s.reviews.reviews);
+    const { landing } = useAppSelector(s => s.stats);
+    const reviews_data = useAppSelector(s => s.reviews.reviews);
 
-    const websitesDelivered = 500 + orders.length;
-    const happyBusinesses = 200 + new Set(orders.map(o => (o as any).client_email || (o as any).clientEmail)).size;
-    const avgRating = reviews.length ? (reviews.reduce((acc: number, rv) => acc + rv.rating, 0) / reviews.length).toFixed(1) : '5.0';
+    // If we have stats from backend, use them. 
+    // We can still add a small base if the client prefers, but they asked for "real and actual".
+    const websitesDelivered = landing.websites_delivered;
+    const happyBusinesses = landing.happy_businesses;
+    const avgRating = landing.avg_rating || '5.0';
 
     const stats = [
-        { num: `${websitesDelivered}+`, label: 'Websites Delivered', icon: <FiGlobe size={28} /> },
-        { num: `${happyBusinesses}+`, label: 'Happy Businesses', icon: <HiOutlineOfficeBuilding size={28} /> },
+        { num: `${websitesDelivered}`, label: 'Websites Delivered', icon: <FiGlobe size={28} /> },
+        { num: `${happyBusinesses}`, label: 'Happy Businesses', icon: <HiOutlineOfficeBuilding size={28} /> },
         { num: '7–14', label: 'Days Avg. Delivery', icon: <FiZap size={28} /> },
         { num: `${avgRating}★`, label: 'Client Satisfaction', icon: <FiAward size={28} /> },
     ];
