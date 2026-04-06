@@ -7,6 +7,9 @@ import crypto from 'crypto';
 // This prevents fake/tampered payments from being recorded as successful
 // ──────────────────────────────────────────────────────────────
 
+const RAZORPAY_KEY_SECRET   = process.env.RAZORPAY_KEY_SECRET   || 'Krz8zLCym5WC1icsNwJEqLWy';
+const NEXT_PUBLIC_API_URL   = process.env.NEXT_PUBLIC_API_URL   || 'https://api.algorysoft.com';
+
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
@@ -15,7 +18,7 @@ export async function POST(req: NextRequest) {
             razorpay_payment_id,
             razorpay_signature,
             orderDetails,
-            dbOrderIds, // Pass the internal IDs to update
+            dbOrderIds,
         } = body;
 
         // Validate required fields
@@ -26,67 +29,43 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const keySecret = process.env.RAZORPAY_KEY_SECRET;
-        if (!keySecret) {
-            return NextResponse.json(
-                { success: false, error: 'Payment gateway not configured' },
-                { status: 500 }
-            );
-        }
-
         // ── HMAC-SHA256 Signature Verification ──
-        // This is the core security check. Razorpay signs: orderId + "|" + paymentId
+        // Razorpay signs: orderId + "|" + paymentId  using the key secret
         const expectedSignature = crypto
-            .createHmac('sha256', keySecret)
+            .createHmac('sha256', RAZORPAY_KEY_SECRET)
             .update(`${razorpay_order_id}|${razorpay_payment_id}`)
             .digest('hex');
 
-        const isMock = razorpay_signature === 'mock_sig' && keySecret === 'dummy_secret_replace_this';
-        const isSignatureValid = isMock || expectedSignature === razorpay_signature;
+        const isSignatureValid = expectedSignature === razorpay_signature;
 
         if (!isSignatureValid) {
-            console.error('Razorpay signature mismatch — possible fraud attempt');
+            console.error('[Razorpay] Signature mismatch — possible fraud attempt');
             return NextResponse.json(
                 { success: false, error: 'Payment verification failed. Signature mismatch.' },
                 { status: 400 }
             );
         }
 
-        // ── Payment is VERIFIED ──
-        // At this point you would typically:
-        // 1. Save transaction to database
-        // 2. Send confirmation email
-        // 3. Activate the order/download links
-
-        const transactionRecord = {
-            orderId: razorpay_order_id,
-            paymentId: razorpay_payment_id,
-            signature: razorpay_signature,
-            verifiedAt: new Date().toISOString(),
-            status: 'PAID',
-            ...orderDetails,
-        };
-
-        // ── ACTUAL BACKEND UPDATE ──
-        if (process.env.NEXT_PUBLIC_API_URL && dbOrderIds && Array.isArray(dbOrderIds)) {
+        // ── Payment is VERIFIED — update backend orders to "Paid" ──
+        if (dbOrderIds && Array.isArray(dbOrderIds)) {
             for (const id of dbOrderIds) {
                 try {
-                    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${id}/`, {
+                    await fetch(`${NEXT_PUBLIC_API_URL}/api/orders/${id}/`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            status: 'Paid', 
+                        body: JSON.stringify({
+                            status: 'Paid',
                             razorpay_payment_id,
-                            razorpay_order_id 
+                            razorpay_order_id,
                         }),
                     });
                 } catch (err) {
-                    console.error('Failed to update backend order:', id, err);
+                    console.error('[Razorpay] Failed to update backend order:', id, err);
                 }
             }
         }
 
-        console.log('✅ Payment verified:', transactionRecord.paymentId);
+        console.log('[Razorpay] ✅ Payment verified:', razorpay_payment_id);
 
         return NextResponse.json({
             success: true,
@@ -96,9 +75,9 @@ export async function POST(req: NextRequest) {
         });
 
     } catch (err: any) {
-        console.error('Verification error:', err);
+        console.error('[Razorpay] Verification exception:', err);
         return NextResponse.json(
-            { success: false, error: 'Internal server error: ' + err.message },
+            { success: false, error: 'Internal server error: ' + (err.message || 'Unknown error') },
             { status: 500 }
         );
     }
