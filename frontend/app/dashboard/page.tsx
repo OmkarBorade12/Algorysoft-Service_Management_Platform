@@ -52,7 +52,7 @@ export default function ClientDashboardPage() {
     // Filter data for the logged in user
     const displayOrders = orders.filter(o => 
         o.client_email === user?.email && 
-        (!!o.razorpay_payment_id || o.tier === 'Custom Request')
+        (['Paid', 'In Progress', 'Completed'].includes(o.status) || o.tier === 'Custom Request')
     );
     const displayInvoices = invoices.filter((i: any) => i.clientEmail === user?.email);
 

@@ -38,9 +38,10 @@ export default function AdminOrdersPage() {
     }, [selectedOrder?.chat]);
 
     const filtered = orders.filter(o => {
-        // Only show orders that have a payment ID or are Custom Requests
-        const isPaid = !!o.razorpay_payment_id && o.razorpay_payment_id.trim() !== '';
+        // Only show orders that are successfully paid OR are Custom Requests
+        const isPaid = ['Paid', 'In Progress', 'Completed'].includes(o.status);
         const isCustom = o.tier === 'Custom Request';
+        // Base Products MUST be paid to be visible. Custom requests are always visible.
         if (!isPaid && !isCustom) return false;
 
         if (filter !== 'All' && o.status !== filter) return false;
