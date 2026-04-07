@@ -79,7 +79,7 @@ export const authOptions: NextAuthOptions = {
 
     pages: {
         signIn: '/',
-        // ⚠️ NOTE: Do NOT set error to '/api/auth/error' — that's the API route itself
+        // ⚠︎︎︎ NOTE: Do NOT set error to '/api/auth/error' — that's the API route itself
         // and causes a redirect loop. Let NextAuth use its default error page instead.
     },
 

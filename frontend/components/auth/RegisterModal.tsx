@@ -35,7 +35,7 @@ export default function RegisterModal() {
             const data = await res.json();
             if (res.ok) {
                 dispatch(setUser({ id: data.user.id, name: data.user.name, email: data.user.email, token: data.token, role: data.user.role || 'customer' }));
-                toast.success('Account created successfully! 🎉');
+                toast.success('Account created successfully! 🎉︎︎');
                 dispatch(closeModals());
             } else {
                 toast.error(data.message || 'Registration failed');
@@ -58,7 +58,7 @@ export default function RegisterModal() {
             }
 
             dispatch(setUser({ id: saved.id, name: saved.name, email: saved.email, role: saved.role }));
-            toast.success('Account created successfully! 🎉');
+            toast.success('Account created successfully! 🎉︎︎');
             dispatch(closeModals());
         }
 
@@ -95,7 +95,7 @@ export default function RegisterModal() {
                     </div>
                     <div className="form-group">
                         <label className="form-label">City</label>
-                        <input type="text" className="form-input" placeholder="Bangalore" value={form.city} onChange={update('city')} />
+                        <input type="text" className="form-input" placeholder="Gadag, Karnataka, India" value={form.city} onChange={update('city')} />
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                         <div className="form-group">

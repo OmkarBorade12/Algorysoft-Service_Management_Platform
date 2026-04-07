@@ -67,7 +67,7 @@ function CardAssignmentPopup({ silverCardId, goldCardId, onSave, onClose }: Card
     const [selectedGold, setSelectedGold] = useState<number | null>(goldCardId);
 
     const silverCards: PricingCard[] = cards.filter((c: PricingCard) => c.tier === 'silver');
-    const goldCards: PricingCard[]   = cards.filter((c: PricingCard) => c.tier === 'gold');
+    const goldCards: PricingCard[] = cards.filter((c: PricingCard) => c.tier === 'gold');
 
     const FeaturePills = ({ features, color }: { features: string; color: 'blue' | 'silver' | 'gold' }) => (
         <>
@@ -156,7 +156,7 @@ function CardAssignmentPopup({ silverCardId, goldCardId, onSave, onClose }: Card
                                     <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#2196f3', margin: '4px 0' }}>₹{Number(basicCard.price).toLocaleString('en-IN')}</div>
                                     <FeaturePills features={basicCard.features || ''} color="blue" />
                                 </div>
-                                <span style={{ background: '#2196f3', color: '#fff', borderRadius: 20, padding: '5px 14px', fontWeight: 700, fontSize: '0.78rem', whiteSpace: 'nowrap' }}>✓ Included</span>
+                                <span style={{ background: '#2196f3', color: '#fff', borderRadius: 20, padding: '5px 14px', fontWeight: 700, fontSize: '0.78rem', whiteSpace: 'nowrap' }}>✓︎ Included</span>
                             </>
                         ) : (
                             <span style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: '0.85rem' }}>No basic card configured — go to Cards section to set one up.</span>
@@ -167,7 +167,7 @@ function CardAssignmentPopup({ silverCardId, goldCardId, onSave, onClose }: Card
                 {/* SILVER CARDS — 4 per row */}
                 <div style={{ marginBottom: 24 }}>
                     <div style={{ fontWeight: 700, color: '#364152', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12, fontSize: '0.9rem' }}>
-                        🥈 Silver Cards
+                        🥈︎︎ Silver Cards
                         {selectedSilver && <span style={{ background: '#ede7f6', color: '#5e35b1', fontSize: '0.68rem', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>1 selected</span>}
                     </div>
                     {silverCards.length === 0 ? (
@@ -185,7 +185,7 @@ function CardAssignmentPopup({ silverCardId, goldCardId, onSave, onClose }: Card
                 {/* GOLD CARDS — 4 per row */}
                 <div style={{ marginBottom: 24 }}>
                     <div style={{ fontWeight: 700, color: '#364152', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12, fontSize: '0.9rem' }}>
-                        🥇 Gold Cards
+                        🥇︎︎ Gold Cards
                         {selectedGold && <span style={{ background: '#fff8e1', color: '#f57f17', fontSize: '0.68rem', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>1 selected</span>}
                     </div>
                     {goldCards.length === 0 ? (
@@ -203,14 +203,14 @@ function CardAssignmentPopup({ silverCardId, goldCardId, onSave, onClose }: Card
                 {/* Summary bar */}
                 <div style={{ background: '#f8fafc', borderRadius: 10, padding: '12px 16px', marginBottom: 20, border: '1px solid #e3e8ef', display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>Selection:</span>
-                    <span style={{ background: '#e3f2fd', color: '#1565c0', padding: '3px 12px', borderRadius: 20, fontSize: '0.78rem', fontWeight: 700 }}>✓ Basic</span>
+                    <span style={{ background: '#e3f2fd', color: '#1565c0', padding: '3px 12px', borderRadius: 20, fontSize: '0.78rem', fontWeight: 700 }}>✓︎ Basic</span>
                     {selectedSilver
-                        ? <span style={{ background: '#ede7f6', color: '#5e35b1', padding: '3px 12px', borderRadius: 20, fontSize: '0.78rem', fontWeight: 700 }}>🥈 {silverCards.find((c: PricingCard) => c.id === selectedSilver)?.name}</span>
-                        : <span style={{ background: '#f1f5f9', color: '#94a3b8', padding: '3px 12px', borderRadius: 20, fontSize: '0.78rem' }}>🥈 No Silver</span>
+                        ? <span style={{ background: '#ede7f6', color: '#5e35b1', padding: '3px 12px', borderRadius: 20, fontSize: '0.78rem', fontWeight: 700 }}>🥈︎︎ {silverCards.find((c: PricingCard) => c.id === selectedSilver)?.name}</span>
+                        : <span style={{ background: '#f1f5f9', color: '#94a3b8', padding: '3px 12px', borderRadius: 20, fontSize: '0.78rem' }}>🥈︎︎ No Silver</span>
                     }
                     {selectedGold
-                        ? <span style={{ background: '#fff8e1', color: '#f57f17', padding: '3px 12px', borderRadius: 20, fontSize: '0.78rem', fontWeight: 700 }}>🥇 {goldCards.find((c: PricingCard) => c.id === selectedGold)?.name}</span>
-                        : <span style={{ background: '#f1f5f9', color: '#94a3b8', padding: '3px 12px', borderRadius: 20, fontSize: '0.78rem' }}>🥇 No Gold</span>
+                        ? <span style={{ background: '#fff8e1', color: '#f57f17', padding: '3px 12px', borderRadius: 20, fontSize: '0.78rem', fontWeight: 700 }}>🥇︎︎ {goldCards.find((c: PricingCard) => c.id === selectedGold)?.name}</span>
+                        : <span style={{ background: '#f1f5f9', color: '#94a3b8', padding: '3px 12px', borderRadius: 20, fontSize: '0.78rem' }}>🥇︎︎ No Gold</span>
                     }
                 </div>
 
@@ -239,7 +239,7 @@ function compressImage(file: File, maxSize = 900, quality = 0.7): Promise<string
         img.onload = () => {
             const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
             const canvas = document.createElement('canvas');
-            canvas.width  = Math.round(img.width  * scale);
+            canvas.width = Math.round(img.width * scale);
             canvas.height = Math.round(img.height * scale);
             const ctx = canvas.getContext('2d')!;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -365,7 +365,7 @@ export default function AdminProductsPage() {
             setForm({});
         } catch (err: any) {
             const msg = err?.message || err?.toString() || 'Error saving product';
-            toast.error(`❌ ${msg}`);
+            toast.error(`❌︎︎ ${msg}`);
             console.error('[Product Save Error]', err);
         }
     };
@@ -573,10 +573,10 @@ export default function AdminProductsPage() {
                                         <span className="chip-auto-tag">Auto</span>
                                     </div>
                                     <div className={`assigned-card-chip silver ${assignedSilverCard ? 'active' : 'empty'}`}>
-                                        🥈 {assignedSilverCard ? `${assignedSilverCard.name} – ₹${Number(assignedSilverCard.price).toLocaleString('en-IN')}` : 'No Silver'}
+                                        🥈︎︎ {assignedSilverCard ? `${assignedSilverCard.name} – ₹${Number(assignedSilverCard.price).toLocaleString('en-IN')}` : 'No Silver'}
                                     </div>
                                     <div className={`assigned-card-chip gold ${assignedGoldCard ? 'active' : 'empty'}`}>
-                                        🥇 {assignedGoldCard ? `${assignedGoldCard.name} – ₹${Number(assignedGoldCard.price).toLocaleString('en-IN')}` : 'No Gold'}
+                                        🥇︎︎ {assignedGoldCard ? `${assignedGoldCard.name} – ₹${Number(assignedGoldCard.price).toLocaleString('en-IN')}` : 'No Gold'}
                                     </div>
                                 </div>
 
@@ -690,8 +690,8 @@ export default function AdminProductsPage() {
                                                 <td>
                                                     <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
                                                         <span style={{ background: '#e3f2fd', color: '#1565c0', padding: '2px 7px', borderRadius: 10, fontSize: '0.7rem', fontWeight: 600 }}>B</span>
-                                                        {sc && <span style={{ background: '#ede7f6', color: '#5e35b1', padding: '2px 7px', borderRadius: 10, fontSize: '0.7rem', fontWeight: 600 }}>🥈</span>}
-                                                        {gc && <span style={{ background: '#fff8e1', color: '#f57f17', padding: '2px 7px', borderRadius: 10, fontSize: '0.7rem', fontWeight: 600 }}>🥇</span>}
+                                                        {sc && <span style={{ background: '#ede7f6', color: '#5e35b1', padding: '2px 7px', borderRadius: 10, fontSize: '0.7rem', fontWeight: 600 }}>🥈︎︎</span>}
+                                                        {gc && <span style={{ background: '#fff8e1', color: '#f57f17', padding: '2px 7px', borderRadius: 10, fontSize: '0.7rem', fontWeight: 600 }}>🥇︎︎</span>}
                                                     </div>
                                                 </td>
                                                 <td>

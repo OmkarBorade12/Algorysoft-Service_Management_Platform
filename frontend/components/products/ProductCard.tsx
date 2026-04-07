@@ -1,8 +1,9 @@
 'use client';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { addToCart } from '@/store/slices/cartSlice';
+import { addToCart, clearCart } from '@/store/slices/cartSlice';
 import { toggleWishlistItem } from '@/store/slices/wishlistSlice';
 import { formatPrice } from '@/store/slices/currencySlice';
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 import styles from './ProductCard.module.css';
@@ -29,12 +30,17 @@ interface Product {
 
 export default function ProductCard({ product }: { product: Product }) {
     const dispatch = useAppDispatch();
+    const router = useRouter();
     const wishlistItems = useAppSelector((s) => s.wishlist.items);
     const { currency, usdRate } = useAppSelector((s) => s.currency);
     const isWishlisted = wishlistItems.some((i) => i.id === product.id);
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault();
+        
+        // Clear cart first for immediate direct checkout behavior
+        dispatch(clearCart());
+
         dispatch(addToCart({
             id: product.id,
             title: product.title,
@@ -44,8 +50,11 @@ export default function ProductCard({ product }: { product: Product }) {
             category: product.category,
             icon: product.icon,
             slug: product.slug,
+            image: product.mainImage,
         }));
-        toast.success('Added to quote! 🛒');
+        
+        toast.success('Redirecting to checkout... 🚀︎︎');
+        router.push('/checkout');
     };
 
     const handleWishlist = (e: React.MouseEvent) => {
@@ -60,7 +69,7 @@ export default function ProductCard({ product }: { product: Product }) {
             icon: product.icon,
             slug: product.slug,
         }));
-        toast.success(isWishlisted ? 'Removed from saved' : 'Saved for later 🤍');
+        toast.success(isWishlisted ? 'Removed from saved' : 'Saved for later 🤍︎︎');
     };
 
     return (

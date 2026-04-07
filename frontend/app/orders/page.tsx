@@ -57,10 +57,10 @@ export default function MyOrdersPage() {
 
     const handleSendMsg = async () => {
         if (!chatMsg.trim() || !selectedOrder) return;
-        const newMsg = { 
-            sender: 'client' as const, 
-            text: chatMsg, 
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+        const newMsg = {
+            sender: 'client' as const,
+            text: chatMsg,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         try {
             await dispatch(addOrderMessageThunk({ id: selectedOrder.id, message: newMsg, chat: selectedOrder.chat })).unwrap();
@@ -83,7 +83,7 @@ export default function MyOrdersPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 24, maxWidth: 1000, margin: '0 auto' }}>
                     {orders.length === 0 ? (
                         <div className="glass-card" style={{ padding: 60, textAlign: 'center' }}>
-                            <div style={{ fontSize: '4rem', opacity: 0.5, marginBottom: 16 }}>🛒</div>
+                            <div style={{ fontSize: '4rem', opacity: 0.5, marginBottom: 16 }}>🛒︎︎</div>
                             <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', marginBottom: 8 }}>No ongoing projects found</h3>
                             <p style={{ color: 'var(--text-muted)' }}>You haven't purchased or requested any custom projects yet.</p>
                             <Link href="/projects" className="btn-primary" style={{ marginTop: 24 }}>Explore Projects</Link>
@@ -95,11 +95,11 @@ export default function MyOrdersPage() {
                                     <div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
                                             <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--pista-dark)' }}>{order.order_id || `#${order.id}`}</span>
-                                            <span className={`badge ${order.status === 'Completed' ? 'badge-discount' : 'badge-category'}`} 
+                                            <span className={`badge ${order.status === 'Completed' ? 'badge-discount' : 'badge-category'}`}
                                                 style={{ background: order.status === 'Completed' ? 'var(--pista-xlight)' : 'rgba(37, 99, 235, 0.1)', color: order.status === 'Completed' ? 'var(--pista-dark)' : '#2563eb', border: 'none' }}>
                                                 {order.status}
                                             </span>
-                                            <span className="badge" style={{ background: '#fff9c4', color: '#f57f17', border: '1px solid #ffd54f' }}>🏎️ {order.tier} Tier</span>
+                                            <span className="badge" style={{ background: '#fff9c4', color: '#f57f17', border: '1px solid #ffd54f' }}>🏎︎︎︎ {order.tier} Tier</span>
                                         </div>
                                         <h3 style={{ fontSize: '1.4rem', fontWeight: 700, margin: '0 0 4px 0', color: 'var(--text-primary)' }}>{order.product}</h3>
                                         <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Ordered on {new Date(order.date).toLocaleDateString()}</div>
@@ -108,12 +108,12 @@ export default function MyOrdersPage() {
                                         <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
                                             ₹{order.amount.toLocaleString('en-IN')}
                                         </div>
-                                        <button 
+                                        <button
                                             onClick={() => setSelectedOrderId(order.id)}
-                                            className="btn-primary" 
+                                            className="btn-primary"
                                             style={{ marginTop: 12, padding: '8px 20px', fontSize: '0.85rem' }}
                                         >
-                                            Track Progress & Chat 💬
+                                            Track Progress & Chat 💬︎︎
                                         </button>
                                     </div>
                                 </div>
@@ -145,14 +145,14 @@ export default function MyOrdersPage() {
             {selectedOrder && (
                 <div className="modal-overlay" style={{ zIndex: 1100, backdropFilter: 'blur(8px)' }}>
                     <div className="modal-content animate-fadeInUp" style={{ maxWidth: 800, padding: 0, height: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                        
+
                         {/* Header */}
                         <div style={{ padding: '24px 32px', background: 'var(--pista-primary)', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
                                 <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700 }}>{selectedOrder.product} <span style={{ opacity: 0.8, fontSize: '0.9rem' }}>({selectedOrder.order_id || `#${selectedOrder.id}`})</span></h3>
                                 <p style={{ margin: 0, opacity: 0.9, fontSize: '0.9rem', marginTop: 4 }}>Live tracking and developer chat regarding your project.</p>
                             </div>
-                            <button onClick={() => setSelectedOrderId(null)} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: 36, height: 36, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                            <button onClick={() => setSelectedOrderId(null)} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: 36, height: 36, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕︎</button>
                         </div>
 
                         {/* Tracker UI */}
@@ -176,11 +176,11 @@ export default function MyOrdersPage() {
                             ) : (
                                 selectedOrder.chat.map((msg, idx) => (
                                     <div key={idx} style={{ alignSelf: msg.sender === 'client' ? 'flex-end' : 'flex-start', maxWidth: '80%', display: 'flex', flexDirection: 'column', alignItems: msg.sender === 'client' ? 'flex-end' : 'flex-start' }}>
-                                        <div style={{ 
-                                            background: msg.sender === 'client' ? 'var(--gradient-primary)' : '#ffffff', 
-                                            color: msg.sender === 'client' ? '#ffffff' : 'var(--text-primary)', 
-                                            padding: '14px 20px', 
-                                            borderRadius: msg.sender === 'client' ? '20px 20px 4px 20px' : '20px 20px 20px 4px', 
+                                        <div style={{
+                                            background: msg.sender === 'client' ? 'var(--gradient-primary)' : '#ffffff',
+                                            color: msg.sender === 'client' ? '#ffffff' : 'var(--text-primary)',
+                                            padding: '14px 20px',
+                                            borderRadius: msg.sender === 'client' ? '20px 20px 4px 20px' : '20px 20px 20px 4px',
                                             border: msg.sender === 'client' ? 'none' : '1px solid var(--border-solid)',
                                             fontSize: '0.95rem',
                                             lineHeight: 1.5,
@@ -202,9 +202,9 @@ export default function MyOrdersPage() {
                             <button style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.2s' }}>
                                 <FiPaperclip size={20} />
                             </button>
-                            <input 
-                                className="form-input" 
-                                placeholder="Type your message here..." 
+                            <input
+                                className="form-input"
+                                placeholder="Type your message here..."
                                 value={chatMsg}
                                 onChange={(e) => setChatMsg(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSendMsg()}

@@ -1,15 +1,16 @@
-'use client';
 import ProductCard from '@/components/products/ProductCard';
 import Link from 'next/link';
+import EmptyState from '@/components/ui/EmptyState';
 
 interface ProductSectionProps {
     title: string;
     subtitle: string;
     projects: any[];
     viewAllLink: string;
+    imageNum?: 1 | 2;
 }
 
-export default function ProductSection({ title, subtitle, projects, viewAllLink }: ProductSectionProps) {
+export default function ProductSection({ title, subtitle, projects, viewAllLink, imageNum = 1 }: ProductSectionProps) {
     return (
         <div>
             <div className="section-header">
@@ -20,11 +21,18 @@ export default function ProductSection({ title, subtitle, projects, viewAllLink 
                 <Link href={viewAllLink} className="view-all-link">View All →</Link>
             </div>
 
-            <div className="products-grid">
-                {projects.slice(0, 4).map((p) => (
-                    <ProductCard key={p.id} product={p} />
-                ))}
-            </div>
+            {projects.length > 0 ? (
+                <div className="products-grid">
+                    {projects.slice(0, 4).map((p) => (
+                        <ProductCard key={p.id} product={p} />
+                    ))}
+                </div>
+            ) : (
+                <EmptyState 
+                    imageNum={imageNum}
+                    imageOnly={true}
+                />
+            )}
         </div>
     );
 }

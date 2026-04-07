@@ -35,7 +35,7 @@ export default function LoginModal() {
                 dispatch(setUser({ id: data.user.id, name: data.user.name, email: data.user.email, token: data.token, role: data.user.role || 'customer' }));
                 dispatch(setCartUser(data.user.email));
                 dispatch(setWishlistUser(data.user.email));
-                toast.success(`Welcome back, ${data.user.name}! 🎉`);
+                toast.success(`Welcome back, ${data.user.name}! 🎉︎︎`);
                 dispatch(closeModals());
             } else {
                 toast.error(data.message || 'Invalid email or password');
@@ -47,7 +47,7 @@ export default function LoginModal() {
                 dispatch(setUser({ id: found.id, name: found.name, email: found.email, role: found.role }));
                 dispatch(setCartUser(found.email));
                 dispatch(setWishlistUser(found.email));
-                toast.success(`Welcome back, ${found.name}! 🎉`);
+                toast.success(`Welcome back, ${found.name}! 🎉︎︎`);
                 dispatch(closeModals());
             } else {
                 toast.error('No account found with these credentials. Please register first.');

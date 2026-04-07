@@ -26,7 +26,7 @@ export default function OrderSuccessPage() {
                     margin: '0 auto 32px',
                     animation: 'float 3s ease-in-out infinite'
                 }}>
-                    ✅
+                    ✅︎︎
                 </div>
 
                 <h1 style={{ fontSize: '2.5rem', marginBottom: '16px', color: 'var(--text-primary)' }}>Order Successful!</h1>

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'AlgorySoft – Business Web Solutions | Custom Websites for Businesses',
   description:
     'Professional business websites, e-commerce stores, SaaS dashboards, and web applications built for Indian businesses. Fast delivery, SEO-first, 1-year free support.',
-  keywords: 'business website development, e-commerce website India, custom web design, SaaS dashboard, corporate website, landing page design, web application development Bangalore',
+  keywords: 'business website development, e-commerce website India, custom web design, SaaS dashboard, corporate website, landing page design, web application development Gadag, Karnataka, India',
   openGraph: {
     title: 'AlgorySoft – Business Web Solutions',
     description: '500+ websites delivered. Custom e-commerce, corporate, SaaS & landing page solutions for businesses across India.',

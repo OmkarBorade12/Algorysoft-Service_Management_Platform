@@ -5,12 +5,12 @@ import { HiOutlineRocketLaunch } from 'react-icons/hi2';
 import { MdOutlineDesignServices } from 'react-icons/md';
 
 const USP_SVG_ICONS: Record<string, React.ReactNode> = {
-    '🎯': <FiTarget size={28} />,
-    '⚡': <FiZap size={28} />,
-    '📈': <FiTrendingUp size={28} />,
-    '🔒': <FiShield size={28} />,
-    '🛠️': <FiTool size={28} />,
-    '🌐': <FiGlobe size={28} />,
+    '🎯︎︎': <FiTarget size={28} />,
+    '⚡︎︎': <FiZap size={28} />,
+    '📈︎︎': <FiTrendingUp size={28} />,
+    '🔒︎︎': <FiShield size={28} />,
+    '🛠︎︎︎': <FiTool size={28} />,
+    '🌐︎︎': <FiGlobe size={28} />,
 };
 
 const PROCESS_ICONS = [

@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        console.log('[Razorpay] ✅ Payment verified:', razorpay_payment_id);
+        console.log('[Razorpay] ✅︎︎ Payment verified:', razorpay_payment_id);
 
         return NextResponse.json({
             success: true,

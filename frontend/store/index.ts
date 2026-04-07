@@ -40,19 +40,68 @@ const rootReducer = combineReducers({
 });
 
 // v2 migration: wipe cart to remove stale items that had combined base+tier pricing
+// Immediate fix for existing storage quota errors by clearing the old bloated key
+if (typeof window !== 'undefined') {
+  try {
+    localStorage.removeItem('persist:algorysoft-root');
+  } catch (e) {}
+}
+
 const migrations: any = {
   2: (state: any) => ({
     ...state,
     cart: undefined, // forces cart reducer to reset to its initialState
   }),
+  3: (state: any) => ({
+    ...state,
+    // Force heavy server data out of storage to fix QuotaExceededError
+    products: undefined,
+    reviews: undefined,
+    orders: undefined,
+    requests: undefined,
+    invoices: undefined,
+    carousel: undefined,
+    categories: undefined,
+    features: undefined,
+    pricingCards: undefined,
+    stats: undefined,
+  }),
+};
+
+const safeStorage = {
+  getItem: (key: string) => {
+    if (typeof window === 'undefined') return Promise.resolve(null);
+    return Promise.resolve(localStorage.getItem(key));
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window === 'undefined') return Promise.resolve();
+    try {
+      localStorage.setItem(key, value);
+      return Promise.resolve();
+    } catch (e) {
+      try {
+        localStorage.clear();
+        localStorage.setItem(key, value);
+        return Promise.resolve();
+      } catch (e2) {
+        console.error('Storage full even after clear');
+        return Promise.resolve();
+      }
+    }
+  },
+  removeItem: (key: string) => {
+    if (typeof window === 'undefined') return Promise.resolve();
+    localStorage.removeItem(key);
+    return Promise.resolve();
+  },
 };
 
 const persistConfig = {
-  key: 'algorysoft-root',
-  version: 2,
-  storage,
+  key: 'algorysoft-root-final',
+  version: 3,
+  storage: safeStorage,
   migrate: createMigrate(migrations, { debug: false }),
-  whitelist: ['cart', 'wishlist', 'auth', 'currency', 'carousel', 'reviews', 'orders', 'products', 'categories', 'requests', 'invoices', 'features', 'pricingCards'],
+  whitelist: ['cart', 'auth', 'currency'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

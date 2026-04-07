@@ -22,12 +22,12 @@ export const PROJECTS: {
 }[] = [];
 
 export const USP_ITEMS = [
-    { icon: '🎯', title: 'Custom Business Design', desc: 'Fully tailored to your brand identity, industry, and target audience — no generic templates.' },
-    { icon: '⚡', title: 'Fast Delivery', desc: 'Most websites delivered within 7–14 business days. Urgent projects taken up with priority.' },
-    { icon: '📈', title: 'SEO & Performance First', desc: 'Every website is optimised for search engines, speed (90+ Lighthouse score), and conversions.' },
-    { icon: '🔒', title: 'Secure & Scalable', desc: 'Built with modern security best practices. Scales gracefully as your business grows.' },
-    { icon: '🛠️', title: '1-Year Free Support', desc: 'We stand behind our work. Get free bug fixes, minor changes, and guidance for a full year.' },
-    { icon: '🌐', title: 'Full Source Code', desc: 'You own everything. Complete source code, hosting setup, and domain configuration included.' },
+    { icon: '🎯︎︎', title: 'Custom Business Design', desc: 'Fully tailored to your brand identity, industry, and target audience — no generic templates.' },
+    { icon: '⚡︎︎', title: 'Fast Delivery', desc: 'Most websites delivered within 7–14 business days. Urgent projects taken up with priority.' },
+    { icon: '📈︎︎', title: 'SEO & Performance First', desc: 'Every website is optimised for search engines, speed (90+ Lighthouse score), and conversions.' },
+    { icon: '🔒︎︎', title: 'Secure & Scalable', desc: 'Built with modern security best practices. Scales gracefully as your business grows.' },
+    { icon: '🛠︎︎︎', title: '1-Year Free Support', desc: 'We stand behind our work. Get free bug fixes, minor changes, and guidance for a full year.' },
+    { icon: '🌐︎︎', title: 'Full Source Code', desc: 'You own everything. Complete source code, hosting setup, and domain configuration included.' },
 ];
 
 export const PHONE = '+91 78995 33525';

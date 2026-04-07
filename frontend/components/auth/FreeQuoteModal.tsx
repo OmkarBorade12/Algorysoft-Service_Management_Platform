@@ -44,7 +44,7 @@ export default function FreeQuoteModal() {
                 requirements: `${form.requirements}${featureText}`,
                 status: 'New'
             })).unwrap();
-            toast.success('Request sent! Our team will contact you shortly. 🚀');
+            toast.success('Request sent! Our team will contact you shortly. 🚀︎︎');
             dispatch(closeModals());
         } catch (err: any) {
             toast.error(err.message || 'Failed to send request');

@@ -37,12 +37,12 @@ export const CATEGORY_ICON_MAP: Record<string, React.ReactNode> = {
 
 // USP icon mapping by key
 export const USP_ICON_MAP: Record<string, React.ReactNode> = {
-    '🎯': <FiTarget size={26} />,
-    '⚡': <FiZap size={26} />,
-    '📈': <FiTrendingUp size={26} />,
-    '🔒': <FiShield size={26} />,
-    '🛠️': <FiTool size={26} />,
-    '🌐': <FiGlobe size={26} />,
+    '🎯︎︎': <FiTarget size={26} />,
+    '⚡︎︎': <FiZap size={26} />,
+    '📈︎︎': <FiTrendingUp size={26} />,
+    '🔒︎︎': <FiShield size={26} />,
+    '🛠︎︎︎': <FiTool size={26} />,
+    '🌐︎︎': <FiGlobe size={26} />,
 };
 
 // Helper for dynamic categories created by admin

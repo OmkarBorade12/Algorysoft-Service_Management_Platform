@@ -23,7 +23,7 @@ export default function AdminDashboard() {
     }, [dispatch]);
 
     const pendingReviews = reviews ? reviews.filter(r => r.status === 'pending').length : 0;
-    
+
     const validOrders = orders.filter(o => {
         const isPaid = ['Paid', 'In Progress', 'Completed'].includes(o.status);
         const isCustom = o.tier === 'Custom Request';
@@ -33,7 +33,7 @@ export default function AdminDashboard() {
     // Make sure we show newest first
     const sortedValidOrders = [...validOrders].sort((a, b) => Number(b.id) - Number(a.id));
     const paginatedOrders = sortedValidOrders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-    
+
     // Dynamic Stats
     const STATS = [
         { label: 'Revenue (Active)', value: `₹${validOrders.filter(o => o.status !== 'Cancelled').reduce((sum, o) => sum + Number(o.amount), 0).toLocaleString('en-IN')}`, color: 'purple', icon: <FiDollarSign /> },
@@ -57,9 +57,9 @@ export default function AdminDashboard() {
     );
 
     return (
-        <motion.div 
-            initial={{ opacity: 0, y: 10 }} 
-            animate={{ opacity: 1, y: 0 }} 
+        <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             style={{ width: '100%', maxWidth: '100%' }}
         >
@@ -120,7 +120,7 @@ export default function AdminDashboard() {
                                 </table>
                             </div>
                             {validOrders.length > itemsPerPage && (
-                                <Pagination 
+                                <Pagination
                                     currentPage={currentPage}
                                     totalItems={validOrders.length}
                                     itemsPerPage={itemsPerPage}

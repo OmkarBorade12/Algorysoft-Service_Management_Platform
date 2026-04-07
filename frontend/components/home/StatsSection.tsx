@@ -17,7 +17,7 @@ export default function StatsSection() {
         { num: `${websitesDelivered}`, label: 'Websites Delivered', icon: <FiGlobe size={28} /> },
         { num: `${happyBusinesses}`, label: 'Happy Businesses', icon: <HiOutlineOfficeBuilding size={28} /> },
         { num: '7–14', label: 'Days Avg. Delivery', icon: <FiZap size={28} /> },
-        { num: `${avgRating}★`, label: 'Client Satisfaction', icon: <FiAward size={28} /> },
+        { num: `${avgRating}★︎`, label: 'Client Satisfaction', icon: <FiAward size={28} /> },
     ];
 
     return (

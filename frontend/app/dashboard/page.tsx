@@ -50,8 +50,8 @@ export default function ClientDashboardPage() {
     const activeOrder = orders.find(o => o.id == selectedOrderId);
 
     // Filter data for the logged in user
-    const displayOrders = orders.filter(o => 
-        o.client_email === user?.email && 
+    const displayOrders = orders.filter(o =>
+        o.client_email === user?.email &&
         (['Paid', 'In Progress', 'Completed'].includes(o.status) || o.tier === 'Custom Request')
     );
     const displayInvoices = invoices.filter((i: any) => i.clientEmail === user?.email);
@@ -91,7 +91,7 @@ export default function ClientDashboardPage() {
             {/* Sidebar overlay styled for client */}
             <aside className={`berry-sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
                 <div className="berry-logo">
-                    <span style={{ fontSize: '1.8rem' }}>⚛️</span>
+                    <span style={{ fontSize: '1.8rem' }}>⚛︎︎︎</span>
                     <span>Client Portal</span>
                     {isMobile && (
                         <button
@@ -167,7 +167,7 @@ export default function ClientDashboardPage() {
                             {sidebarOpen ? <FiX size={20} /> : <FiMenu size={20} />}
                         </button>
                         <h1 style={{ fontSize: '1.25rem', fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {activeTab === 'dashboard' && 'Welcome to your Workspace 👋'}
+                            {activeTab === 'dashboard' && 'Welcome to your Workspace 👋︎︎'}
                             {activeTab === 'orders' && !activeOrder && 'My Active Projects'}
                             {activeTab === 'orders' && activeOrder && `Tracking: ${activeOrder.product}`}
                             {activeTab === 'invoices' && 'Billing & Invoices'}
@@ -247,7 +247,7 @@ export default function ClientDashboardPage() {
                             <h2 className="berry-title" style={{ marginBottom: 24 }}>Invoices from AlgorySoft</h2>
                             {displayInvoices.length === 0 ? (
                                 <div style={{ textAlign: 'center', padding: '60px 0', color: '#697586' }}>
-                                    <div style={{ fontSize: '3rem', marginBottom: 16, opacity: 0.5 }}>🧾</div>
+                                    <div style={{ fontSize: '3rem', marginBottom: 16, opacity: 0.5 }}>🧾︎︎</div>
                                     <p>No invoices have been generated for your account yet.</p>
                                 </div>
                             ) : (
@@ -387,7 +387,7 @@ export default function ClientDashboardPage() {
                                         { label: 'Testing & Delivery', sub: 'Project completed', p: 100 }
                                     ].map((step, idx) => (
                                         <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                            <div style={{ width: 28, height: 28, borderRadius: '50%', background: activeOrder.progress >= step.p ? '#b9f6ca' : '#f8fafc', color: activeOrder.progress >= step.p ? '#00c853' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.75rem' }}>✓</div>
+                                            <div style={{ width: 28, height: 28, borderRadius: '50%', background: activeOrder.progress >= step.p ? '#b9f6ca' : '#f8fafc', color: activeOrder.progress >= step.p ? '#00c853' : '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.75rem' }}>✓︎</div>
                                             <div>
                                                 <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>{step.label}</div>
                                                 <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{step.sub}</div>

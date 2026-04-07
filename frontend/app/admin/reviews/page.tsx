@@ -48,21 +48,21 @@ export default function AdminReviewsPage() {
     );
 
     return (
-        <motion.div 
-            initial={{ opacity: 0, x: 20 }} 
-            animate={{ opacity: 1, x: 0 }} 
+        <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
             style={{ width: '100%', maxWidth: '100%' }}
         >
             <div className="berry-card">
-                 <h2 className="berry-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FiStar /> Manage Reviews</h2>
-                 <p style={{ color: '#697586', marginBottom: 24 }}>Approve, reject, or delete user reviews.</p>
+                <h2 className="berry-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FiStar /> Manage Reviews</h2>
+                <p style={{ color: '#697586', marginBottom: 24 }}>Approve, reject, or delete user reviews.</p>
 
                 {/* Tabs */}
                 <div style={{ display: 'flex', gap: 12, marginBottom: 24, borderBottom: '1px solid #e3e8ef', paddingBottom: 16 }}>
                     {(['all', 'pending', 'approved', 'rejected'] as const).map(tab => (
-                        <button 
-                            key={tab} 
+                        <button
+                            key={tab}
                             onClick={() => { setFilter(tab); setCurrentPage(1); }}
                             style={{
                                 padding: '8px 16px',
@@ -104,7 +104,7 @@ export default function AdminReviewsPage() {
                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
                                             <span className={`berry-badge ${review.status === 'pending' ? 'warning' : review.status === 'approved' ? 'success' : 'error'}`}>{review.status}</span>
                                             <div style={{ color: '#fbc02d', fontSize: '1.2rem', letterSpacing: 2 }}>
-                                                {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                                                {'★︎'.repeat(review.rating)}{'☆︎'.repeat(5 - review.rating)}
                                             </div>
                                         </div>
                                     </div>
@@ -115,13 +115,13 @@ export default function AdminReviewsPage() {
                                         {review.status !== 'approved' && (
                                             <button className="berry-btn-primary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}
                                                 onClick={() => { dispatch(approveReview(review.id)); toast.success('Review approved!'); }}>
-                                                ✓ Approve
+                                                ✓︎ Approve
                                             </button>
                                         )}
                                         {review.status !== 'rejected' && (
                                             <button className="berry-btn-outline" style={{ padding: '8px 16px', fontSize: '0.85rem', borderColor: '#ffab00', color: '#f57f17' }}
                                                 onClick={() => { dispatch(rejectReview(review.id)); toast('Review rejected'); }}>
-                                                ✕ Reject
+                                                ✕︎ Reject
                                             </button>
                                         )}
                                         <button style={{ padding: '8px 16px', fontSize: '0.85rem', background: '#ffebee', color: '#c62828', border: '1px solid #ef9a9a', borderRadius: 8, cursor: 'pointer' }}
@@ -133,7 +133,7 @@ export default function AdminReviewsPage() {
                             );
                         })}
                         {filtered.length > itemsPerPage && (
-                            <Pagination 
+                            <Pagination
                                 currentPage={currentPage}
                                 totalItems={filtered.length}
                                 itemsPerPage={itemsPerPage}
@@ -143,7 +143,7 @@ export default function AdminReviewsPage() {
                     </div>
                 )}
 
-                <ConfirmModal 
+                <ConfirmModal
                     isOpen={!!deleteId}
                     title="Delete Review"
                     message="Are you sure you want to permanently delete this client review? This cannot be undone."

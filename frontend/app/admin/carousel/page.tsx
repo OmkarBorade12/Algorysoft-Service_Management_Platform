@@ -31,10 +31,10 @@ export default function AdminCarouselPage() {
         if (!form.title || !form.subtitle) { toast.error('Title and subtitle required'); return; }
         if (editSlide) {
             dispatch(updateSlide({ ...form, id: editSlide.id }));
-            toast.success('✅ Slide updated!');
+            toast.success('✅︎︎ Slide updated!');
         } else {
             dispatch(addSlide({ ...form, id: Date.now() }));
-            toast.success('✅ Slide added!');
+            toast.success('✅︎︎ Slide added!');
         }
         setShowForm(false);
     };
@@ -78,7 +78,7 @@ export default function AdminCarouselPage() {
                                         style={{ background: slide.isActive ? '#b9f6ca' : '#ffcdd2', color: slide.isActive ? '#00c853' : '#c62828', border: 'none', padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer' }}
                                         onClick={() => { dispatch(toggleSlideActive(slide.id)); }}
                                     >
-                                        {slide.isActive ? '✓ Active' : '✕ Hidden'}
+                                        {slide.isActive ? '✓︎ Active' : '✕︎ Hidden'}
                                     </button>
                                     <button className="berry-btn-outline" style={{ padding: '6px 14px', fontSize: '0.82rem' }} onClick={() => openEdit(slide)}>Edit</button>
                                     <button style={{ padding: '6px 14px', fontSize: '0.82rem', background: '#ffebee', color: '#c62828', border: '1px solid #ef9a9a', borderRadius: 8, cursor: 'pointer' }}
@@ -107,11 +107,11 @@ export default function AdminCarouselPage() {
                             <h2 style={{ fontWeight: 800, margin: 0, color: '#121926', display: 'flex', alignItems: 'center', gap: 8 }}>
                                 {editSlide ? <><FiEdit2 /> Edit Slide</> : <><FiPlus /> New Slide</>}
                             </h2>
-                            <button onClick={() => setShowForm(false)} style={{ background: '#f8fafc', border: '1px solid #e3e8ef', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', color: '#697586' }}>✕</button>
+                            <button onClick={() => setShowForm(false)} style={{ background: '#f8fafc', border: '1px solid #e3e8ef', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', color: '#697586' }}>✕︎</button>
                         </div>
                         <div style={{ marginBottom: 16 }}>
                             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#364152', marginBottom: 8 }}>Title *</label>
-                            <input className="berry-input" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} placeholder="🚀 Amazing Business Solutions" />
+                            <input className="berry-input" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} placeholder="🚀︎︎ Amazing Business Solutions" />
                         </div>
                         <div style={{ marginBottom: 16 }}>
                             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#364152', marginBottom: 8 }}>Subtitle *</label>
@@ -157,7 +157,7 @@ export default function AdminCarouselPage() {
                                 {form.image && (
                                     <div style={{ marginTop: 12, position: 'relative' }}>
                                         <img src={form.image} alt="Preview" style={{ width: '100%', height: 60, objectFit: 'cover', borderRadius: 8, border: '1px solid #e3e8ef' }} />
-                                        <button onClick={() => setForm(p => ({ ...p, image: undefined }))} style={{ position: 'absolute', top: -8, right: -8, background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', width: 20, height: 20, fontSize: 10, cursor: 'pointer' }}>✕</button>
+                                        <button onClick={() => setForm(p => ({ ...p, image: undefined }))} style={{ position: 'absolute', top: -8, right: -8, background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', width: 20, height: 20, fontSize: 10, cursor: 'pointer' }}>✕︎</button>
                                     </div>
                                 )}
                             </div>

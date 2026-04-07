@@ -392,7 +392,7 @@ export default function AdminInvoicesPage() {
                                             <div style={{ color: '#64748b', fontSize: '0.9rem' }}>Premium Web & Software Solutions</div>
                                             <div style={{ color: '#121926', fontSize: '0.9rem', marginTop: 12 }}>algorysoft@gmail.com</div>
                                             <div style={{ color: '#121926', fontSize: '0.9rem' }}>+91 78995 33525</div>
-                                            <div style={{ color: '#121926', fontSize: '0.9rem' }}>Bangalore, Karnataka, India</div>
+                                            <div style={{ color: '#121926', fontSize: '0.9rem' }}>Gadag, Karnataka, India</div>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
                                             <div style={{ fontSize: '2.8rem', fontWeight: 900, color: '#f1f5f9', letterSpacing: '4px', textTransform: 'uppercase', marginBottom: -10 }}>INVOICE</div>
@@ -467,7 +467,7 @@ export default function AdminInvoicesPage() {
                                     <div style={{ marginTop: 60, paddingTop: 32, borderTop: '1px solid #f1f5f9', textAlign: 'center', fontSize: '0.85rem', color: '#94a3b8', lineHeight: 2 }}>
                                         <div style={{ fontSize: '1rem', fontWeight: 700, color: '#475569', marginBottom: 4 }}>Thank you for choosing AlgorySoft!</div>
                                         This is a computer-generated invoice. No signature required.
-                                        <br />Bangalore, KA • Website: algorysoft.in • Support: algorysoft@gmail.com
+                                        <br />Gadag, KA • Website: algorysoft.in • Support: algorysoft@gmail.com
                                     </div>
                                 </>
                             )}

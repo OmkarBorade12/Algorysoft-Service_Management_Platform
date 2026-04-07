@@ -8,12 +8,19 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import {
+    FiShoppingCart, FiArrowRight, FiShield, FiCheck, FiRefreshCw,
+    FiUser, FiPhone, FiMail, FiMapPin, FiLock, FiCreditCard,
+    FiSmartphone, FiRepeat, FiMessageCircle,
+} from 'react-icons/fi';
+import { HiOutlineShoppingBag, HiOutlineBuildingLibrary } from 'react-icons/hi2';
+import { MdOutlineVerified } from 'react-icons/md';
 
 // ─── Trust Badge ────────────────────────────────────────────────
-function TrustBadge({ icon, label }: { icon: string; label: string }) {
+function TrustBadge({ icon, label }: { icon: React.ReactNode; label: string }) {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '14px 10px', background: '#f8fafc', borderRadius: 12, border: '1px solid #e2e8f0', flex: 1, minWidth: 0 }}>
-            <span style={{ fontSize: '1.5rem' }}>{icon}</span>
+            <span style={{ color: '#6db03a', display: 'flex' }}>{icon}</span>
             <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#475569', textAlign: 'center', lineHeight: 1.3 }}>{label}</span>
         </div>
     );
@@ -45,7 +52,7 @@ function InputField({
     label, type = 'text', placeholder, value, onChange, validate, icon,
 }: {
     label: string; type?: string; placeholder?: string; value: string;
-    onChange: (v: string) => void; validate?: (v: string) => boolean; icon?: string;
+    onChange: (v: string) => void; validate?: (v: string) => boolean; icon?: React.ReactNode;
 }) {
     const [touched, setTouched] = useState(false);
     const isValid = validate ? validate(value) : true;
@@ -55,7 +62,7 @@ function InputField({
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#374151' }}>{label}</label>
             <div style={{ position: 'relative' }}>
-                {icon && <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: '1rem', opacity: 0.5 }}>{icon}</span>}
+                {icon && <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', display: 'flex', color: '#94a3b8' }}>{icon}</span>}
                 <input
                     type={type}
                     placeholder={placeholder}
@@ -71,8 +78,11 @@ function InputField({
                     onFocus={e => { e.target.style.borderColor = 'var(--pista-primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(109,176,58,0.12)'; }}
                 />
                 {touched && value && (
-                    <span style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', fontSize: '1rem' }}>
-                        {isValid ? '✅' : '❌'}
+                    <span style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', display: 'flex' }}>
+                        {isValid
+                            ? <FiCheck size={16} style={{ color: '#10b981' }} />
+                            : <span style={{ width: 16, height: 16, borderRadius: '50%', background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FiCheck size={10} style={{ color: 'white', transform: 'rotate(45deg)' }} /></span>
+                        }
                     </span>
                 )}
             </div>
@@ -86,14 +96,16 @@ function SuccessOverlay({ paymentId, amount }: { paymentId: string; amount: numb
     return (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(16px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div className="animate-fadeInUp" style={{ background: 'white', borderRadius: 32, padding: '56px 48px', textAlign: 'center', maxWidth: 460, width: '90%', boxShadow: '0 40px 80px rgba(0,0,0,0.4)' }}>
-                <div style={{ width: 100, height: 100, background: 'linear-gradient(135deg, #22c55e, #16a34a)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem', margin: '0 auto 28px', boxShadow: '0 20px 40px rgba(34,197,94,0.4)', animation: 'float 3s ease-in-out infinite' }}>✅</div>
+                <div style={{ width: 100, height: 100, background: 'linear-gradient(135deg, #22c55e, #16a34a)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 28px', boxShadow: '0 20px 40px rgba(34,197,94,0.4)', animation: 'float 3s ease-in-out infinite' }}>
+                    <MdOutlineVerified size={52} color="white" />
+                </div>
                 <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#0f172a', marginBottom: 12 }}>Payment Successful!</h2>
                 <p style={{ color: '#64748b', marginBottom: 24, lineHeight: 1.6 }}>Your transaction has been verified and secured.</p>
                 <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 12, padding: '16px 20px', marginBottom: 28, fontSize: '0.82rem', color: '#166534', fontFamily: 'monospace', fontWeight: 600 }}>
                     TXN ID: {paymentId}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#10b981', fontSize: '0.88rem', fontWeight: 700 }}>
-                    <span>🔒</span> ₹{amount.toLocaleString('en-IN')} • 256-bit Secured • Redirecting...
+                    <FiLock size={14} /> ₹{amount.toLocaleString('en-IN')} • 256-bit Secured • Redirecting...
                 </div>
             </div>
         </div>
@@ -103,17 +115,22 @@ function SuccessOverlay({ paymentId, amount }: { paymentId: string; amount: numb
 // ─── Processing Overlay ──────────────────────────────────────────
 function ProcessingOverlay({ stage }: { stage: string }) {
     const stages = [
-        { key: 'creating', label: 'Creating Secure Order', icon: '🛡️' },
-        { key: 'opening', label: 'Launching Payment Gateway', icon: '🏦' },
+        { key: 'creating', label: 'Creating Secure Order', icon: <FiShield size={20} /> },
+        { key: 'opening', label: 'Launching Payment Gateway', icon: <HiOutlineBuildingLibrary size={20} /> },
     ];
+    const current = stages.find(s => s.key === stage);
 
     return (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(12px)', zIndex: 9998, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div className="animate-fadeIn" style={{ background: 'white', borderRadius: 28, padding: '48px 40px', textAlign: 'center', maxWidth: 400, width: '90%', boxShadow: '0 30px 60px rgba(0,0,0,0.5)' }}>
                 <div style={{ width: 80, height: 80, borderRadius: '50%', border: '4px solid #e2e8f0', borderTopColor: '#6db03a', animation: 'spin 0.8s linear infinite', margin: '0 auto 32px' }} />
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: 8, color: '#0f172a' }}>{stages.find(s => s.key === stage)?.icon} {stages.find(s => s.key === stage)?.label || 'Processing...'}</h3>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: 8, color: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                    <span style={{ color: '#6db03a' }}>{current?.icon}</span> {current?.label || 'Processing...'}
+                </h3>
                 <p style={{ color: '#64748b', fontSize: '0.88rem' }}>Please wait, establishing secure connection...</p>
-                <div style={{ marginTop: 24, fontSize: '0.65rem', color: '#94a3b8', fontFamily: 'monospace' }}>🔒 TLS 1.3 • 256-bit AES • Razorpay PCI-DSS</div>
+                <div style={{ marginTop: 24, fontSize: '0.65rem', color: '#94a3b8', fontFamily: 'monospace', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                    <FiLock size={10} /> TLS 1.3 • 256-bit AES • Razorpay PCI-DSS
+                </div>
             </div>
         </div>
     );
@@ -202,7 +219,7 @@ export default function CheckoutPage() {
             onSuccess: async (paymentId, orderId, signature) => {
                 setProcessingStage(null);
                 setSuccessData({ paymentId, amount: totalPrice });
-                toast.success('🎉 Payment verified! Order confirmed.', { duration: 5000, style: { background: '#22c55e', color: 'white', fontWeight: 700 } });
+                toast.success('🎉︎︎ Payment verified! Order confirmed.', { duration: 5000, style: { background: '#22c55e', color: 'white', fontWeight: 700 } });
                 dispatch(clearCart());
 
                 // Redirect after showing the success screen
@@ -211,7 +228,7 @@ export default function CheckoutPage() {
             onFailure: (error) => {
                 setProcessingStage(null);
                 if (error !== 'Payment cancelled by user') {
-                    toast.error(`❌ ${error}`, { duration: 6000 });
+                    toast.error(error, { duration: 6000 });
                 }
             },
         });
@@ -223,11 +240,13 @@ export default function CheckoutPage() {
     if (items.length === 0 && !successData) {
         return (
             <div className="container" style={{ padding: '120px 24px', textAlign: 'center', minHeight: '70vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24 }}>
-                <div style={{ fontSize: '5rem', animation: 'float 3s ease-in-out infinite' }}>🛒</div>
+                <div style={{ width: 96, height: 96, background: 'var(--pista-xlight)', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'float 3s ease-in-out infinite' }}>
+                    <FiShoppingCart size={48} style={{ color: 'var(--pista-primary)' }} />
+                </div>
                 <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)' }}>Your Cart is Empty</h1>
                 <p style={{ color: 'var(--text-muted)', maxWidth: 360 }}>Add some amazing software projects to your cart before checking out.</p>
-                <Link href="/projects" className="btn-primary" style={{ marginTop: 8, fontSize: '1rem', padding: '14px 32px' }}>
-                    🚀 Browse Projects
+                <Link href="/projects" className="btn-primary" style={{ marginTop: 8, fontSize: '1rem', padding: '14px 32px', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    <HiOutlineShoppingBag size={18} /> Browse Projects
                 </Link>
             </div>
         );
@@ -249,7 +268,9 @@ export default function CheckoutPage() {
 
                     {/* Hero heading */}
                     <div style={{ marginBottom: 40, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-                        <div style={{ width: 50, height: 50, background: 'var(--gradient-accent)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', boxShadow: '0 8px 20px rgba(109,176,58,0.3)', flexShrink: 0 }}>🔒</div>
+                        <div style={{ width: 50, height: 50, background: 'var(--gradient-accent)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 20px rgba(109,176,58,0.3)', flexShrink: 0 }}>
+                            <FiLock size={22} color="white" />
+                        </div>
                         <div style={{ minWidth: 250 }}>
                             <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>Secure Checkout</h1>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: 0 }}>Powered by Razorpay · PCI-DSS Compliant · SSL Encrypted</p>
@@ -267,14 +288,14 @@ export default function CheckoutPage() {
                                     <StepBadge num={1} /> Billing Details
                                 </h2>
                                 <div className="checkout-form-grid">
-                                    <InputField label="Full Name *" placeholder="John Doe" value={form.name} onChange={setField('name')} validate={validators.name} icon="👤" />
-                                    <InputField label="Phone Number *" placeholder="9876543210" value={form.phone} onChange={setField('phone')} validate={validators.phone} icon="📱" />
+                                    <InputField label="Full Name *" placeholder="John Doe" value={form.name} onChange={setField('name')} validate={validators.name} icon={<FiUser size={15} />} />
+                                    <InputField label="Phone Number *" placeholder="9876543210" value={form.phone} onChange={setField('phone')} validate={validators.phone} icon={<FiPhone size={15} />} />
                                 </div>
                                 <div style={{ marginBottom: 16 }}>
-                                    <InputField label="Email Address *" type="email" placeholder="you@example.com" value={form.email} onChange={setField('email')} validate={validators.email} icon="📧" />
+                                    <InputField label="Email Address *" type="email" placeholder="you@example.com" value={form.email} onChange={setField('email')} validate={validators.email} icon={<FiMail size={15} />} />
                                 </div>
                                 <div style={{ marginBottom: 16 }}>
-                                    <InputField label="Full Address *" placeholder="Flat 201, MG Road, Bengaluru" value={form.address} onChange={setField('address')} validate={validators.address} icon="🏠" />
+                                    <InputField label="Full Address *" placeholder="Flat 201, MG Road, Bengaluru" value={form.address} onChange={setField('address')} validate={validators.address} icon={<FiMapPin size={15} />} />
                                 </div>
                                 <div className="responsive-3-col">
                                     <InputField label="City *" placeholder="Bengaluru" value={form.city} onChange={setField('city')} />
@@ -298,21 +319,23 @@ export default function CheckoutPage() {
                                 {/* Payment methods row */}
                                 <div style={{ display: 'flex', gap: 10, marginBottom: 28, flexWrap: 'wrap' }}>
                                     {[
-                                        { icon: '📱', label: 'UPI' },
-                                        { icon: '💳', label: 'Cards' },
-                                        { icon: '🏦', label: 'Net Banking' },
-                                        { icon: '👛', label: 'Wallets' },
-                                        { icon: '🔄', label: 'EMI' },
+                                        { icon: <FiSmartphone size={14} />, label: 'UPI' },
+                                        { icon: <FiCreditCard size={14} />, label: 'Cards' },
+                                        { icon: <HiOutlineBuildingLibrary size={14} />, label: 'Net Banking' },
+                                        { icon: <HiOutlineShoppingBag size={14} />, label: 'Wallets' },
+                                        { icon: <FiRepeat size={14} />, label: 'EMI' },
                                     ].map(m => (
                                         <div key={m.label} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--bg-secondary)', border: '1px solid var(--border-solid)', borderRadius: 8, padding: '6px 12px', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                                            <span>{m.icon}</span> {m.label}
+                                            <span style={{ display: 'flex', color: '#6db03a' }}>{m.icon}</span> {m.label}
                                         </div>
                                     ))}
                                 </div>
 
                                 {/* Razorpay brand banner */}
                                 <div style={{ background: 'linear-gradient(135deg, #0f172a, #1e293b)', borderRadius: 16, padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 16 }}>
-                                    <div style={{ width: 52, height: 52, background: '#2563eb', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>💳</div>
+                                    <div style={{ width: 52, height: 52, background: '#2563eb', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                        <FiCreditCard size={24} color="white" />
+                                    </div>
                                     <div>
                                         <div style={{ color: 'white', fontWeight: 800, fontSize: '1rem' }}>Pay via Razorpay Checkout</div>
                                         <div style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: 3 }}>A secure, PCI-DSS certified payment popup will open — no card details stored on our servers.</div>
@@ -321,10 +344,10 @@ export default function CheckoutPage() {
 
                                 {/* Trust indicators */}
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: 10 }}>
-                                    <TrustBadge icon="🔒" label="256-bit SSL" />
-                                    <TrustBadge icon="✅" label="PCI Compliant" />
-                                    <TrustBadge icon="🛡️" label="Secure Gateway" />
-                                    <TrustBadge icon="↩️" label="Instant Refund" />
+                                    <TrustBadge icon={<FiLock size={20} />} label="256-bit SSL" />
+                                    <TrustBadge icon={<MdOutlineVerified size={20} />} label="PCI Compliant" />
+                                    <TrustBadge icon={<FiShield size={20} />} label="Secure Gateway" />
+                                    <TrustBadge icon={<FiRefreshCw size={20} />} label="Instant Refund" />
                                 </div>
                             </div>
 
@@ -343,9 +366,9 @@ export default function CheckoutPage() {
                                 onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 18px 40px rgba(109,176,58,0.5)'; }}
                                 onMouseOut={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(109,176,58,0.4)'; }}
                             >
-                                <span style={{ fontSize: '1.4rem' }}>🔐</span>
+                                <FiLock size={20} />
                                 <span style={{ textAlign: 'left' }}>Pay ₹{grandTotal.toLocaleString('en-IN')} via Razorpay</span>
-                                <span style={{ fontSize: '1.2rem' }}>→</span>
+                                <FiArrowRight size={20} />
                             </button>
 
                             <p style={{ textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
@@ -356,8 +379,8 @@ export default function CheckoutPage() {
                         {/* ─── RIGHT: Order Summary ─── */}
                         <div style={{ position: 'sticky', top: 110 }}>
                             <div style={{ background: 'white', borderRadius: 24, border: '1.5px solid var(--border-solid)', padding: 32, boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
-                                <h2 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: 24, paddingBottom: 16, borderBottom: '1px solid var(--border-solid)', color: 'var(--text-primary)' }}>
-                                    🛒 Order Summary
+                                <h2 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: 24, paddingBottom: 16, borderBottom: '1px solid var(--border-solid)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <FiShoppingCart size={18} style={{ color: 'var(--pista-primary)' }} /> Order Summary
                                 </h2>
 
                                 {/* Items */}
@@ -365,8 +388,8 @@ export default function CheckoutPage() {
                                     {items.map(item => (
                                         <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
                                             <div style={{ display: 'flex', gap: 12, flex: 1, minWidth: 0 }}>
-                                                <div style={{ width: 44, height: 44, background: 'var(--pista-xlight)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', flexShrink: 0 }}>
-                                                    {item.icon || '💻'}
+                                                <div style={{ width: 44, height: 44, background: 'var(--pista-xlight)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                                    <HiOutlineShoppingBag size={20} style={{ color: 'var(--pista-primary)' }} />
                                                 </div>
                                                 <div style={{ minWidth: 0 }}>
                                                     <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', lineHeight: 1.35 }}>{item.title}</div>
@@ -420,7 +443,7 @@ export default function CheckoutPage() {
                                     target="_blank" rel="noreferrer"
                                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 16, padding: '12px', background: 'rgba(37,211,102,0.08)', border: '1px solid rgba(37,211,102,0.3)', borderRadius: 12, color: '#25D366', fontWeight: 700, fontSize: '0.85rem', textDecoration: 'none' }}
                                 >
-                                    💬 Need help? Chat on WhatsApp
+                                    <FiMessageCircle size={16} /> Need help? Chat on WhatsApp
                                 </a>
                             </div>
                         </div>

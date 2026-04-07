@@ -95,11 +95,11 @@ export default function ProjectDetail() {
                                 background: '#121926'
                             }}>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img 
-                                    src={displayImage} 
-                                    alt={project.title} 
+                                <img
+                                    src={displayImage}
+                                    alt={project.title}
                                     onClick={() => openLightbox(displayImage)}
-                                    style={{ width: '100%', height: '100%', objectFit: 'contain', cursor: 'zoom-in' }} 
+                                    style={{ width: '100%', height: '100%', objectFit: 'contain', cursor: 'zoom-in' }}
                                 />
                             </div>
                             {project.images && project.images.length > 1 && (
@@ -154,10 +154,10 @@ export default function ProjectDetail() {
 
                     <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
                         <span className="badge badge-category">{project.category}</span>
-                        <span className="badge badge-new" style={{ color: 'var(--text-muted)', background: 'var(--bg-glass)' }}>👁 {project.views.toLocaleString()} views</span>
-                        <span className="badge badge-new" style={{ color: 'var(--text-muted)', background: 'var(--bg-glass)' }}>⭐ 4.9 (124 reviews)</span>
+                        <span className="badge badge-new" style={{ color: 'var(--text-muted)', background: 'var(--bg-glass)' }}>👁︎︎ {project.views.toLocaleString()} views</span>
+                        <span className="badge badge-new" style={{ color: 'var(--text-muted)', background: 'var(--bg-glass)' }}>⭐︎ 4.9 (124 reviews)</span>
                         <button className="btn-secondary" style={{ padding: '4px 12px', fontSize: '0.9rem', borderRadius: '8px' }} onClick={() => window.open(project.slug === 'custom' ? '#' : `https://demo.algorysoft.com/${project.slug}`, '_blank')}>
-                            Live Preview ↗
+                            Live Preview ↗︎
                         </button>
                     </div>
 
@@ -170,17 +170,17 @@ export default function ProjectDetail() {
 
                     <div style={{ marginBottom: '40px' }}>
                         <h3 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: 10, color: 'var(--dark-pista-bright)' }}>
-                            <div style={{ width: 8, height: 24, background: 'var(--dark-pista-bright)', borderRadius: 4 }} /> 
+                            <div style={{ width: 8, height: 24, background: 'var(--dark-pista-bright)', borderRadius: 4 }} />
                             Technologies Used
                         </h3>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '16px' }}>
                             {project.tech.map(t => (
-                                <div key={t} style={{ 
-                                    padding: '16px', 
-                                    background: 'var(--bg-card)', 
-                                    border: '1px solid var(--border-color)', 
-                                    borderRadius: '16px', 
-                                    fontSize: '0.95rem', 
+                                <div key={t} style={{
+                                    padding: '16px',
+                                    background: 'var(--bg-card)',
+                                    border: '1px solid var(--border-color)',
+                                    borderRadius: '16px',
+                                    fontSize: '0.95rem',
                                     color: 'var(--text-primary)',
                                     display: 'flex',
                                     alignItems: 'center',
@@ -205,23 +205,23 @@ export default function ProjectDetail() {
                         <h3 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>What's Included?</h3>
                         <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', color: 'var(--text-secondary)' }}>
                             <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                                <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓</div>
+                                <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓︎</div>
                                 Scalable & Professional Source Code
                             </li>
                             <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                                <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓</div>
+                                <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓︎</div>
                                 Full Admin Control Panel & CRM
                             </li>
                             <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                                <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓</div>
+                                <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓︎</div>
                                 Responsive & SEO Optimised Design
                             </li>
                             <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                                <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓</div>
+                                <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓︎</div>
                                 1 Year Technical Priority Support
                             </li>
                             <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                                <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓</div>
+                                <div style={{ width: '24px', height: '24px', background: 'rgba(82, 183, 136, 0.1)', color: 'var(--dark-pista-bright)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>✓︎</div>
                                 Free Cloud Deployment & Configuration
                             </li>
                         </ul>
@@ -271,14 +271,14 @@ export default function ProjectDetail() {
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '1.1rem' }} onClick={handleCart}>
-                                ⚡ Buy Now (2% Off)
+                                ⚡︎︎ Buy Now (2% Off)
                             </button>
                             <button className="btn-secondary" style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '1.1rem' }} onClick={() => {
                                 // Mock behavior for custom request
                                 const confirmReq = confirm('Login required. Redirect to login to request customization?');
                                 if (confirmReq) { window.location.href = '/login'; }
                             }}>
-                                📝 Request Custom
+                                📝︎︎ Request Custom
                             </button>
                         </div>
 
@@ -296,7 +296,7 @@ export default function ProjectDetail() {
                         <div style={{ marginTop: '24px', padding: '16px', background: 'rgba(37, 211, 102, 0.1)', borderRadius: '12px', border: '1px solid rgba(37, 211, 102, 0.2)', textAlign: 'center' }}>
                             <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '8px' }}>Need help with this project?</p>
                             <a href={`https://wa.me/${WHATSAPP}?text=Hi! I want to know more about the ${project.title} project.`} target="_blank" rel="noreferrer" style={{ color: '#25D366', fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                                💬 Chat on WhatsApp
+                                💬︎︎ Chat on WhatsApp
                             </a>
                         </div>
                     </div>
@@ -305,24 +305,24 @@ export default function ProjectDetail() {
 
             {/* Premium Lightbox Modal */}
             {isLightboxOpen && allImages.length > 0 && (
-                <div 
-                    className="modal-overlay animate-fadeIn" 
+                <div
+                    className="modal-overlay animate-fadeIn"
                     style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.95)', padding: 0, zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     onClick={() => setIsLightboxOpen(false)}
                 >
-                    <button 
+                    <button
                         onClick={() => setIsLightboxOpen(false)}
                         style={{ position: 'absolute', top: 30, right: 30, background: 'rgba(255,255,255,0.1)', color: 'white', border: 'none', width: 50, height: 50, borderRadius: '50%', fontSize: '1.5rem', cursor: 'pointer', zIndex: 2001 }}
-                    >✕</button>
+                    >✕︎</button>
 
                     {allImages.length > 1 && (
                         <>
-                            <button 
+                            <button
                                 onClick={(e) => { e.stopPropagation(); setActiveLightboxIndex(p => (p - 1 + allImages.length) % allImages.length); }}
                                 style={{ position: 'absolute', left: 30, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', color: 'white', border: 'none', width: 60, height: 60, borderRadius: '50%', fontSize: '1.8rem', cursor: 'pointer', zIndex: 2001 }}
                             >‹</button>
 
-                            <button 
+                            <button
                                 onClick={(e) => { e.stopPropagation(); setActiveLightboxIndex(p => (p + 1) % allImages.length); }}
                                 style={{ position: 'absolute', right: 30, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', color: 'white', border: 'none', width: 60, height: 60, borderRadius: '50%', fontSize: '1.8rem', cursor: 'pointer', zIndex: 2001 }}
                             >›</button>
@@ -331,10 +331,10 @@ export default function ProjectDetail() {
 
                     <div style={{ maxWidth: '90%', maxHeight: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} onClick={e => e.stopPropagation()}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
-                            src={allImages[activeLightboxIndex]} 
-                            alt={`${project.title} detailed view`} 
-                            style={{ maxWidth: '100%', maxHeight: '85vh', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 0 40px rgba(0,0,0,0.5)' }} 
+                        <img
+                            src={allImages[activeLightboxIndex]}
+                            alt={`${project.title} detailed view`}
+                            style={{ maxWidth: '100%', maxHeight: '85vh', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 0 40px rgba(0,0,0,0.5)' }}
                         />
                         <div style={{ color: 'white', marginTop: 20, fontSize: '1rem', opacity: 0.8 }}>
                             Image {activeLightboxIndex + 1} / {allImages.length}

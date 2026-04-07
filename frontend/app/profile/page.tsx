@@ -17,7 +17,7 @@ export default function ProfilePage() {
         name: user?.name || '',
         email: user?.email || '',
         phone: '+91 9876543210',
-        address: '123 Tech Park, Bangalore, India'
+        address: 'RAJIV GANDHI NAGAR, GADAG, KARNATAKA, India'
     });
 
     useEffect(() => {
@@ -30,7 +30,7 @@ export default function ProfilePage() {
 
     const handleSave = () => {
         setIsEditing(false);
-        toast.success('🎉 Profile information updated successfully!');
+        toast.success('🎉︎︎ Profile information updated successfully!');
     };
 
     const handleLogout = () => {
@@ -57,7 +57,7 @@ export default function ProfilePage() {
                         </div>
                         {user.role === 'admin' && (
                             <div style={{ position: 'absolute', bottom: -5, right: -5, background: '#1e40af', color: 'white', padding: '4px 12px', borderRadius: 99, fontSize: '0.75rem', fontWeight: 800, border: '3px solid white' }}>
-                                ADMIN 👑
+                                ADMIN 👑︎︎
                             </div>
                         )}
                     </div>
@@ -67,13 +67,13 @@ export default function ProfilePage() {
                             {user.name}
                         </h1>
                         <p style={{ fontSize: '1.05rem', color: 'var(--text-muted)', margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
-                            📧 {user.email}
+                            📧︎︎ {user.email}
                         </p>
                         
                         <div style={{ display: 'flex', gap: 16 }}>
                             {user.role === 'admin' && (
                                 <Link href="/admin" className="btn-secondary" style={{ padding: '8px 24px', fontSize: '0.9rem', borderColor: '#1e40af', color: '#1e40af', background: '#eff6ff' }}>
-                                    Go to Admin Area 🚀
+                                    Go to Admin Area 🚀︎︎
                                 </Link>
                             )}
                             <button onClick={handleLogout} style={{ padding: '8px 24px', fontSize: '0.9rem', background: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca', borderRadius: 99, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>
@@ -94,7 +94,7 @@ export default function ProfilePage() {
                                 className={isEditing ? 'btn-primary' : 'btn-secondary'} 
                                 style={{ padding: '6px 16px', fontSize: '0.85rem' }}
                             >
-                                {isEditing ? '💾 Save Changes' : '✏️ Edit Profile'}
+                                {isEditing ? '💾︎︎ Save Changes' : '✏︎︎︎ Edit Profile'}
                             </button>
                         </div>
 
@@ -150,7 +150,7 @@ export default function ProfilePage() {
                         <div className="glass-card" style={{ padding: 32, textAlign: 'center', borderTop: '4px solid #f59e0b' }}>
                             <div style={{ fontSize: '3rem', fontWeight: 900, color: '#b45309', lineHeight: 1 }}>1</div>
                             <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: 8, letterSpacing: '1px' }}>Saved To Wishlist</div>
-                            <Link href="/projects" className="btn-secondary" style={{ marginTop: 20, width: '100%', justifyContent: 'center', borderColor: '#f59e0b', color: '#b45309' }}>View Wishlist ❤️</Link>
+                            <Link href="/projects" className="btn-secondary" style={{ marginTop: 20, width: '100%', justifyContent: 'center', borderColor: '#f59e0b', color: '#b45309' }}>View Wishlist ❤︎︎︎</Link>
                         </div>
                     </div>
 

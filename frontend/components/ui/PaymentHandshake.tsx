@@ -15,10 +15,10 @@ export default function PaymentHandshake({ status, message }: PaymentHandshakePr
     };
 
     const icons = {
-        initializing: '🛡️',
-        authenticating: '🏦',
-        processing: '⚡',
-        success: '✅'
+        initializing: '🛡︎︎︎',
+        authenticating: '🏦︎︎',
+        processing: '⚡︎︎',
+        success: '✅︎︎'
     };
 
     const progress = {

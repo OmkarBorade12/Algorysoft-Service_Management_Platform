@@ -76,10 +76,10 @@ export default function Header() {
                     {/* Logo */}
                     <Link href="/" className={styles.logo}>
                         <Image 
-                            src="/algorysoft.jpeg" 
+                            src="/logo-wide.jpeg" 
                             alt="AlgorySoft" 
-                            width={54} 
-                            height={54} 
+                            width={160} 
+                            height={44} 
                             className={styles.logoImg} 
                             style={{ objectFit: 'contain' }}
                             priority
@@ -216,10 +216,10 @@ export default function Header() {
                     <div className={styles.sidebarHeader}>
                         <Link href="/" className={styles.logo} onClick={() => dispatch(toggleMobileMenu())}>
                             <Image 
-                                src="/algorysoft.jpeg" 
+                                src="/logo-wide.jpeg" 
                                 alt="AlgorySoft" 
-                                width={48} 
-                                height={48} 
+                                width={140} 
+                                height={38} 
                                 className={styles.logoImg} 
                                 style={{ objectFit: 'contain' }}
                                 priority

@@ -57,7 +57,7 @@ export default function FeaturesAdmin() {
                 await dispatch(deleteFeatureThunk(deleteId)).unwrap();
                 toast.success('Feature deleted successfully!');
                 setDeleteId(null);
-                
+
                 const newTotal = features.length - 1;
                 const newMaxPages = Math.ceil(newTotal / itemsPerPage) || 1;
                 if (currentPage > newMaxPages) {
@@ -119,7 +119,7 @@ export default function FeaturesAdmin() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div style={{ display: 'flex', gap: 12 }}>
                         <button type="submit" className="berry-btn-primary" style={{ padding: '12px 32px' }}>
                             {editingId ? <><FiSave /> Update Feature</> : <><FiCheck /> Save Feature</>}
@@ -137,7 +137,7 @@ export default function FeaturesAdmin() {
                 <h3 className="berry-title" style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '1.2rem' }}>
                     Available Features ({features?.length || 0})
                 </h3>
-                
+
                 {status === 'loading' && features.length === 0 ? (
                     <div style={{ padding: 40, textAlign: 'center' }}><FiRefreshCw className="berry-icon-spin" size={32} /></div>
                 ) : features.length === 0 ? (
@@ -176,7 +176,7 @@ export default function FeaturesAdmin() {
 
                         {features.length > itemsPerPage && (
                             <div style={{ marginTop: 24 }}>
-                                <Pagination 
+                                <Pagination
                                     currentPage={currentPage}
                                     totalItems={features.length}
                                     itemsPerPage={itemsPerPage}
@@ -188,7 +188,7 @@ export default function FeaturesAdmin() {
                 )}
             </div>
 
-            <ConfirmModal 
+            <ConfirmModal
                 isOpen={!!deleteId}
                 title="Delete Feature"
                 message="Are you sure you want to delete this feature? Clients will no longer see this as an option."

@@ -14,25 +14,29 @@ export default function AdminRequestsPage() {
     const { items: requests, status } = useAppSelector(s => s.requests);
     const [currentPage, setCurrentPage] = useState(1);
     const [deleteId, setDeleteId] = useState<string | number | null>(null);
+    const [deleteDisplayId, setDeleteDisplayId] = useState<number | null>(null);
     const [expandedId, setExpandedId] = useState<string | number | null>(null);
+    const [sendingEmail, setSendingEmail] = useState<string | number | null>(null);
     const itemsPerPage = 8; // Increased slightly for better view
 
     useEffect(() => {
         dispatch(fetchRequests());
     }, [dispatch]);
 
-    const paginatedRequests = requests.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const sortedRequests = [...requests].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const paginatedRequests = sortedRequests.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    const approveRequest = (id: string | number) => {
+    const approveRequest = (id: string | number, displayId: number) => {
         dispatch(updateRequestStatusThunk({ id, status: 'Approved' }));
-        toast.success(`Request #${id} approved!`);
+        toast.success(`Request #${displayId} approved!`);
     };
 
     const executeDelete = () => {
         if (deleteId) {
             dispatch(deleteRequestThunk(deleteId));
-            toast.success(`Request #${deleteId} deleted.`);
+            toast.success(`Request #${deleteDisplayId} deleted.`);
             setDeleteId(null);
+            setDeleteDisplayId(null);
         }
     };
 
@@ -40,7 +44,37 @@ export default function AdminRequestsPage() {
         setExpandedId(expandedId === id ? null : id);
     };
 
-    const convertToOrder = async (req: typeof requests[0]) => {
+    const sendProjectEmail = async (req: typeof requests[0]) => {
+        setSendingEmail(req.id);
+        try {
+            const res = await fetch('/api/requests/email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    toEmail: req.email,
+                    clientName: req.client,
+                    requestId: req.id,
+                    status: req.status,
+                    requirements: req.requirements,
+                    business: req.business,
+                    budget: req.budget,
+                    timeline: req.timeline
+                }),
+            });
+
+            if (res.ok) {
+                toast.success(`Project update emailed to ${req.email}!`);
+            } else {
+                toast.error('Failed to send email via server.');
+            }
+        } catch (err) {
+            toast.error('Network error while sending email.');
+        } finally {
+            setSendingEmail(null);
+        }
+    };
+
+    const convertToOrder = async (req: typeof requests[0], displayId: number) => {
         try {
             await dispatch(updateRequestStatusThunk({ id: req.id, status: 'In Development' })).unwrap();
             await dispatch(addOrderThunk({
@@ -52,13 +86,13 @@ export default function AdminRequestsPage() {
                 amount: 0,
                 status: 'Pending',
                 progress: 0,
-                chat: [{ 
-                    sender: 'admin', 
-                    text: `Welcome! We've approved your request: "${req.requirements.slice(0, 50)}...". Let's discuss further here.`, 
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+                chat: [{
+                    sender: 'admin',
+                    text: `Welcome! We've approved your request: "${req.requirements.slice(0, 50)}...". Let's discuss further here.`,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 }]
             })).unwrap();
-            toast.success(`Request #${req.id} successfully converted to an active Order.`);
+            toast.success(`Request #${displayId} successfully converted to an active Order.`);
         } catch (err) {
             toast.error('Failed to convert request to order');
         }
@@ -84,9 +118,9 @@ export default function AdminRequestsPage() {
     );
 
     return (
-        <motion.div 
-            initial={{ opacity: 0, scale: 0.98, y: 10 }} 
-            animate={{ opacity: 1, scale: 1, y: 0 }} 
+        <motion.div
+            initial={{ opacity: 0, scale: 0.98, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
             style={{ width: '100%' }}
         >
@@ -109,18 +143,19 @@ export default function AdminRequestsPage() {
                         <tbody>
                             {paginatedRequests.length === 0 ? (
                                 <tr><td colSpan={6} style={{ textAlign: 'center', padding: '24px', color: '#697586' }}>No pending requests</td></tr>
-                            ) : paginatedRequests.map(r => {
+                            ) : paginatedRequests.map((r, index) => {
                                 const isExpanded = expandedId === r.id;
+                                const displayId = (currentPage - 1) * itemsPerPage + index + 1;
                                 return (
                                     <React.Fragment key={r.id}>
-                                        <tr 
-                                            onClick={() => toggleExpand(r.id)} 
+                                        <tr
+                                            onClick={() => toggleExpand(r.id)}
                                             style={{ cursor: 'pointer', background: isExpanded ? '#f8f9fe' : 'transparent' }}
                                             className="hover-row"
                                         >
                                             <td style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                                 {isExpanded ? <FiChevronUp style={{ color: '#673ab7' }} /> : <FiChevronDown style={{ color: '#94a3b8' }} />}
-                                                <code style={{ fontSize: '0.8rem', color: '#673ab7', background: '#ede7f6', padding: '4px 8px', borderRadius: 6, fontWeight: 700 }}>#{r.id}</code>
+                                                <code style={{ fontSize: '0.8rem', color: '#673ab7', background: '#ede7f6', padding: '4px 8px', borderRadius: 6, fontWeight: 700 }}>#{displayId}</code>
                                             </td>
                                             <td style={{ fontWeight: 600, color: '#121926' }}>{r.client}</td>
                                             <td style={{ fontSize: '0.85rem', color: '#64748b', maxWidth: '350px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -132,23 +167,23 @@ export default function AdminRequestsPage() {
                                                 </span>
                                             </td>
                                             <td style={{ color: '#697586', fontSize: '0.85rem' }}>{new Date(r.date).toLocaleDateString()}</td>
-                                            <td>
+                                             <td>
                                                 <div style={{ display: 'flex', gap: 8 }} onClick={e => e.stopPropagation()}>
                                                     {r.status === 'New' && (
-                                                        <button onClick={() => approveRequest(r.id)} className="berry-btn-primary" style={{ padding: '6px 12px', fontSize: '0.75rem' }}>Approve</button>
+                                                        <button onClick={() => approveRequest(r.id, displayId)} className="berry-btn-primary" style={{ padding: '6px 12px', fontSize: '0.75rem' }}>Approve</button>
                                                     )}
                                                     {r.status === 'Approved' && (
-                                                        <button onClick={() => convertToOrder(r)} className="berry-btn-outline" style={{ padding: '6px 12px', fontSize: '0.75rem', borderColor: '#00c853', color: '#00c853' }}>Convert</button>
+                                                        <button onClick={() => convertToOrder(r, displayId)} className="berry-btn-outline" style={{ padding: '6px 12px', fontSize: '0.75rem', borderColor: '#00c853', color: '#00c853' }}>Convert</button>
                                                     )}
-                                                    <button onClick={() => setDeleteId(r.id)} className="berry-btn-outline" style={{ padding: '6px 12px', fontSize: '0.75rem', borderColor: '#f44336', color: '#f44336' }}>Del</button>
+                                                    <button onClick={() => { setDeleteId(r.id); setDeleteDisplayId(displayId); }} className="berry-btn-outline" style={{ padding: '6px 12px', fontSize: '0.75rem', borderColor: '#f44336', color: '#f44336' }}>Del</button>
                                                 </div>
                                             </td>
                                         </tr>
                                         {isExpanded && (
                                             <tr style={{ background: '#fcfcfe' }}>
                                                 <td colSpan={6} style={{ padding: '0 24px 24px 24px' }}>
-                                                    <motion.div 
-                                                        initial={{ opacity: 0, height: 0 }} 
+                                                    <motion.div
+                                                        initial={{ opacity: 0, height: 0 }}
                                                         animate={{ opacity: 1, height: 'auto' }}
                                                         style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 40, border: '1px solid #e3e8ef', borderRadius: '12px', padding: '24px', background: 'white', marginTop: -8, boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}
                                                     >
@@ -180,13 +215,14 @@ export default function AdminRequestsPage() {
                                                                 {r.phone && (
                                                                     <a href={`https://wa.me/${r.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="berry-btn-primary" style={{ flex: 1, background: '#25D366', fontSize: '0.8rem', textAlign: 'center', textDecoration: 'none' }}>WhatsApp</a>
                                                                 )}
-                                                                <a 
-                                                                    href={`mailto:${r.email}?subject=AlgorySoft - Custom Project Quote (#${r.id})&body=Hello ${r.client},%0D%0A%0D%0AWe have received your custom project request for: "${r.business || 'your business'}".%0D%0A%0D%0AOur team has reviewed your requirements:%0D%0A"${r.requirements.replace(/\n/g, '%0D%0A')}"%0D%0A%0D%0ABudget: ${r.budget}%0D%0ATimeline: ${r.timeline}%0D%0A%0D%0AWe would like to discuss this further. Let us know a good time for a call!%0D%0A%0D%0ABest Regards,%0D%0AAlgorySoft Team`} 
-                                                                    className="berry-btn-outline" 
-                                                                    style={{ flex: 1, fontSize: '0.8rem', textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                                                <button
+                                                                    onClick={() => sendProjectEmail(r)}
+                                                                    disabled={sendingEmail === r.id}
+                                                                    className="berry-btn-outline"
+                                                                    style={{ flex: 1, fontSize: '0.8rem', textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: sendingEmail === r.id ? 'not-allowed' : 'pointer', opacity: sendingEmail === r.id ? 0.7 : 1 }}
                                                                 >
-                                                                    Send Email
-                                                                </a>
+                                                                    {sendingEmail === r.id ? 'Sending...' : 'Send Email'}
+                                                                </button>
                                                             </div>
                                                         </div>
                                                         <div>
@@ -206,7 +242,7 @@ export default function AdminRequestsPage() {
                     </table>
                 </div>
                 {requests.length > itemsPerPage && (
-                    <Pagination 
+                    <Pagination
                         currentPage={currentPage}
                         totalItems={requests.length}
                         itemsPerPage={itemsPerPage}
@@ -214,12 +250,12 @@ export default function AdminRequestsPage() {
                     />
                 )}
 
-                <ConfirmModal 
+                <ConfirmModal
                     isOpen={!!deleteId}
                     title="Delete Request"
-                    message={`Are you sure you want to permanently delete custom request #${deleteId}?`}
+                    message={`Are you sure you want to permanently delete custom request #${deleteDisplayId}?`}
                     onConfirm={executeDelete}
-                    onCancel={() => setDeleteId(null)}
+                    onCancel={() => { setDeleteId(null); setDeleteDisplayId(null); }}
                 />
             </div>
             <style jsx>{`

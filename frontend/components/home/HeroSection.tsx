@@ -91,32 +91,15 @@ export default function HeroSection() {
                             <Link key={t} href={`/projects?search=${t}`} className={styles.techTag}>{t}</Link>
                         ))}
                     </div>
-
-                    {/* Trust row */}
-                    <div style={{ marginTop: '28px', display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <div style={{ display: 'flex', gap: '1px' }}>
-                                {[0, 1, 2, 3, 4].map((i) => (
-                                    <FiStar key={i} size={13} style={{ color: '#f59e0b', fill: '#f59e0b' }} />
-                                ))}
-                            </div>
-                            <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                                {avgRating}/5 from {happyClients} Clients
-                            </span>
-                        </div>
-                        <span style={{ color: 'var(--border-solid)' }}>|</span>
-                        <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><HiOutlineRocketLaunch size={14} style={{ color: 'var(--pista-primary)' }} /> {websitesDelivered} Websites Delivered</span>
-                        <span style={{ color: 'var(--border-solid)' }}>|</span>
-                        <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '5px' }}><FiMapPin size={13} style={{ color: 'var(--pista-primary)' }} /> Bangalore, India</span>
-                    </div>
                 </div>
+
+
 
                 {/* RIGHT — visual */}
                 <div className={styles.right}>
                     <div className={styles.heroVisual}>
                         <div className={styles.logoCard}>
-                            <Image src="/algorysoft.jpeg" alt="AlgorySoft" width={90} height={90} className={styles.heroLogo} />
-                            <span className={styles.logoName}>AlgorySoft</span>
+                            <Image src="/logo-wide.jpeg" alt="AlgorySoft" width={140} height={38} className={styles.heroLogo} style={{ objectFit: 'contain' }} />
                             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 500, textAlign: 'center' }}>
                                 Business Web Solutions
                             </span>

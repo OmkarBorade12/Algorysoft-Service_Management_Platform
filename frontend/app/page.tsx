@@ -30,16 +30,16 @@ const ProductSkeleton = () => (
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
-  
+
   useEffect(() => {
     dispatch(fetchLandingStats());
   }, [dispatch]);
 
   const projects = useSelector((state: RootState) => state.products.items);
-  
+
   // Sort all by newest first (highest id = most recently added)
   const allSorted = [...projects].sort((a, b) => Number(b.id) - Number(a.id));
-  
+
   // Show top 8 most recent projects as latest
   const latestSolutions = allSorted.slice(0, 8);
 
@@ -73,10 +73,11 @@ export default function HomePage() {
           <div className="container">
             <Suspense fallback={<ProductSkeleton />}>
               <ProductSection
-                title="🆕 Latest Solutions"
+                title="🆕︎ Latest Solutions"
                 subtitle="Freshly Launched"
                 projects={latestSolutions}
                 viewAllLink="/projects?filter=new"
+                imageNum={1}
               />
             </Suspense>
           </div>
@@ -89,10 +90,11 @@ export default function HomePage() {
           <div className="container">
             <Suspense fallback={<ProductSkeleton />}>
               <ProductSection
-                title="🔥 Most Popular"
+                title="🔥︎︎ Most Popular"
                 subtitle="Client Favourites"
                 projects={popularSolutions}
                 viewAllLink="/projects?filter=popular"
+                imageNum={2}
               />
             </Suspense>
           </div>

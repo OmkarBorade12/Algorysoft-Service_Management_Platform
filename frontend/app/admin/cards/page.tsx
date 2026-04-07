@@ -42,9 +42,9 @@ const MultiSelectFeatures = ({
                 ))}
             </div>
             <div style={{ position: 'relative' }}>
-                <input 
-                    type="text" 
-                    className="berry-input" 
+                <input
+                    type="text"
+                    className="berry-input"
                     placeholder="+ Search and add feature..."
                     value={searchTerm}
                     onChange={e => {
@@ -53,14 +53,14 @@ const MultiSelectFeatures = ({
                     }}
                     onFocus={() => setIsOpen(true)}
                     onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-                    style={{ padding: '8px', fontSize: '0.85rem' }} 
+                    style={{ padding: '8px', fontSize: '0.85rem' }}
                 />
-                
+
                 {isOpen && filtered.length > 0 && (
                     <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e3e8ef', borderRadius: 8, marginTop: 4, maxHeight: 200, overflowY: 'auto', zIndex: 10, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                         {filtered.map(o => (
-                            <div 
-                                key={o.id} 
+                            <div
+                                key={o.id}
                                 style={{ padding: '8px 12px', cursor: 'pointer', fontSize: '0.85rem', borderBottom: '1px solid #eee' }}
                                 onMouseDown={(e) => {
                                     e.preventDefault(); // prevent blur
@@ -118,7 +118,7 @@ const CardFormModal = ({
                         {(['silver', 'gold'] as const).map(t => (
                             <button key={t} type="button" onClick={() => setForm(p => ({ ...p, tier: t }))}
                                 className={`pc-tier-btn ${form.tier === t ? t : ''}`}>
-                                {t === 'silver' ? '🥈 Silver' : '🥇 Gold'}
+                                {t === 'silver' ? '🥈︎︎ Silver' : '🥇︎︎ Gold'}
                             </button>
                         ))}
                     </div>
@@ -175,7 +175,7 @@ const PricingCardTile = ({ card, onEdit, onDelete }: { card: PricingCard; onEdit
             {/* Tier badge */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                 <span className={`pc-tier-badge ${isSilver ? 'silver' : 'gold'}`}>
-                    {isSilver ? '🥈 Silver' : '🥇 Gold'}
+                    {isSilver ? '🥈︎︎ Silver' : '🥇︎︎ Gold'}
                 </span>
                 <div style={{ display: 'flex', gap: 6 }}>
                     <button className="pc-icon-btn edit" onClick={onEdit} title="Edit"><FiEdit2 size={13} /></button>
@@ -335,7 +335,7 @@ export default function PricingCardsAdmin() {
                             {/* Preview card */}
                             <div className="pc-basic-preview">
                                 <div className="pc-card-accent blue" />
-                                <span className="pc-tier-badge blue">⭐ Basic</span>
+                                <span className="pc-tier-badge blue">⭐︎ Basic</span>
                                 <div style={{ fontWeight: 800, fontSize: '1.4rem', color: '#2196f3', margin: '12px 0 8px' }}>
                                     ₹{Number(basicForm.price).toLocaleString('en-IN')}
                                 </div>
@@ -403,7 +403,7 @@ export default function PricingCardsAdmin() {
                             {(['all', 'silver', 'gold'] as const).map(t => (
                                 <button key={t} onClick={() => { setTierFilter(t); setCardPage(1); }}
                                     className={`pc-filter-tab ${t} ${tierFilter === t ? 'active' : ''}`}>
-                                    {t === 'all' ? 'All Cards' : t === 'silver' ? '🥈 Silver' : '🥇 Gold'}
+                                    {t === 'all' ? 'All Cards' : t === 'silver' ? '🥈︎︎ Silver' : '🥇︎︎ Gold'}
                                 </button>
                             ))}
                         </div>

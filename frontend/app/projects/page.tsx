@@ -121,7 +121,7 @@ function ProjectsContent() {
             <main style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ marginBottom: '20px' }} className="mobile-only">
                     <button className="btn-secondary" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }} onClick={() => setShowSidebar(true)}>
-                         🔍 Filter & Search
+                        🔍︎︎ Filter & Search
                     </button>
                 </div>
                 <div className="section-header" style={{ marginBottom: '24px' }}>
@@ -161,7 +161,7 @@ function ProjectsContent() {
                     </div>
                 ) : (
                     <div className="no-results">
-                        <div className="no-results-icon">🔍</div>
+                        <div className="no-results-icon">🔍︎︎</div>
                         <h3 style={{ fontSize: '1.4rem', marginBottom: '12px' }}>No projects found</h3>
                         <p>Try adjusting your filters or search query.</p>
                         <button className="btn-secondary" style={{ marginTop: '24px' }} onClick={() => { setSearchQuery(''); setActiveCategory('all'); setPriceRange([0, 50000]); }}>

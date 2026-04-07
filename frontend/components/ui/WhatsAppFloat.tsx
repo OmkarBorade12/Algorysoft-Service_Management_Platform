@@ -5,7 +5,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 export default function WhatsAppFloat() {
     return (
         <a
-            href={`https://wa.me/${WHATSAPP}?text=Hi! I'm interested in engineering projects from AlgorySoft.`}
+            href={`https://wa.me/${WHATSAPP}?text=Hi! I'm looking for business web solutions from AlgorySoft.`}
             target="_blank"
             rel="noreferrer"
             className="whatsapp-float"

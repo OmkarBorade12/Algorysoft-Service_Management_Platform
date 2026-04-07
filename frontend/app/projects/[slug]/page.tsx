@@ -1,9 +1,9 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { addToCart } from '@/store/slices/cartSlice';
+import { addToCart, clearCart } from '@/store/slices/cartSlice';
 import { toggleWishlistItem } from '@/store/slices/wishlistSlice';
 import { addReview, type Review } from '@/store/slices/reviewSlice';
 import { addRequestThunk } from '@/store/slices/requestsSlice';
@@ -49,7 +49,7 @@ function RequirementModal({ project, onClose }: { project: Product; onClose: () 
             budget: form.budget
         }));
         setSubmitted(true);
-        toast.success('🎉 Your requirements sent! We\'ll contact you within 2 hours.');
+        toast.success('🎉︎︎ Your requirements sent! We\'ll contact you within 2 hours.');
         setTimeout(onClose, 2000);
     };
 
@@ -58,15 +58,15 @@ function RequirementModal({ project, onClose }: { project: Product; onClose: () 
             <div className="modal-content animate-fadeInUp" style={{ maxWidth: 600 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                     <div>
-                        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>📋 Share Your Requirements</h2>
+                        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>📋︎︎ Share Your Requirements</h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: 4 }}>For: {project.title}</p>
                     </div>
-                    <button onClick={onClose} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-solid)', borderRadius: '50%', width: 36, height: 36, cursor: 'pointer', fontSize: '1rem' }}>✕</button>
+                    <button onClick={onClose} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-solid)', borderRadius: '50%', width: 36, height: 36, cursor: 'pointer', fontSize: '1rem' }}>✕︎</button>
                 </div>
 
                 {submitted ? (
                     <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                        <div style={{ fontSize: '3rem', marginBottom: 16 }}>✅</div>
+                        <div style={{ fontSize: '3rem', marginBottom: 16 }}>✅︎︎</div>
                         <h3>Requirements Submitted!</h3>
                         <p style={{ color: 'var(--text-muted)', marginTop: 8 }}>Our team will reach out within 2 hours.</p>
                     </div>
@@ -110,9 +110,9 @@ function RequirementModal({ project, onClose }: { project: Product; onClose: () 
                                     </span>
                                 ))}
                             </div>
-                            <select 
-                                className="form-input" 
-                                value="" 
+                            <select
+                                className="form-input"
+                                value=""
                                 onChange={(e) => {
                                     if (e.target.value && !selectedFeatures.includes(e.target.value)) {
                                         setSelectedFeatures(s => [...s, e.target.value]);
@@ -121,7 +121,7 @@ function RequirementModal({ project, onClose }: { project: Product; onClose: () 
                             >
                                 <option value="" disabled>+ Pick a feature...</option>
                                 {catalogFeatures.filter(f => !selectedFeatures.includes(f.name)).map(f => (
-                                    <option key={f.id} value={f.name}>{f.name}</option> 
+                                    <option key={f.id} value={f.name}>{f.name}</option>
                                 ))}
                             </select>
                         </div>
@@ -130,7 +130,7 @@ function RequirementModal({ project, onClose }: { project: Product; onClose: () 
                             <textarea className="form-input" rows={4} value={form.requirements} onChange={e => setForm(p => ({ ...p, requirements: e.target.value }))} placeholder="Describe your business, features you need, specific pages, integrations, etc..." required style={{ resize: 'vertical' }} />
                         </div>
                         <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                            🚀 Submit Requirements & Get Free Quote
+                            🚀︎︎ Submit Requirements & Get Free Quote
                         </button>
                         <p style={{ textAlign: 'center', marginTop: 12, fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                             We respond within 2 hours • Mon–Sat 9:30 AM – 6:30 PM
@@ -167,24 +167,24 @@ function ReviewForm({ projectSlug }: { projectSlug: string }) {
             createdAt: new Date().toISOString(),
         }));
         setSubmitted(true);
-        toast.success('⭐ Review submitted! Pending admin approval.');
+        toast.success('⭐︎ Review submitted! Pending admin approval.');
     };
 
     if (submitted) return (
         <div style={{ background: 'var(--bg-secondary)', padding: 24, borderRadius: 'var(--radius-lg)', textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem' }}>⭐</div>
+            <div style={{ fontSize: '2rem' }}>⭐︎</div>
             <p style={{ fontWeight: 600, marginTop: 8 }}>Thank you! Your review is pending approval.</p>
         </div>
     );
 
     return (
         <form onSubmit={handleSubmit} className="review-form">
-            <h3 style={{ fontWeight: 700, marginBottom: 16 }}>✍️ Write a Review</h3>
+            <h3 style={{ fontWeight: 700, marginBottom: 16 }}>✍︎︎︎ Write a Review</h3>
             <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
                 {[1, 2, 3, 4, 5].map(star => (
                     <button key={star} type="button" onClick={() => setRating(star)} onMouseEnter={() => setHoverRating(star)} onMouseLeave={() => setHoverRating(0)}
                         style={{ fontSize: '1.6rem', background: 'none', border: 'none', cursor: 'pointer', color: star <= (hoverRating || rating) ? '#f59e0b' : '#d1d5db' }}>
-                        ★
+                        ★︎
                     </button>
                 ))}
                 <span style={{ alignSelf: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>({['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][rating]})</span>
@@ -224,7 +224,7 @@ function ReviewList({ projectSlug }: { projectSlug: string }) {
                                 <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{new Date(r.createdAt).toLocaleDateString('en-IN')}</div>
                             </div>
                         </div>
-                        <div>{Array(r.rating).fill('★').join('')}<span style={{ color: '#d1d5db' }}>{Array(5 - r.rating).fill('★').join('')}</span></div>
+                        <div>{Array(r.rating).fill('★︎').join('')}<span style={{ color: '#d1d5db' }}>{Array(5 - r.rating).fill('★︎').join('')}</span></div>
                     </div>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem' }}>{r.text}</p>
                 </div>
@@ -235,6 +235,7 @@ function ReviewList({ projectSlug }: { projectSlug: string }) {
 
 export default function ProjectDetailPage() {
     const params = useParams();
+    const router = useRouter();
     const slug = params?.slug as string;
     const dispatch = useAppDispatch();
     const { currency, usdRate } = useAppSelector(s => s.currency);
@@ -298,7 +299,7 @@ export default function ProjectDetailPage() {
     if (!project) {
         return (
             <div style={{ padding: '100px 24px', textAlign: 'center' }}>
-                <div style={{ fontSize: '3rem', marginBottom: 16 }}>🔍</div>
+                <div style={{ fontSize: '3rem', marginBottom: 16 }}>🔍︎︎</div>
                 <h2>Project Not Found</h2>
                 <Link href="/projects" className="btn-primary" style={{ marginTop: 24, display: 'inline-flex' }}>← Back to Projects</Link>
             </div>
@@ -312,11 +313,12 @@ export default function ProjectDetailPage() {
 
     const handleWishlist = () => {
         dispatch(toggleWishlistItem({ id: project.id, title: project.title, price: project.price, originalPrice: project.originalPrice, discount: project.discount, icon: project.icon, slug: project.slug }));
-        toast(isWishlisted ? '💔 Removed from wishlist' : '❤️ Added to wishlist!');
+        toast(isWishlisted ? '💔︎︎ Removed from wishlist' : '❤︎︎︎ Added to wishlist!');
     };
 
     const handleBuyNow = () => {
         setBuyingNow(true);
+        dispatch(clearCart());
         dispatch(addToCart({
             id: project.id,
             title: project.title,
@@ -325,11 +327,14 @@ export default function ProjectDetailPage() {
             discount: project.discount,
             icon: project.icon,
             slug: project.slug,
+            image: project.mainImage,
             tier: 'Base Product',
         }));
-        toast.success(`🛒 ${project.title} added to cart — ${discountedPrice}`, {
+        toast.success(`Redirecting to checkout... 🚀︎︎`, {
             style: { background: '#22c55e', color: '#fff', fontWeight: 700 },
         });
+
+        router.push('/checkout');
         setTimeout(() => setBuyingNow(false), 800);
     };
 
@@ -337,7 +342,7 @@ export default function ProjectDetailPage() {
         {
             key: 'Basic' as const,
             label: 'Basic Tier',
-            emoji: '🔵',
+            emoji: '🔵︎︎',
             color: '#3b82f6',
             gradient: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
             border: '#93c5fd',
@@ -348,7 +353,7 @@ export default function ProjectDetailPage() {
         {
             key: 'Silver' as const,
             label: 'Silver Tier',
-            emoji: '🟣',
+            emoji: '🟣︎︎',
             color: '#8b5cf6',
             gradient: 'linear-gradient(135deg, #f5f3ff, #ede9fe)',
             border: '#c4b5fd',
@@ -359,7 +364,7 @@ export default function ProjectDetailPage() {
         {
             key: 'Gold' as const,
             label: 'Gold Tier',
-            emoji: '🟡',
+            emoji: '🟡︎︎',
             color: '#f59e0b',
             gradient: 'linear-gradient(135deg, #fffbeb, #fef3c7)',
             border: '#fcd34d',
@@ -423,64 +428,64 @@ export default function ProjectDetailPage() {
                                     >
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={m.src} alt={m.caption} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        {m.type === 'video' && <div className="thumb-play">▶</div>}
+                                        {m.type === 'video' && <div className="thumb-play">▶︎</div>}
                                     </button>
                                 ))}
                             </div>
 
                             {/* Tech Stack - Premium Berry Style */}
                             {project.tech && project.tech.filter(Boolean).length > 0 && (
-                            <div style={{ 
-                                marginTop: 32, 
-                                padding: '28px', 
-                                background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)', 
-                                borderRadius: '24px', 
-                                border: '1px solid #e3e8ef',
-                                boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
-                                position: 'relative',
-                                overflow: 'hidden'
-                            }}>
-                                <div style={{ position: 'absolute', top: -20, right: -20, opacity: 0.03, fontSize: '8rem', color: '#5e35b1' }}>
-                                    <FiSettings />
-                                </div>
-                                <h3 style={{ 
-                                    fontWeight: 800, 
-                                    marginBottom: 20, 
-                                    fontSize: '1.25rem', 
-                                    color: '#121926', 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    gap: 10,
-                                    letterSpacing: '-0.3px'
+                                <div style={{
+                                    marginTop: 32,
+                                    padding: '28px',
+                                    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                                    borderRadius: '24px',
+                                    border: '1px solid #e3e8ef',
+                                    boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
+                                    position: 'relative',
+                                    overflow: 'hidden'
                                 }}>
-                                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, background: '#ede7f6', color: '#5e35b1', borderRadius: '10px' }}>
-                                        <FiCpu size={20} />
-                                    </span>
-                                    Core Tech Stack
-                                </h3>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                                    {project.tech.filter(Boolean).map((t, i) => (
-                                        <span key={`${t}-${i}`} style={{ 
-                                            background: '#ffffff', 
-                                            border: '1px solid #e3e8ef', 
-                                            padding: '10px 20px', 
-                                            borderRadius: '14px', 
-                                            fontSize: '0.9rem', 
-                                            fontWeight: 700, 
-                                            color: '#364152', 
-                                            boxShadow: '0 4px 6px rgba(0,0,0,0.02)',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 8,
-                                            transition: 'all 0.3s ease',
-                                            cursor: 'default'
-                                        }} className="tech-badge-hover">
-                                            <span style={{ width: 8, height: 8, borderRadius: '50%', background: i % 2 === 0 ? '#5e35b1' : '#2196f3' }} />
-                                            {t}
+                                    <div style={{ position: 'absolute', top: -20, right: -20, opacity: 0.03, fontSize: '8rem', color: '#5e35b1' }}>
+                                        <FiSettings />
+                                    </div>
+                                    <h3 style={{
+                                        fontWeight: 800,
+                                        marginBottom: 20,
+                                        fontSize: '1.25rem',
+                                        color: '#121926',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 10,
+                                        letterSpacing: '-0.3px'
+                                    }}>
+                                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, background: '#ede7f6', color: '#5e35b1', borderRadius: '10px' }}>
+                                            <FiCpu size={20} />
                                         </span>
-                                    ))}
-                                </div>
-                                <style jsx>{`
+                                        Core Tech Stack
+                                    </h3>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+                                        {project.tech.filter(Boolean).map((t, i) => (
+                                            <span key={`${t}-${i}`} style={{
+                                                background: '#ffffff',
+                                                border: '1px solid #e3e8ef',
+                                                padding: '10px 20px',
+                                                borderRadius: '14px',
+                                                fontSize: '0.9rem',
+                                                fontWeight: 700,
+                                                color: '#364152',
+                                                boxShadow: '0 4px 6px rgba(0,0,0,0.02)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 8,
+                                                transition: 'all 0.3s ease',
+                                                cursor: 'default'
+                                            }} className="tech-badge-hover">
+                                                <span style={{ width: 8, height: 8, borderRadius: '50%', background: i % 2 === 0 ? '#5e35b1' : '#2196f3' }} />
+                                                {t}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <style jsx>{`
                                     .tech-badge-hover:hover {
                                         transform: translateY(-3px);
                                         border-color: #5e35b1;
@@ -488,7 +493,7 @@ export default function ProjectDetailPage() {
                                         color: #5e35b1;
                                     }
                                 `}</style>
-                            </div>
+                                </div>
                             )}
                         </div>
 
@@ -497,8 +502,8 @@ export default function ProjectDetailPage() {
                             {/* Badges */}
                             <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
                                 <span className="badge badge-category">{project.category}</span>
-                                {project.isNew && <span className="badge badge-new">🆕 New</span>}
-                                {project.featured && <span className="badge" style={{ background: 'rgba(109,176,58,0.1)', color: 'var(--pista-dark)', border: '1px solid var(--pista-border)' }}>⭐ Featured</span>}
+                                {project.isNew && <span className="badge badge-new">🆕︎ New</span>}
+                                {project.featured && <span className="badge" style={{ background: 'rgba(109,176,58,0.1)', color: 'var(--pista-dark)', border: '1px solid var(--pista-border)' }}>⭐︎ Featured</span>}
                             </div>
 
                             <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.25, marginBottom: 16 }}>
@@ -535,7 +540,7 @@ export default function ProjectDetailPage() {
                             {/* CTA Buttons */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
                                 <button className="btn-primary" style={{ justifyContent: 'center', fontSize: '1.05rem', padding: '16px' }} onClick={() => setShowRequirement(true)}>
-                                    📋 Get Free Quote & Share Requirements
+                                    📋︎︎ Get Free Quote & Share Requirements
                                 </button>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                                     <button
@@ -543,7 +548,7 @@ export default function ProjectDetailPage() {
                                         className={`btn-secondary ${isWishlisted ? 'active' : ''}`}
                                         style={{ justifyContent: 'center', borderColor: isWishlisted ? '#dc2626' : undefined, color: isWishlisted ? '#dc2626' : undefined }}
                                     >
-                                        {isWishlisted ? '❤️ Wishlisted' : '🤍 Wishlist'}
+                                        {isWishlisted ? '❤︎︎︎ Wishlisted' : '🤍︎︎ Wishlist'}
                                     </button>
                                     <button
                                         onClick={handleBuyNow}
@@ -561,7 +566,7 @@ export default function ProjectDetailPage() {
                                             whiteSpace: 'nowrap',
                                         }}
                                     >
-                                        {buyingNow ? '✓ Added!' : `⚡ Buy — ${discountedPrice}`}
+                                        {buyingNow ? '✓︎ Added!' : `⚡︎︎ Buy — ${discountedPrice}`}
                                     </button>
                                 </div>
                             </div>
@@ -569,7 +574,7 @@ export default function ProjectDetailPage() {
                             {/* Contact */}
                             <div style={{ display: 'flex', gap: 12, padding: 16, background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-solid)' }}>
                                 <a href="https://wa.me/917899533525" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#25D366', fontSize: '0.85rem', fontWeight: 600, width: '100%' }}>
-                                    💬 WhatsApp Us
+                                    💬︎︎ WhatsApp Us
                                 </a>
                             </div>
                         </div>
@@ -588,7 +593,7 @@ export default function ProjectDetailPage() {
                                 background: 'linear-gradient(135deg, var(--pista-primary, #6db03a), #4caf50)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 fontSize: '1.1rem', flexShrink: 0,
-                            }}>🏷️</div>
+                            }}>🏷︎︎︎</div>
                             <div>
                                 <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0 }}>Choose Your Service Tier</h2>
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: 4 }}>Select the package that fits your project scope</p>
@@ -663,7 +668,7 @@ export default function ProjectDetailPage() {
                                                         fontSize: '0.65rem', flexShrink: 0,
                                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                         marginTop: 1,
-                                                    }}>✓</span>
+                                                    }}>✓︎</span>
                                                     <span style={{ lineHeight: 1.4 }}>{f.trim()}</span>
                                                 </li>
                                             ))}
@@ -687,7 +692,7 @@ export default function ProjectDetailPage() {
                                                     tier: tier.key,
                                                     tierPrice: tp,
                                                 }));
-                                                toast.success(`✨ ${tier.label} added to cart!`, {
+                                                toast.success(`✨︎︎ ${tier.label} added to cart!`, {
                                                     style: { background: tier.color, color: '#fff', fontWeight: 700 },
                                                 });
                                             }}
@@ -704,7 +709,7 @@ export default function ProjectDetailPage() {
                                                 boxShadow: isSelected ? `0 4px 14px ${tier.glow}` : 'none',
                                             }}
                                         >
-                                            {isSelected ? `🛒 Add ${tier.key} to Cart` : `Add ${tier.key}`}
+                                            {isSelected ? `🛒︎︎ Add ${tier.key} to Cart` : `Add ${tier.key}`}
                                         </button>
                                     </div>
                                 );
@@ -714,7 +719,7 @@ export default function ProjectDetailPage() {
 
                     {/* Reviews Section */}
                     <div style={{ marginTop: 64, paddingTop: 48, borderTop: '2px solid var(--border-solid)' }}>
-                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 32 }}>⭐ Customer Reviews</h2>
+                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 32 }}>⭐︎ Customer Reviews</h2>
                         <div className="reviews-grid-container">
                             <div>
                                 <h3 style={{ fontWeight: 700, marginBottom: 20, color: 'var(--text-secondary)' }}>What Clients Say</h3>
@@ -728,7 +733,7 @@ export default function ProjectDetailPage() {
 
                     {/* Related Projects */}
                     <div style={{ marginTop: 64, paddingTop: 48, borderTop: '2px solid var(--border-solid)' }}>
-                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 32 }}>🔥 Similar Solutions</h2>
+                        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 32 }}>🔥︎︎ Similar Solutions</h2>
                         <div className="products-grid">
                             {projects.filter(p => p.category === project.category && p.id !== project.id).slice(0, 4).map(p => (
                                 <Link key={p.id} href={`/projects/${p.slug}`} className="product-card" style={{ textDecoration: 'none', display: 'block' }}>
@@ -761,34 +766,34 @@ export default function ProjectDetailPage() {
 
             {/* Premium Lightbox Modal */}
             {isLightboxOpen && (
-                <div 
-                    className="modal-overlay animate-fadeIn" 
+                <div
+                    className="modal-overlay animate-fadeIn"
                     style={{ background: 'rgba(0,0,0,0.95)', padding: 0, zIndex: 99999 }}
                     onClick={() => setIsLightboxOpen(false)}
                 >
-                    <button 
+                    <button
                         onClick={() => setIsLightboxOpen(false)}
                         style={{ position: 'absolute', top: 40, right: 40, background: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', width: 50, height: 50, borderRadius: '50%', fontSize: '1.5rem', cursor: 'pointer', zIndex: 100000, transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)' }}
                         onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.3)'}
                         onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
                         title="Close (Esc)"
-                    >✕</button>
+                    >✕︎</button>
 
-                    <button 
+                    <button
                         onClick={(e) => { e.stopPropagation(); setActiveMedia(p => (p - 1 + mediaItems.length) % mediaItems.length); }}
                         style={{ position: 'absolute', left: 30, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', color: 'white', border: 'none', width: 60, height: 60, borderRadius: '50%', fontSize: '1.8rem', cursor: 'pointer', zIndex: 100000, transition: 'all 0.2s' }}
                         onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
                         onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                     >‹</button>
 
-                    <button 
+                    <button
                         onClick={(e) => { e.stopPropagation(); setActiveMedia(p => (p + 1) % mediaItems.length); }}
                         style={{ position: 'absolute', right: 30, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', color: 'white', border: 'none', width: 60, height: 60, borderRadius: '50%', fontSize: '1.8rem', cursor: 'pointer', zIndex: 100000, transition: 'all 0.2s' }}
                         onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
                         onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                     >›</button>
 
-                    <div 
+                    <div
                         style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px' }}
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -799,9 +804,9 @@ export default function ProjectDetailPage() {
                         ) : (
                             <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img 
-                                    src={mediaItems[activeMedia].src} 
-                                    alt={mediaItems[activeMedia].caption} 
+                                <img
+                                    src={mediaItems[activeMedia].src}
+                                    alt={mediaItems[activeMedia].caption}
                                     style={{ maxWidth: '100%', maxHeight: '85vh', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 0 40px rgba(0,0,0,0.8)', transition: 'transform 0.3s ease' }}
                                 />
                                 <div style={{ color: 'white', textAlign: 'center', marginTop: 24, fontSize: '1.1rem', fontWeight: 600, textShadow: '0 2px 10px rgba(0,0,0,0.5)', opacity: 0.9 }}>

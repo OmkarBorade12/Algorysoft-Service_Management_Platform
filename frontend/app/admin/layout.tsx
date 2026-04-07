@@ -116,10 +116,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <aside className={`berry-sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
                 <div className="berry-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0' }}>
                     <Image 
-                        src="/algorysoft.jpeg" 
+                        src="/logo-wide.jpeg" 
                         alt="AlgorySoft" 
-                        width={120} 
-                        height={40} 
+                        width={160} 
+                        height={44} 
                         style={{ objectFit: 'contain' }} 
                         priority 
                         quality={100} 

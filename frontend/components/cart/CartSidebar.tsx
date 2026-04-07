@@ -10,9 +10,9 @@ import { FiShoppingCart, FiX, FiPackage, FiHeart, FiFolder, FiLayers } from 'rea
 
 // Tier color map
 const TIER_COLORS: Record<string, { color: string; bg: string; border: string }> = {
-    Basic:  { color: '#3b82f6', bg: 'rgba(59,130,246,0.08)',  border: 'rgba(59,130,246,0.25)' },
+    Basic: { color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.25)' },
     Silver: { color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)', border: 'rgba(139,92,246,0.25)' },
-    Gold:   { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)',  border: 'rgba(245,158,11,0.25)' },
+    Gold: { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.25)' },
 };
 
 const getTierColor = (tier: string | undefined) => {
@@ -184,7 +184,7 @@ export default function CartSidebar() {
                                         fontSize: '0.78rem',
                                     }}>
                                         <div style={{ fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 6 }}>
-                                            🏷️ Selected Tiers
+                                            🏷︎︎︎ Selected Tiers
                                         </div>
                                         {items.filter(i => i.tier).map(i => {
                                             const tc = getTierColor(i.tier);

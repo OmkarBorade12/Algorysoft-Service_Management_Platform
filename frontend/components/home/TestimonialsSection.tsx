@@ -11,7 +11,7 @@ const TESTIMONIALS = [
     {
         id: 1,
         name: 'Arjun Mehta',
-        company: 'FreshBite Restaurants, Bangalore',
+        company: 'FreshBite Restaurants, Gadag, Karnataka, India',
         role: 'Founder & CEO',
         rating: 5,
         avatar: 'A',
@@ -116,7 +116,7 @@ export default function TestimonialsSection() {
                                 {/* Stars */}
                                 <div style={{ display: 'flex', gap: '3px', marginBottom: '14px' }}>
                                     {Array(t.rating).fill(0).map((_, i) => (
-                                        <span key={i} style={{ color: '#e8960a', fontSize: '1rem' }}>★</span>
+                                        <span key={i} style={{ color: '#e8960a', fontSize: '1rem' }}>★︎</span>
                                     ))}
                                 </div>
 
@@ -148,7 +148,7 @@ export default function TestimonialsSection() {
                                         borderRadius: '9999px', padding: '3px 10px',
                                         fontSize: '0.7rem', fontWeight: '700', color: 'var(--pista-dark)', flexShrink: 0,
                                     }}>
-                                        Verified ✓
+                                        Verified ✓︎
                                     </div>
                                 </div>
                             </div>
@@ -163,7 +163,7 @@ export default function TestimonialsSection() {
                     display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px', flexWrap: 'wrap',
                 }}>
                     <FiMapPin size={13} style={{ color: 'var(--pista-primary)', flexShrink: 0 }} />
-                    Trusted by businesses in Bangalore · Hyderabad · Mumbai · Chennai · Delhi
+                    Trusted by businesses in Gadag, Karnataka, India · Hyderabad · Mumbai · Chennai · Delhi
                 </div>
             </div>
         </section>

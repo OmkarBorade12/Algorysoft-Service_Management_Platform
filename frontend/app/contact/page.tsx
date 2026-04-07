@@ -24,7 +24,7 @@ export default function ContactPage() {
             });
 
             if (res.ok) {
-                toast.success('Your message has been sent successfully! 📧');
+                toast.success('Your message has been sent successfully! 📧︎︎');
                 setFormData({ name: '', email: '', subject: '', message: '' });
             } else {
                 const errorData = await res.json().catch(() => null);
@@ -48,17 +48,17 @@ export default function ContactPage() {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px', marginBottom: '60px' }}>
                 <div style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--border-color)' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '12px' }}>📍</div>
+                    <div style={{ fontSize: '2rem', marginBottom: '12px' }}>📍︎︎</div>
                     <h3 style={{ fontSize: '1.1rem', marginBottom: '8px' }}>Visit Us</h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>123 Hub Layout, Sector 4<br />Bangalore, KA 560034</p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>RAJIV GANDHI NAGAR, GADAG, KARNATAKA<br />India (IN), Pin Code:- 582101 582101</p>
                 </div>
                 <div style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--border-color)' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '12px' }}>📞</div>
+                    <div style={{ fontSize: '2rem', marginBottom: '12px' }}>📞︎︎</div>
                     <h3 style={{ fontSize: '1.1rem', marginBottom: '8px' }}>Call Us</h3>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{PHONE}<br />{WORKING_HOURS}</p>
                 </div>
                 <div style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--border-color)' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '12px' }}>✉️</div>
+                    <div style={{ fontSize: '2rem', marginBottom: '12px' }}>✉︎︎︎</div>
                     <h3 style={{ fontSize: '1.1rem', marginBottom: '8px' }}>Email Us</h3>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{EMAIL}<br />24/7 Support Available</p>
                 </div>

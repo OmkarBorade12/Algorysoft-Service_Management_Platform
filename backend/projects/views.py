@@ -46,7 +46,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 
 class CustomRequestViewSet(viewsets.ModelViewSet):
-    queryset = CustomRequest.objects.all()
+    queryset = CustomRequest.objects.all().order_by('-date')
     serializer_class = CustomRequestSerializer
 
 
@@ -71,18 +71,17 @@ from django.db.models import Count
 @permission_classes([AllowAny])
 def landing_stats(request):
     """Provides public stats for the landing page."""
-    # Count orders that are not Cancelled or Pending
-    order_count = Order.objects.exclude(status__in=['Cancelled', 'Pending']).count()
-    request_count = CustomRequest.objects.filter(status__in=['Approved', 'In Development']).count()
-    
-    # Total unique clients (based on email)
-    order_emails = Order.objects.values_list('client_email', flat=True).distinct()
-    request_emails = CustomRequest.objects.values_list('email', flat=True).distinct()
-    
-    unique_emails = set(list(order_emails) + list(request_emails))
-    
+    # Only count orders that are fully Completed
+    completed_orders = Order.objects.filter(status='Completed')
+
+    # Websites delivered = number of completed orders
+    order_count = completed_orders.count()
+
+    # Happy businesses = unique clients who have at least one Completed order
+    unique_emails = completed_orders.values_list('client_email', flat=True).distinct()
+
     return Response({
-        'websites_delivered': order_count + request_count,
-        'happy_businesses': len(unique_emails),
+        'websites_delivered': order_count,
+        'happy_businesses': unique_emails.count(),
         'avg_rating': '5.0',
     })
