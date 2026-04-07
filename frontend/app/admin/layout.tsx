@@ -156,7 +156,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px', background: '#f8fafc', borderRadius: '12px', marginBottom: 12 }}>
                         <div style={{ width: 42, height: 42, borderRadius: '10px', overflow: 'hidden', flexShrink: 0, border: '1.5px solid #e3e8ef', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Image 
-                                src="/algorysoft.jpeg" 
+                                src="/toplogo.jpeg" 
                                 alt="Admin Avatar" 
                                 width={42} 
                                 height={42} 

@@ -767,7 +767,7 @@ img {
   }
 }
 
-/* ===== SKELETON LOADER ===== */
+/* ===== SKELETON LOADER & GLOBAL FRAME ===== */
 .skeleton {
   background: linear-gradient(90deg, #f0f4ee 25%, #e5eddf 50%, #f0f4ee 75%);
   background-size: 200% 100%;
@@ -783,6 +783,51 @@ img {
   100% {
     background-position: -200% 0;
   }
+}
+
+/* Global Skeleton Corner Shimmers */
+.skeleton-corner {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0.25;
+  filter: blur(40px);
+  background: var(--pista-primary);
+  animation: shimmer-pulse 3s infinite alternate;
+}
+
+.skeleton-corner-tl { top: -20px; left: -20px; }
+.skeleton-corner-tr { top: -20px; right: -20px; }
+.skeleton-corner-bl { bottom: -20px; left: -20px; }
+.skeleton-corner-br { bottom: -20px; right: -20px; }
+
+@keyframes shimmer-pulse {
+  from { opacity: 0.15; transform: scale(1); }
+  to { opacity: 0.35; transform: scale(1.2); }
+}
+
+/* Shimmering Border for Entire Website */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  border: 4px solid transparent;
+  background: linear-gradient(90deg, transparent 25%, rgba(109, 176, 58, 0.1) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+          mask-composite: exclude;
+  opacity: 0.6;
 }
 
 /* ===== TOAST ===== */

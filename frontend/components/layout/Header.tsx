@@ -171,7 +171,15 @@ export default function Header() {
                         {isAuthenticated ? (
                             <div className={styles.dropdown} style={{ position: 'relative' }}>
                                 <button className={styles.userBtn} onClick={() => setUserMenuOpen(!userMenuOpen)}>
-                                    <div className={styles.userAvatar}>{user?.name?.charAt(0).toUpperCase()}</div>
+                                    <div className={styles.userAvatar} style={{ overflow: 'hidden' }}>
+                                        <Image 
+                                            src="/toplogo.jpeg" 
+                                            alt="User" 
+                                            width={30} 
+                                            height={30} 
+                                            style={{ objectFit: 'cover' }}
+                                        />
+                                    </div>
                                     <span className={styles.userName}>{user?.name?.split(' ')[0]}</span>
                                 </button>
                                 {userMenuOpen && (
@@ -274,8 +282,14 @@ export default function Header() {
                         {isAuthenticated ? (
                             <div className={styles.sidebarAccount}>
                                 <div className={styles.sidebarUser}>
-                                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--pista-primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
-                                        {user?.name?.charAt(0).toUpperCase()}
+                                    <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                        <Image 
+                                            src="/toplogo.jpeg" 
+                                            alt="User" 
+                                            width={40} 
+                                            height={40} 
+                                            style={{ objectFit: 'cover' }}
+                                        />
                                     </div>
                                     <div style={{ minWidth: 0 }}>
                                         <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--pista-dark)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.name}</div>

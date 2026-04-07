@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   description:
     'Professional business websites, e-commerce stores, SaaS dashboards, and web applications built for Indian businesses. Fast delivery, SEO-first, 1-year free support.',
   keywords: 'business website development, e-commerce website India, custom web design, SaaS dashboard, corporate website, landing page design, web application development Gadag, Karnataka, India',
+  icons: {
+    icon: '/toplogo.jpeg',
+  },
   openGraph: {
     title: 'AlgorySoft – Business Web Solutions',
     description: '500+ websites delivered. Custom e-commerce, corporate, SaaS & landing page solutions for businesses across India.',
@@ -30,6 +33,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </ClientLayoutWrapper>
         </Providers>
+        {/* Global Skeleton Effects */}
+        <div className="skeleton-corner skeleton-corner-tl" />
+        <div className="skeleton-corner skeleton-corner-tr" />
+        <div className="skeleton-corner skeleton-corner-bl" />
+        <div className="skeleton-corner skeleton-corner-br" />
       </body>
     </html>
   );
