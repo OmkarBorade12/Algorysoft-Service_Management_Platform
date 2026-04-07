@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { fetchOrders, addOrderMessageThunk, OrderItem } from '@/store/slices/ordersSlice';
 import { FiSend, FiPaperclip, FiSmile } from 'react-icons/fi';
+import EmptyState from '@/components/ui/EmptyState';
 
 export default function MyOrdersPage() {
     const { isAuthenticated, user } = useAppSelector(s => s.auth);
@@ -82,12 +83,13 @@ export default function MyOrdersPage() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 24, maxWidth: 1000, margin: '0 auto' }}>
                     {orders.length === 0 ? (
-                        <div className="glass-card" style={{ padding: 60, textAlign: 'center' }}>
-                            <div style={{ fontSize: '4rem', opacity: 0.5, marginBottom: 16 }}>🛒︎︎</div>
-                            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', marginBottom: 8 }}>No ongoing projects found</h3>
-                            <p style={{ color: 'var(--text-muted)' }}>You haven't purchased or requested any custom projects yet.</p>
-                            <Link href="/projects" className="btn-primary" style={{ marginTop: 24 }}>Explore Projects</Link>
-                        </div>
+                        <EmptyState 
+                            imageNum={1}
+                            title="No ongoing projects found"
+                            description="You haven't purchased or requested any custom projects yet. Explore our solutions to get started!"
+                            buttonText="Explore Projects"
+                            buttonLink="/projects"
+                        />
                     ) : (
                         orders.map(order => (
                             <div key={order.id} className="glass-card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>

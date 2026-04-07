@@ -7,6 +7,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import styles from './CartSidebar.module.css';
 import { FiShoppingCart, FiX, FiPackage, FiHeart, FiFolder, FiLayers } from 'react-icons/fi';
+import EmptyState from '@/components/ui/EmptyState';
 
 // Tier color map
 const TIER_COLORS: Record<string, { color: string; bg: string; border: string }> = {
@@ -48,15 +49,13 @@ export default function CartSidebar() {
                 </div>
 
                 {items.length === 0 ? (
-                    <div className={styles.empty}>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--pista-primary)' }}>
-                            <FiShoppingCart size={48} />
-                        </div>
-                        <p>Your cart is empty</p>
-                        <Link href="/projects" className="btn-primary" style={{ marginTop: '16px' }} onClick={() => dispatch(closeModals())}>
-                            Browse Projects
-                        </Link>
-                    </div>
+                    <EmptyState 
+                        imageNum={1}
+                        title="Your cart is empty"
+                        description="Looks like you haven't added anything to your cart yet. Explore our solutions to get started!"
+                        buttonText="Browse Projects"
+                        buttonLink="/projects"
+                    />
                 ) : (
                     <>
                         <div className={styles.items}>

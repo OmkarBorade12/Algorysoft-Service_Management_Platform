@@ -15,20 +15,20 @@ export default function EmptyState({ imageNum, title, description, buttonText, b
     const imageUrl = `/empty${imageNum}.jpeg`;
 
     return (
-        <div className="empty-state-container" style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            textAlign: 'center', 
+        <div className="empty-state-container" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
             padding: '60px 24px',
             animation: 'fadeIn 0.5s ease-out'
         }}>
             <div style={{ position: 'relative', width: '280px', height: '280px', marginBottom: imageOnly ? '0' : '32px' }}>
-                <Image 
-                    src={imageUrl} 
-                    alt="Empty state" 
-                    fill 
+                <Image
+                    src={imageUrl}
+                    alt="Empty state"
+                    fill
                     style={{ objectFit: 'contain', borderRadius: '24px' }}
                     priority
                 />
@@ -36,10 +36,10 @@ export default function EmptyState({ imageNum, title, description, buttonText, b
             {!imageOnly && (
                 <>
                     {title && (
-                        <h3 style={{ 
-                            fontSize: '1.8rem', 
-                            fontWeight: 800, 
-                            color: 'var(--text-primary)', 
+                        <h3 style={{
+                            fontSize: '1.8rem',
+                            fontWeight: 800,
+                            color: 'var(--text-primary)',
                             marginBottom: '12px',
                             letterSpacing: '-0.5px'
                         }}>
@@ -47,10 +47,10 @@ export default function EmptyState({ imageNum, title, description, buttonText, b
                         </h3>
                     )}
                     {description && (
-                        <p style={{ 
-                            color: 'var(--text-muted)', 
-                            fontSize: '1.1rem', 
-                            maxWidth: '400px', 
+                        <p style={{
+                            color: 'var(--text-muted)',
+                            fontSize: '1.1rem',
+                            maxWidth: '400px',
                             lineHeight: 1.6,
                             marginBottom: '32px'
                         }}>

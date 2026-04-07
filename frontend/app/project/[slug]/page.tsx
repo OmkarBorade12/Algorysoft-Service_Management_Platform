@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
+import EmptyState from '@/components/ui/EmptyState';
 
 export default function ProjectDetail() {
     const { slug } = useParams();
@@ -30,10 +31,14 @@ export default function ProjectDetail() {
 
     if (!project) {
         return (
-            <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>
-                <h1 style={{ fontSize: '2rem', marginBottom: '16px' }}>Project Not Found</h1>
-                <p style={{ color: 'var(--text-muted)' }}>The project you're looking for doesn't exist.</p>
-                <Link href="/projects" className="btn-primary" style={{ marginTop: '24px' }}>Browse All Projects</Link>
+            <div className="container" style={{ padding: '80px 24px', textAlign: 'center' }}>
+                <EmptyState 
+                    imageNum={1}
+                    title="Project Not Found"
+                    description="The project you're looking for doesn't exist or has been removed. Browse our solutions to find what you need!"
+                    buttonText="Browse All Projects"
+                    buttonLink="/projects"
+                />
             </div>
         );
     }

@@ -13,6 +13,7 @@ import { fetchFeatures } from '@/store/slices/featuresSlice';
 import { fetchBasicCard } from '@/store/slices/pricingCardsSlice';
 import toast from 'react-hot-toast';
 import { FiSettings, FiCpu } from 'react-icons/fi';
+import EmptyState from '@/components/ui/EmptyState';
 
 // Simulated media gallery for each project
 function getMediaItems(slug: string) {
@@ -205,7 +206,10 @@ function ReviewList({ projectSlug }: { projectSlug: string }) {
     const projReviews = reviews.filter(r => r.projectSlug === projectSlug);
 
     if (!projReviews.length) return (
-        <p style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>No reviews yet. Be the first to review!</p>
+        <EmptyState 
+            imageNum={1}
+            imageOnly={true}
+        />
     );
 
     return (
@@ -298,10 +302,14 @@ export default function ProjectDetailPage() {
 
     if (!project) {
         return (
-            <div style={{ padding: '100px 24px', textAlign: 'center' }}>
-                <div style={{ fontSize: '3rem', marginBottom: 16 }}>🔍︎︎</div>
-                <h2>Project Not Found</h2>
-                <Link href="/projects" className="btn-primary" style={{ marginTop: 24, display: 'inline-flex' }}>← Back to Projects</Link>
+            <div className="container" style={{ padding: '80px 24px', textAlign: 'center' }}>
+                <EmptyState 
+                    imageNum={1}
+                    title="Project Not Found"
+                    description="The project you're looking for doesn't exist or has been removed. Browse our solutions to find what you need!"
+                    buttonText="Browse All Projects"
+                    buttonLink="/projects"
+                />
             </div>
         );
     }
@@ -734,29 +742,33 @@ export default function ProjectDetailPage() {
                     {/* Related Projects */}
                     <div style={{ marginTop: 64, paddingTop: 48, borderTop: '2px solid var(--border-solid)' }}>
                         <h2 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 32 }}>🔥︎︎ Similar Solutions</h2>
-                        <div className="products-grid">
-                            {projects.filter(p => p.category === project.category && p.id !== project.id).slice(0, 4).map(p => (
-                                <Link key={p.id} href={`/projects/${p.slug}`} className="product-card" style={{ textDecoration: 'none', display: 'block' }}>
-                                    <div className="product-card-image" style={{ overflow: 'hidden' }}>
-                                        {p.mainImage ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src={p.mainImage} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        ) : (
-                                            <span style={{ fontSize: '3rem' }}>{p.icon}</span>
-                                        )}
-                                    </div>
-                                    <div className="product-card-body">
-                                        <span className="badge badge-category" style={{ fontSize: '0.72rem' }}>{p.category}</span>
-                                        <h3 className="product-card-title">{p.title}</h3>
-                                        <div className="product-card-price">
-                                            <span className="price-discounted">{formatPrice(p.price, currency, usdRate)}</span>
-                                            <span className="price-original">{formatPrice(p.originalPrice, currency, usdRate)}</span>
-                                            <span className="badge badge-discount">-{p.discount}%</span>
+                        {projects.filter(p => p.category === project.category && p.id !== project.id).length > 0 ? (
+                            <div className="products-grid">
+                                {projects.filter(p => p.category === project.category && p.id !== project.id).slice(0, 4).map(p => (
+                                    <Link key={p.id} href={`/projects/${p.slug}`} className="product-card" style={{ textDecoration: 'none', display: 'block' }}>
+                                        <div className="product-card-image" style={{ overflow: 'hidden' }}>
+                                            {p.mainImage ? (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img src={p.mainImage} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            ) : (
+                                                <span style={{ fontSize: '3rem' }}>{p.icon}</span>
+                                            )}
                                         </div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
+                                        <div className="product-card-body">
+                                            <span className="badge badge-category" style={{ fontSize: '0.72rem' }}>{p.category}</span>
+                                            <h3 className="product-card-title">{p.title}</h3>
+                                            <div className="product-card-price">
+                                                <span className="price-discounted">{formatPrice(p.price, currency, usdRate)}</span>
+                                                <span className="price-original">{formatPrice(p.originalPrice, currency, usdRate)}</span>
+                                                <span className="badge badge-discount">-{p.discount}%</span>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : (
+                            <EmptyState imageNum={1} imageOnly={true} />
+                        )}
                     </div>
                 </div>
             </div>

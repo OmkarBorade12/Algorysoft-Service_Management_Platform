@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import styles from './WishlistSidebar.module.css';
 import Link from 'next/link';
 import { FiHeart, FiX, FiShoppingCart, FiPackage } from 'react-icons/fi';
+import EmptyState from '@/components/ui/EmptyState';
 
 export default function WishlistSidebar() {
     const dispatch = useAppDispatch();
@@ -28,13 +29,13 @@ export default function WishlistSidebar() {
                 </div>
 
                 {items.length === 0 ? (
-                    <div className={styles.empty}>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px', color: 'var(--pista-primary)' }}><FiHeart size={48} /></div>
-                        <p>Your wishlist is empty</p>
-                        <Link href="/projects" className="btn-primary" style={{ marginTop: '16px' }} onClick={() => dispatch(closeModals())}>
-                            Explore Projects
-                        </Link>
-                    </div>
+                    <EmptyState 
+                        imageNum={1}
+                        title="Your wishlist is empty"
+                        description="Save your favorite projects here to keep track of them!"
+                        buttonText="Explore Projects"
+                        buttonLink="/projects"
+                    />
                 ) : (
                     <div className={styles.items}>
                         {items.map((item) => (

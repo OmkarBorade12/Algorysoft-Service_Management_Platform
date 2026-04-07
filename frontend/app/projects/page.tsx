@@ -5,6 +5,7 @@ import { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import ProductCard from '@/components/products/ProductCard';
+import EmptyState from '@/components/ui/EmptyState';
 
 function ProjectsContent() {
     const searchParams = useSearchParams();
@@ -160,14 +161,13 @@ function ProjectsContent() {
                         ))}
                     </div>
                 ) : (
-                    <div className="no-results">
-                        <div className="no-results-icon">🔍︎︎</div>
-                        <h3 style={{ fontSize: '1.4rem', marginBottom: '12px' }}>No projects found</h3>
-                        <p>Try adjusting your filters or search query.</p>
-                        <button className="btn-secondary" style={{ marginTop: '24px' }} onClick={() => { setSearchQuery(''); setActiveCategory('all'); setPriceRange([0, 50000]); }}>
-                            Clear Filters
-                        </button>
-                    </div>
+                    <EmptyState 
+                        imageNum={1}
+                        title="No projects found"
+                        description="Try adjusting your filters or search query to find what you're looking for."
+                        buttonText="Clear All Filters"
+                        buttonLink="/projects"
+                    />
                 )}
             </main>
         </div>
