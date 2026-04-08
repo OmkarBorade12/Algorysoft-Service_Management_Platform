@@ -2,7 +2,7 @@
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import styles from './SocialAuth.module.css';
-import { FaGoogle } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 
 interface SocialAuthButtonsProps {
     mode: 'login' | 'register';
@@ -46,7 +46,7 @@ export default function SocialAuthButtons({ mode }: SocialAuthButtonsProps) {
                     id="btn-auth-google"
                 >
                     <span className={styles.socialIcon}>
-                        <FaGoogle size={18} />
+                        <FcGoogle size={24} />
                     </span>
                     <span className={styles.socialLabel}>Continue with Google</span>
                 </button>

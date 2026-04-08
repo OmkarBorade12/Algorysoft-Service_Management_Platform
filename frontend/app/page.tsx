@@ -14,6 +14,7 @@ import { fetchLandingStats } from '@/store/slices/statsSlice';
 
 const ProductSection = lazy(() => import('@/components/home/ProductSection'));
 const TestimonialsSection = lazy(() => import('@/components/home/TestimonialsSection'));
+const MapSection = lazy(() => import('@/components/home/MapSection'));
 const CTASection = lazy(() => import('@/components/home/CTASection'));
 
 const ProductSkeleton = () => (
@@ -111,6 +112,13 @@ export default function HomePage() {
       <ScrollReveal direction="zoom" delay={0} duration={0.6}>
         <Suspense fallback={<div style={{ height: '200px' }} />}>
           <TestimonialsSection />
+        </Suspense>
+      </ScrollReveal>
+
+      {/* Map Section — wireframe reveal */}
+      <ScrollReveal direction="wireframe" delay={0} duration={0.7}>
+        <Suspense fallback={<div style={{ height: '400px', background: 'var(--bg-secondary)', borderRadius: '28px', margin: '50px 0' }} />}>
+          <MapSection />
         </Suspense>
       </ScrollReveal>
 

@@ -65,6 +65,12 @@ export default function LoginModal() {
                     <button className={styles.closeBtn} onClick={() => dispatch(closeModals())}><FiX size={18} /></button>
                 </div>
 
+                <SocialAuthButtons mode="login" />
+
+                <div className={styles.divider} style={{ marginBottom: '24px' }}>
+                    <span>or sign in with email</span>
+                </div>
+
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label className="form-label">Email Address</label>
@@ -113,11 +119,6 @@ export default function LoginModal() {
                     </button>
                 </form>
 
-                <div className={styles.divider}>
-                    <span>or continue with</span>
-                </div>
-
-                <SocialAuthButtons mode="login" />
 
                 <p className={styles.switchText}>
                     Don&apos;t have an account?{' '}

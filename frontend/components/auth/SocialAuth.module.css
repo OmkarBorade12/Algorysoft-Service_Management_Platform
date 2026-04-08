@@ -119,22 +119,36 @@
 
 /* ══════════════ Google ═════════════════════════════════════════ */
 .google {
-    background: linear-gradient(145deg, #4285f418, #4285f40e);
-    border-color: #4285f440;
-    color: #3367d6;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    color: #3c4043;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    box-shadow: none;
+    transition: background-color .218s, border-color .218s, box-shadow .218s;
 }
 
 .google .socialIcon {
-    background: #fff;
-    color: #4285f4;
-    border: 1.5px solid #e0e0e0;
-    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.25);
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    width: auto;
+    height: auto;
+    margin-right: 4px;
 }
 
 .google:hover {
-    background: linear-gradient(145deg, #4285f428, #4285f418);
-    border-color: #4285f4;
-    box-shadow: 0 8px 24px #4285f430;
+    background-color: #f8f9fa;
+    border-color: #d2d4d7;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    transform: none;
+}
+
+.google:active {
+    background-color: #f1f3f4;
+    transform: none;
 }
 
 /* ── No responsive col collapse needed anymore ─────── */

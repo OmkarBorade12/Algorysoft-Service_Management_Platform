@@ -74,6 +74,12 @@ export default function RegisterModal() {
                     <button className={styles.closeBtn} onClick={() => dispatch(closeModals())}><FiX size={18} /></button>
                 </div>
 
+                <SocialAuthButtons mode="register" />
+
+                <div className={styles.divider} style={{ marginBottom: '24px' }}>
+                    <span>or register with email</span>
+                </div>
+
                 <form onSubmit={handleSubmit}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                         <div className="form-group">
@@ -119,11 +125,6 @@ export default function RegisterModal() {
                     </button>
                 </form>
 
-                <div className={styles.divider}>
-                    <span>or continue with</span>
-                </div>
-
-                <SocialAuthButtons mode="register" />
 
                 <p className={styles.switchText}>
                     Already have an account?{' '}
