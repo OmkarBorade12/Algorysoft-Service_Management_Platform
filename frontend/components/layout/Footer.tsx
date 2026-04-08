@@ -33,7 +33,20 @@ export default function Footer() {
                     <h4 className={styles.colTitle}>Quick Links</h4>
                     <ul className={styles.links}>
                         {['Home', 'About Us', 'Projects', 'Contact Us', 'FAQ'].map((link) => (
-                            <li key={link}><Link href={link === 'Home' ? '/' : `/${link.toLowerCase().replace(/ /g, '-')}`} className={styles.link} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><FiChevronRight size={13} style={{ color: 'var(--pista-primary)', flexShrink: 0 }} /> {link}</Link></li>
+                            <li key={link}>
+                                <Link 
+                                    href={
+                                        link === 'Home' ? '/' : 
+                                        link === 'About Us' ? '/about' : 
+                                        `/${link.toLowerCase().replace(/ /g, '-')}`
+                                    } 
+                                    className={styles.link} 
+                                    style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                                >
+                                    <FiChevronRight size={13} style={{ color: 'var(--pista-primary)', flexShrink: 0 }} /> 
+                                    {link}
+                                </Link>
+                            </li>
                         ))}
                     </ul>
                 </div>

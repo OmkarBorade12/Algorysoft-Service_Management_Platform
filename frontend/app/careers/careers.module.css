@@ -1,0 +1,129 @@
+.careersPage {
+    padding-top: 60px;
+    padding-bottom: 100px;
+}
+
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+    background: var(--gradient-hero);
+    border-radius: var(--radius-2xl);
+    margin-bottom: 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.heroTitle {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 900;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+}
+
+.heroSubtitle {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;
+    color: var(--text-secondary);
+}
+
+.section {
+    margin-bottom: 100px;
+}
+
+.sectionTitle {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.rolesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 80px;
+}
+
+.roleCard {
+    background: var(--bg-card);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    border: 1.5px solid var(--border-solid);
+    transition: all var(--transition-normal);
+}
+
+.roleCard:hover {
+    border-color: var(--pista-primary);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.roleBadge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--pista-xlight);
+    color: var(--pista-dark);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+.roleTitle {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.roleDesc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.applyLink {
+    color: var(--pista-primary);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.2s;
+}
+
+.roleCard:hover .applyLink {
+    gap: 12px;
+}
+
+.formSection {
+    background: var(--bg-secondary);
+    padding: 80px 40px;
+    border-radius: var(--radius-2xl);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.formCard {
+    background: #fff;
+    padding: 50px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .formCard {
+        padding: 30px 20px;
+    }
+}

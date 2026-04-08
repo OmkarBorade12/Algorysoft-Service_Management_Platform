@@ -9,6 +9,8 @@ import { FiX, FiUserPlus } from 'react-icons/fi';
 import { registerUser } from '@/lib/localUsers';
 import SocialAuthButtons from './SocialAuthButtons';
 
+import Link from 'next/link';
+
 export default function RegisterModal() {
     const dispatch = useAppDispatch();
     const [form, setForm] = useState({ firstName: '', lastName: '', email: '', mobile: '', city: '', password: '', confirmPassword: '' });
@@ -116,8 +118,8 @@ export default function RegisterModal() {
                     <div className={styles.checkboxRow}>
                         <input type="checkbox" id="terms" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
                         <label htmlFor="terms" className={styles.checkboxLabel}>
-                            I agree to the <a href="/terms-conditions" className={styles.policyLink}>Terms &amp; Conditions</a> and{' '}
-                            <a href="/privacy-policy" className={styles.policyLink}>Privacy Policy</a>
+                            I agree to the <Link href="/terms-conditions" className={styles.policyLink} onClick={() => dispatch(closeModals())}>Terms &amp; Conditions</Link> and{' '}
+                            <Link href="/privacy-policy" className={styles.policyLink} onClick={() => dispatch(closeModals())}>Privacy Policy</Link>
                         </label>
                     </div>
                     <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} disabled={loading}>

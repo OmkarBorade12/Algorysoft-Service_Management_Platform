@@ -11,7 +11,7 @@ import { setWishlistUser } from '@/store/slices/wishlistSlice';
 import CurrencyToggle from '@/components/ui/CurrencyToggle';
 import { PHONE } from '@/lib/data';
 import styles from './Header.module.css';
-import { FiClock, FiPhone, FiMessageCircle, FiSearch, FiHeart, FiShoppingCart, FiGrid, FiPackage, FiUser, FiKey, FiLogOut, FiX, FiMenu, FiHome, FiFolder, FiInfo, FiGlobe } from 'react-icons/fi';
+import { FiClock, FiPhone, FiMessageCircle, FiSearch, FiHeart, FiShoppingCart, FiGrid, FiPackage, FiUser, FiKey, FiLogOut, FiX, FiMenu, FiHome, FiFolder, FiInfo, FiGlobe, FiTarget } from 'react-icons/fi';
 import { FaChevronDown } from 'react-icons/fa';
 import { renderCategoryIcon } from '@/lib/icons';
 
@@ -138,6 +138,7 @@ export default function Header() {
 
                         <Link href="/projects" className={styles.navLink}>Projects</Link>
                         <Link href="/about" className={styles.navLink}>About</Link>
+                        <Link href="/careers" className={styles.navLink}>Careers</Link>
                         <Link href="/contact" className={styles.navLink}>Contact</Link>
                     </nav>
 
@@ -256,6 +257,7 @@ export default function Header() {
                             <Link href="/" className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())}><FiHome size={18} /> Home</Link>
                             <Link href="/projects" className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())}><FiFolder size={18} /> All Projects</Link>
                             <Link href="/about" className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())}><FiInfo size={18} /> About Us</Link>
+                            <Link href="/careers" className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())}><FiTarget size={18} /> Careers</Link>
                             <Link href="/contact" className={styles.mobileNavLink} onClick={() => dispatch(toggleMobileMenu())}><FiPhone size={18} /> Contact</Link>
                         </div>
 
