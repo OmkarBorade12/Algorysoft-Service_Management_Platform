@@ -304,15 +304,15 @@ export default function AdminProductsPage() {
 
     const handleImagesUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
-        if (files.length > 0 && (files.length < 2 || files.length > 10)) {
-            toast.error('Please upload between 2 and 10 images.');
+        if (files.length > 0 && (files.length < 2 || files.length > 20)) {
+            toast.error('Please upload between 2 and 20 images.');
             e.target.value = '';
             return;
         }
         const toastId = toast.loading('Compressing images...');
         Promise.all(files.map(file => compressImage(file)))
             .then(compressed => {
-                setForm((p: any) => ({ ...p, images: [...(p.images || []), ...compressed].slice(0, 10) }));
+                setForm((p: any) => ({ ...p, images: [...(p.images || []), ...compressed].slice(0, 20) }));
                 toast.success('Images added!', { id: toastId });
             })
             .catch(() => toast.error('Image processing failed.', { id: toastId }));
@@ -512,7 +512,7 @@ export default function AdminProductsPage() {
                             </div>
 
                             <div className="field-group">
-                                <label className="input-label">Gallery (2-10 Images)</label>
+                                <label className="input-label">Gallery (2-20 Images)</label>
                                 <div className="gallery-upload-grid">
                                     {form.images?.map((img, idx) => (
                                         <div key={idx} className="gallery-item-admin" onClick={() => setMaximizedImage({ index: idx, images: form.images || [] })}>
@@ -520,7 +520,7 @@ export default function AdminProductsPage() {
                                             <button onClick={(e) => { e.stopPropagation(); setForm({ ...form, images: form.images?.filter((_, i) => i !== idx) }); }} className="del-img"><FiTrash2 /></button>
                                         </div>
                                     ))}
-                                    {(!form.images || form.images.length < 10) && (
+                                    {(!form.images || form.images.length < 20) && (
                                         <button className="add-gallery-btn" onClick={() => document.getElementById('gal-upload')?.click()}><FiPlus /></button>
                                     )}
                                     <input id="gal-upload" type="file" hidden multiple accept="image/*" onChange={handleImagesUpload} />
