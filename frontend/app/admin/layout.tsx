@@ -103,7 +103,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
     return (
-        <div className="berry-admin-layout">
+        <div 
+            className="berry-admin-layout" 
+            style={{ 
+                //@ts-ignore
+                '--sidebar-width': (!isMobile && sidebarOpen) ? '260px' : '0px',
+                '--topbar-height': isMobile ? '64px' : '72px'
+            }}
+        >
             {/* Mobile backdrop */}
             {isMobile && sidebarOpen && (
                 <div 
@@ -182,7 +189,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Main Area */}
             <div 
                 className="berry-main" 
-                style={{ marginLeft: (!isMobile && sidebarOpen) ? '260px' : '0' }}
+                style={{ marginLeft: 'var(--sidebar-width)' }}
             >
                 <header className="berry-topbar">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>

@@ -1347,8 +1347,14 @@ input[type="range"]::-webkit-slider-thumb {
 
 @media (max-width: 480px) {
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 11px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .section-header {
+    width: 100%;
+    margin-bottom: 24px;
   }
 
   .btn-primary,

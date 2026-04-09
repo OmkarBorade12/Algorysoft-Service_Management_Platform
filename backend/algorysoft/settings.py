@@ -98,3 +98,11 @@ REST_FRAMEWORK = {
 # ── Allow large image payloads (base64 images in JSON can be 5-20MB) ──
 DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50 MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50 MB
+# ── Email Configuration (AlgorySoft) ──
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'algorysoft@gmail.com'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'iabillqfdmhympaf')
+DEFAULT_FROM_EMAIL = 'AlgorySoft <algorysoft@gmail.com>'

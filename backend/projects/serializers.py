@@ -3,12 +3,18 @@
 Serializers for the projects app models.
 """
 from rest_framework import serializers
-from .models import Category, Project, CustomRequest, Order, Feature, BasicCard, PricingCard
+from .models import Category, Project, CustomRequest, Order, Feature, BasicCard, PricingCard, Carousel
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        fields = '__all__'
+
+
+class CarouselSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Carousel
         fields = '__all__'
 
 

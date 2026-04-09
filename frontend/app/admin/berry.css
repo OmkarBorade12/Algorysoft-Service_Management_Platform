@@ -42,7 +42,7 @@
   left: 0;
   bottom: 0;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 5; /* Very low on desktop to allow content modals to overlay if needed */
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 0;
 }
@@ -127,7 +127,7 @@
   border-bottom: 1px solid var(--berry-grey-200);
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: 20; /* Below sidebar and modals */
   height: 72px;
 }
 
@@ -139,6 +139,8 @@
   transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 0;
   overflow: visible;
+  position: relative;
+  z-index: 1;
 }
 
 .berry-content {
@@ -286,6 +288,7 @@
   .berry-sidebar {
     transform: translateX(-100%);
     box-shadow: 4px 0 20px rgba(0,0,0,0.12);
+    z-index: 1000 !important; /* High on mobile as it's an overlay */
   }
   .berry-sidebar.open {
     transform: translateX(0);

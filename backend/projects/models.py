@@ -104,3 +104,20 @@ class Feature(models.Model):
 
     def __str__(self):
         return self.name
+
+class Carousel(models.Model):
+    TYPE_CHOICES = [('home', 'Home Hero'), ('product', 'Product Strip')]
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='home')
+    title = models.CharField(max_length=200, blank=True, null=True)
+    subtitle = models.CharField(max_length=500, blank=True, null=True)
+    text = models.CharField(max_length=500, blank=True, null=True) # for product strip
+    cta_text = models.CharField(max_length=200, blank=True, null=True)
+    cta_link = models.CharField(max_length=500, blank=True, null=True)
+    image = models.TextField(blank=True, null=True) # Data URL or path
+    bg_color = models.CharField(max_length=200, blank=True, null=True)
+    order = models.IntegerField(default=1)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.type} - {self.title or self.text} ({self.order})"

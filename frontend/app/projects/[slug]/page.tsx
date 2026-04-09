@@ -14,6 +14,7 @@ import { fetchBasicCard } from '@/store/slices/pricingCardsSlice';
 import toast from 'react-hot-toast';
 import { FiSettings, FiCpu } from 'react-icons/fi';
 import EmptyState from '@/components/ui/EmptyState';
+import ProductStripCarousel from '@/components/products/ProductStripCarousel';
 
 // Simulated media gallery for each project
 function getMediaItems(slug: string) {
@@ -299,6 +300,14 @@ export default function ProjectDetailPage() {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [isLightboxOpen, mediaItems.length]);
+
+    // Auto-open Requirement Form after 6 seconds
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowRequirement(true);
+        }, 6000); // 6 seconds
+        return () => clearTimeout(timer);
+    }, []);
 
     if (!project) {
         return (
@@ -588,6 +597,9 @@ export default function ProjectDetailPage() {
                         </div>
                     </div>
 
+                    {/* ── Dynamic Product Strip Carousel ── */}
+                    <ProductStripCarousel />
+
                     {/* ── Full-Width Pricing Tier Section ── */}
                     <div style={{
                         marginTop: 56,
@@ -682,43 +694,83 @@ export default function ProjectDetailPage() {
                                             ))}
                                         </ul>
 
-                                        {/* Add to Cart button */}
-                                        <button
-                                            onClick={e => {
-                                                e.stopPropagation();
-                                                setSelectedTier(tier.key);
-                                                // Tier price is standalone — base product price is NOT added
-                                                const tp = tier.data.price;
-                                                dispatch(addToCart({
-                                                    id: Number(`${project.id}${tier.key === 'Basic' ? 1 : tier.key === 'Silver' ? 2 : 3}`),
-                                                    title: `${project.title}`,
-                                                    price: tp,                      // only the tier's own price
-                                                    originalPrice: tp,
-                                                    discount: 0,
-                                                    icon: project.icon,
-                                                    slug: project.slug,
-                                                    tier: tier.key,
-                                                    tierPrice: tp,
-                                                }));
-                                                toast.success(`✨︎︎ ${tier.label} added to cart!`, {
-                                                    style: { background: tier.color, color: '#fff', fontWeight: 700 },
-                                                });
-                                            }}
-                                            style={{
-                                                width: '100%', padding: '12px 0',
-                                                borderRadius: 12,
-                                                border: `2px solid ${tier.color}`,
-                                                background: isSelected ? tier.color : 'transparent',
-                                                color: isSelected ? '#fff' : tier.color,
-                                                fontWeight: 800, fontSize: '0.88rem',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.2s ease',
-                                                letterSpacing: '0.02em',
-                                                boxShadow: isSelected ? `0 4px 14px ${tier.glow}` : 'none',
-                                            }}
-                                        >
-                                            {isSelected ? `🛒︎︎ Add ${tier.key} to Cart` : `Add ${tier.key}`}
-                                        </button>
+                                        {/* Tier Actions */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                            {/* Buy Now button */}
+                                            <button
+                                                onClick={e => {
+                                                    e.stopPropagation();
+                                                    setSelectedTier(tier.key);
+                                                    const tp = tier.data.price;
+                                                    dispatch(clearCart());
+                                                    dispatch(addToCart({
+                                                        id: Number(`${project.id}${tier.key === 'Basic' ? 1 : tier.key === 'Silver' ? 2 : 3}`),
+                                                        title: `${project.title}`,
+                                                        price: tp,
+                                                        originalPrice: tp,
+                                                        discount: 0,
+                                                        icon: project.icon,
+                                                        slug: project.slug,
+                                                        tier: tier.key,
+                                                        tierPrice: tp,
+                                                    }));
+                                                    toast.success(`Redirecting to checkout... 🚀︎︎`, {
+                                                        style: { background: tier.color, color: '#fff', fontWeight: 700 },
+                                                    });
+                                                    router.push('/checkout');
+                                                }}
+                                                style={{
+                                                    width: '100%', padding: '12px 0',
+                                                    borderRadius: 12,
+                                                    border: 'none',
+                                                    background: tier.color,
+                                                    color: '#fff',
+                                                    fontWeight: 800, fontSize: '0.88rem',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease',
+                                                    letterSpacing: '0.02em',
+                                                    boxShadow: `0 4px 14px ${tier.glow}`,
+                                                }}
+                                            >
+                                                ⚡︎︎ Buy {tier.key} Now
+                                            </button>
+
+                                            {/* Add to Cart button */}
+                                            <button
+                                                onClick={e => {
+                                                    e.stopPropagation();
+                                                    setSelectedTier(tier.key);
+                                                    const tp = tier.data.price;
+                                                    dispatch(addToCart({
+                                                        id: Number(`${project.id}${tier.key === 'Basic' ? 1 : tier.key === 'Silver' ? 2 : 3}`),
+                                                        title: `${project.title}`,
+                                                        price: tp,
+                                                        originalPrice: tp,
+                                                        discount: 0,
+                                                        icon: project.icon,
+                                                        slug: project.slug,
+                                                        tier: tier.key,
+                                                        tierPrice: tp,
+                                                    }));
+                                                    toast.success(`✨︎︎ ${tier.label} added to cart!`, {
+                                                        style: { background: tier.color, color: '#fff', fontWeight: 700 },
+                                                    });
+                                                }}
+                                                style={{
+                                                    width: '100%', padding: '11px 0',
+                                                    borderRadius: 12,
+                                                    border: `2px solid ${tier.color}`,
+                                                    background: 'transparent',
+                                                    color: tier.color,
+                                                    fontWeight: 800, fontSize: '0.88rem',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease',
+                                                    letterSpacing: '0.02em',
+                                                }}
+                                            >
+                                                🛒︎︎ Add {tier.key} to Cart
+                                            </button>
+                                        </div>
                                     </div>
                                 );
                             })}

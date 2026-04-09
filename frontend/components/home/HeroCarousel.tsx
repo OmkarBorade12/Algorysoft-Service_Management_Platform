@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useAppSelector } from '@/hooks/useRedux';
-import type { CarouselSlide } from '@/store/slices/carouselSlice';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { fetchCarousel, type CarouselSlide } from '@/store/slices/carouselSlice';
 import { FiStar } from 'react-icons/fi';
 
 const DEFAULT_SLIDES: CarouselSlide[] = [
@@ -86,7 +86,13 @@ function CarouselSlideItem({ slide, active }: { slide: CarouselSlide; active: bo
 }
 
 export default function HeroCarousel() {
-    const { slides } = useAppSelector(s => s.carousel);
+    const dispatch = useAppDispatch();
+    const { slides, status } = useAppSelector(s => s.carousel);
+
+    useEffect(() => {
+        if (status === 'idle') dispatch(fetchCarousel());
+    }, [dispatch, status]);
+
     const activeSlides = (slides.length > 0 ? slides : DEFAULT_SLIDES)
         .filter(s => s.isActive)
         .sort((a, b) => a.order - b.order);

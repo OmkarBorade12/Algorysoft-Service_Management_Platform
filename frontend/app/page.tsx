@@ -68,8 +68,8 @@ export default function HomePage() {
         <CategoryCarousel />
       </ScrollReveal>
 
-      {/* Latest Work — wireframe reveal */}
-      <ScrollReveal direction="wireframe" delay={0} duration={0.7}>
+      {/* Latest Work — standard fade up reveal */}
+      <ScrollReveal direction="up" delay={0} duration={0.6}>
         <section style={{ padding: '50px 0', background: 'var(--bg-secondary)' }}>
           <div className="container">
             <Suspense fallback={<ProductSkeleton />}>
@@ -85,8 +85,8 @@ export default function HomePage() {
         </section>
       </ScrollReveal>
 
-      {/* Most Popular — wireframe reveal */}
-      <ScrollReveal direction="wireframe" delay={0} duration={0.7}>
+      {/* Most Popular — standard fade up reveal */}
+      <ScrollReveal direction="up" delay={0} duration={0.6}>
         <section style={{ padding: '50px 0', background: 'var(--bg-primary)' }}>
           <div className="container">
             <Suspense fallback={<ProductSkeleton />}>

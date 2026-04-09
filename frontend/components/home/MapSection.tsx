@@ -43,23 +43,23 @@ export default function MapSection() {
                         loading="lazy"
                         allowFullScreen
                     ></iframe>
-                    
-                    {/* Floating Info Card */}
-                    <div 
-                        className={styles.infoCard}
-                        onClick={() => window.open(googleMapsUrl, '_blank')}
-                    >
-                        <div className={styles.iconWrapper}>
-                            <FiMapPin size={28} />
-                        </div>
-                        <div className={styles.content}>
-                            <div className={styles.title}>Registered Office</div>
-                            <div className={styles.addressText}>{address}</div>
-                        </div>
-                        <div className={styles.directionBtn}>
-                            <FiNavigation />
-                            Get Directions
-                        </div>
+                </div>
+                
+                {/* Office Info Card - Now below the map */}
+                <div 
+                    className={styles.infoCard}
+                    onClick={() => window.open(googleMapsUrl, '_blank')}
+                >
+                    <div className={styles.iconWrapper}>
+                        <FiMapPin size={28} />
+                    </div>
+                    <div className={styles.content}>
+                        <div className={styles.title}>Registered Office</div>
+                        <div className={styles.addressText}>{address}</div>
+                    </div>
+                    <div className={styles.directionBtn}>
+                        <FiNavigation />
+                        Get Directions
                     </div>
                 </div>
             </div>
