@@ -8,10 +8,11 @@ on:
 
 jobs:
   deploy:
+    environment: production
     runs-on: ubuntu-latest
     env:
-      SERVER_IP: ${{ secrets.SERVER_IP }}
-      SERVER_USER: ${{ secrets.SERVER_USER }}
+      SERVER_IP: ${{ secrets.SERVER_IP || vars.SERVER_IP }}
+      SERVER_USER: ${{ secrets.SERVER_USER || vars.SERVER_USER }}
       # Frontend env vars
       RAZORPAY_KEY_ID: ${{ secrets.RAZORPAY_KEY_ID }}
       RAZORPAY_KEY_SECRET: ${{ secrets.RAZORPAY_KEY_SECRET }}
@@ -34,9 +35,15 @@ jobs:
 
       - name: Verify Secrets
         run: |
-          if [ -z "$SERVER_IP" ]; then echo "❌ SERVER_IP missing"; exit 1; fi
-          if [ -z "$SERVER_USER" ]; then echo "❌ SERVER_USER missing"; exit 1; fi
-          echo "✅ Basic connection secrets are present."
+          if [ -z "$SERVER_IP" ]; then 
+            echo "❌ SERVER_IP missing. Add it to Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+          if [ -z "$SERVER_USER" ]; then 
+            echo "❌ SERVER_USER missing. Add it to Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+          echo "✅ Connection secrets (IP and User) are present."
 
       - name: Add Server to Known Hosts
         run: |
