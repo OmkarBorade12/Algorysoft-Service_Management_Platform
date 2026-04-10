@@ -94,7 +94,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ['https://algorysoft.com', 'http://algorysoft.com', 'http://localhost:3000']
+CSRF_TRUSTED_ORIGINS = ['https://algorysoft.com', 'http://algorysoft.com', 'https://api.algorysoft.com', 'http://localhost:3000']
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', 'rest_framework.filters.SearchFilter', 'rest_framework.filters.OrderingFilter'],
