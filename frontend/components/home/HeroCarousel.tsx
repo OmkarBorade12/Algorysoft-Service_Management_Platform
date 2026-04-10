@@ -3,7 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { fetchCarousel, type CarouselSlide } from '@/store/slices/carouselSlice';
-import { FiStar } from 'react-icons/fi';
+import { FiStar, FiZoomIn } from 'react-icons/fi';
+import ImageLightbox from '@/components/ui/ImageLightbox';
+
 
 const DEFAULT_SLIDES: CarouselSlide[] = [
     {
@@ -39,6 +41,8 @@ const DEFAULT_SLIDES: CarouselSlide[] = [
 ];
 
 function CarouselSlideItem({ slide, active }: { slide: CarouselSlide; active: boolean }) {
+    const [lightboxOpen, setLightboxOpen] = useState(false);
+
     return (
         <div
             className={`hero-carousel-slide ${active ? 'active' : ''}`}
@@ -56,8 +60,24 @@ function CarouselSlideItem({ slide, active }: { slide: CarouselSlide; active: bo
                 <div className="hero-carousel-right">
                     <div className="hero-carousel-visual">
                         {slide.image ? (
-                            <div className="hero-carousel-image-container animate-pulse-soft" style={{ width: '100%', height: '100%', borderRadius: 20, overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.4)' }}>
+                            <div 
+                                className="hero-carousel-image-container animate-pulse-soft" 
+                                style={{ 
+                                    width: '100%', 
+                                    height: '100%', 
+                                    borderRadius: 20, 
+                                    overflow: 'hidden', 
+                                    boxShadow: '0 20px 40px rgba(0,0,0,0.15)', 
+                                    border: '1px solid rgba(255,255,255,0.4)',
+                                    cursor: 'zoom-in',
+                                    position: 'relative'
+                                }}
+                                onClick={() => setLightboxOpen(true)}
+                            >
                                 <img src={slide.image} alt={slide.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <div className="image-overlay-hint">
+                                    <FiZoomIn size={24} />
+                                </div>
                             </div>
                         ) : (
                             <div className="hero-carousel-window">
@@ -81,6 +101,35 @@ function CarouselSlideItem({ slide, active }: { slide: CarouselSlide; active: bo
                     </div>
                 </div>
             </div>
+            
+            {slide.image && (
+                <ImageLightbox 
+                    isOpen={lightboxOpen} 
+                    onClose={() => setLightboxOpen(false)} 
+                    imageSrc={slide.image} 
+                    altText={slide.title} 
+                />
+            )}
+
+            <style jsx>{`
+                .image-overlay-hint {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.2);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                }
+                .hero-carousel-image-container:hover .image-overlay-hint {
+                    opacity: 1;
+                }
+            `}</style>
         </div>
     );
 }

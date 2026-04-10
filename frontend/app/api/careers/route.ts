@@ -3,10 +3,17 @@ import nodemailer from 'nodemailer';
 
 export async function POST(req: Request) {
     try {
-        const { name, email, phone, position, resume, portfolio, message } = await req.json();
+        const formData = await req.formData();
+        const name = formData.get('name') as string;
+        const email = formData.get('email') as string;
+        const phone = formData.get('phone') as string;
+        const position = formData.get('position') as string;
+        const portfolio = formData.get('portfolio') as string;
+        const message = formData.get('message') as string;
+        const resumeFile = formData.get('resume') as File | null;
 
-        if (!name || !email || !position) {
-            return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
+        if (!name || !email || !position || !resumeFile) {
+            return NextResponse.json({ message: 'Missing required fields or resume file' }, { status: 400 });
         }
 
         const emailPass = (process.env.EMAIL_PASS || '').trim();
@@ -26,6 +33,10 @@ export async function POST(req: Request) {
             },
         });
 
+        // Convert file buffer for nodemailer
+        const bytes = await resumeFile.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+
         const mailOptions = {
             from: `"Career Application — ${name}" <${process.env.EMAIL_USER || 'algorysoft@gmail.com'}>`,
             to: 'algorysoft@gmail.com',
@@ -38,8 +49,8 @@ export async function POST(req: Request) {
                     <p><strong>Email:</strong> ${email}</p>
                     <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
                     <p><strong>Position:</strong> ${position}</p>
-                    <p><strong>Resume Link:</strong> <a href="${resume}">${resume}</a></p>
                     <p><strong>Portfolio/GitHub:</strong> ${portfolio || 'N/A'}</p>
+                    <p style="color: #6db03a; font-weight: bold;">📎 Resume attached to this email</p>
                     <hr style="border: 1px solid #f1f5f9; margin: 20px 0;">
                     <p><strong>Applicant Message:</strong></p>
                     <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; color: #334155;">
@@ -47,6 +58,12 @@ export async function POST(req: Request) {
                     </div>
                 </div>
             `,
+            attachments: [
+                {
+                    filename: resumeFile.name,
+                    content: buffer,
+                }
+            ]
         };
 
         await transporter.sendMail(mailOptions);

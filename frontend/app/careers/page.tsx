@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { FiBriefcase, FiArrowRight, FiSend, FiCheckCircle } from 'react-icons/fi';
+import { FiBriefcase, FiArrowRight, FiSend, FiCheckCircle, FiUpload, FiFileText, FiX } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import styles from './careers.module.css';
 
@@ -10,10 +10,10 @@ const CareersPage = () => {
         email: '',
         phone: '',
         position: '',
-        resume: '',
         portfolio: '',
         message: ''
     });
+    const [resumeFile, setResumeFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
@@ -22,13 +22,25 @@ const CareersPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!resumeFile) {
+            toast.error('Please upload your resume / CV');
+            return;
+        }
         setLoading(true);
 
         try {
+            const formData = new FormData();
+            formData.append('name', form.name);
+            formData.append('email', form.email);
+            formData.append('phone', form.phone);
+            formData.append('position', form.position);
+            formData.append('portfolio', form.portfolio);
+            formData.append('message', form.message);
+            formData.append('resume', resumeFile);
+
             const res = await fetch('/api/careers', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form)
+                body: formData
             });
 
             if (res.ok) {
@@ -127,12 +139,42 @@ const CareersPage = () => {
                                         <option value="Other">Other / General Interest</option>
                                     </select>
                                 </div>
-                                <div className="form-group">
-                                    <label className="form-label">Resume / CV Link (Google Drive/Dropbox)</label>
-                                    <input type="url" className="form-input" placeholder="https://..." value={form.resume} onChange={update('resume')} required />
+                                <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                                    <label className="form-label">Resume / CV (PDF, DOCX)</label>
+                                    <div className={styles.fileUploadContainer}>
+                                        <input
+                                            type="file"
+                                            id="resume-upload"
+                                            className={styles.hiddenInput}
+                                            accept=".pdf,.doc,.docx"
+                                            onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
+                                            required
+                                        />
+                                        <label htmlFor="resume-upload" className={styles.filePicker}>
+                                            {resumeFile ? (
+                                                <div className={styles.fileInfo}>
+                                                    <FiFileText size={20} />
+                                                    <span className={styles.fileName}>{resumeFile.name}</span>
+                                                    <button 
+                                                        type="button" 
+                                                        className={styles.removeFile} 
+                                                        onClick={(e) => { e.preventDefault(); setResumeFile(null); }}
+                                                    >
+                                                        <FiX />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className={styles.uploadPlaceholder}>
+                                                    <FiUpload size={24} />
+                                                    <span>Click to upload or drag & drop</span>
+                                                    <small>PDF, DOCX (Max 5MB)</small>
+                                                </div>
+                                            )}
+                                        </label>
+                                    </div>
                                 </div>
-                                <div className="form-group">
-                                    <label className="form-label">Portfolio or GitHub Link</label>
+                                <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                                    <label className="form-label">Portfolio or GitHub Link (Optional)</label>
                                     <input type="url" className="form-input" placeholder="https://..." value={form.portfolio} onChange={update('portfolio')} />
                                 </div>
                             </div>

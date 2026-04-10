@@ -1,12 +1,13 @@
-'use client';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { fetchCarousel } from '@/store/slices/carouselSlice';
-import { FiCheckCircle } from 'react-icons/fi';
+import { FiCheckCircle, FiZoomIn } from 'react-icons/fi';
+import ImageLightbox from '@/components/ui/ImageLightbox';
 
 export default function ProductStripCarousel() {
     const dispatch = useAppDispatch();
     const { productSlides, status } = useAppSelector(s => s.carousel);
+    const [lightbox, setLightbox] = useState({ open: false, src: '', text: '' });
 
     useEffect(() => {
         if (status === 'idle') dispatch(fetchCarousel());
@@ -23,14 +24,31 @@ export default function ProductStripCarousel() {
         <div className="product-strip-marquee">
             <div className="marquee-content">
                 {displaySlides.map((slide, i) => (
-                    <div key={`${slide.id}-${i}`} className="marquee-item">
+                    <div 
+                        key={`${slide.id}-${i}`} 
+                        className="marquee-item"
+                        onClick={() => slide.image && setLightbox({ open: true, src: slide.image, text: slide.text || '' })}
+                        style={{ cursor: slide.image ? 'zoom-in' : 'default' }}
+                    >
                         {slide.image && (
-                            <img src={slide.image} alt="" className="marquee-banner" />
+                            <div className="marquee-image-container">
+                                <img src={slide.image} alt="" className="marquee-banner" />
+                                <div className="marquee-zoom-overlay">
+                                    <FiZoomIn size={20} />
+                                </div>
+                            </div>
                         )}
                         {slide.text && <span className="marquee-text">{slide.text}</span>}
                     </div>
                 ))}
             </div>
+
+            <ImageLightbox 
+                isOpen={lightbox.open} 
+                onClose={() => setLightbox({ ...lightbox, open: false })} 
+                imageSrc={lightbox.src} 
+                altText={lightbox.text} 
+            />
 
             <style jsx>{`
                 .product-strip-marquee {
@@ -70,6 +88,32 @@ export default function ProductStripCarousel() {
                     border-radius: 12px;
                     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                     filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+                }
+
+                .marquee-image-container {
+                    position: relative;
+                    overflow: hidden;
+                    border-radius: 12px;
+                }
+
+                .marquee-zoom-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.2);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                    border-radius: 12px;
+                }
+
+                .marquee-item:hover .marquee-zoom-overlay {
+                    opacity: 1;
                 }
 
                 .marquee-item:hover .marquee-banner {
