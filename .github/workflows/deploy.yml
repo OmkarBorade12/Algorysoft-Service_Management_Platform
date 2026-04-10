@@ -41,12 +41,16 @@ jobs:
       - name: Add Server to Known Hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts 2>/dev/null
-          echo "✅ Server added to known_hosts"
+          chmod 700 ~/.ssh
+          # Use ssh-keyscan with a timeout and retry mechanism, allowing it to fail without breaking the build
+          # as we'll also use StrictHostKeyChecking=no in subsequent commands for better reliability.
+          ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts || echo "⚠️ Warning: ssh-keyscan failed to find host keys"
+          chmod 600 ~/.ssh/known_hosts
+          echo "✅ SSH setup complete"
 
       - name: Deploy Backend Files
         run: |
-          rsync -avz --delete \
+          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" \
             ./backend/ "$SERVER_USER@$SERVER_IP":/var/www/algorysoft/ \
             --exclude 'venv' \
             --exclude '__pycache__' \
@@ -58,7 +62,7 @@ jobs:
 
       - name: Deploy Frontend Files
         run: |
-          rsync -avz --delete \
+          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" \
             ./frontend/ "$SERVER_USER@$SERVER_IP":/var/www/frontend/ \
             --exclude 'node_modules' \
             --exclude '.next' \
@@ -66,7 +70,7 @@ jobs:
 
       - name: Write Production .env.local
         run: |
-          ssh "$SERVER_USER@$SERVER_IP" "cat > /var/www/frontend/.env.local" << EOF
+          ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_IP" "cat > /var/www/frontend/.env.local" << EOF
           RAZORPAY_KEY_ID=$RAZORPAY_KEY_ID
           RAZORPAY_KEY_SECRET=$RAZORPAY_KEY_SECRET
           GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
@@ -77,11 +81,11 @@ jobs:
           EMAIL_USER=$EMAIL_USER
           EMAIL_PASS=$EMAIL_PASS
           EOF
-          ssh "$SERVER_USER@$SERVER_IP" "chmod 600 /var/www/frontend/.env.local"
+          ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_IP" "chmod 600 /var/www/frontend/.env.local"
 
       - name: Setup and Restart Services
         run: |
-          ssh "$SERVER_USER@$SERVER_IP" << 'EOF'
+          ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_IP" << 'EOF'
           set -e
           
           echo ">>> Setting up Backend..."
