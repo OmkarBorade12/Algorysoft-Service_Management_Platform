@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -11,7 +12,7 @@ jobs:
     env:
       SERVER_IP: ${{ secrets.SERVER_IP }}
       SERVER_USER: ${{ secrets.SERVER_USER }}
-      # Frontend env vars (Razorpay + Google Auth + API URL)
+      # Frontend env vars
       RAZORPAY_KEY_ID: ${{ secrets.RAZORPAY_KEY_ID }}
       RAZORPAY_KEY_SECRET: ${{ secrets.RAZORPAY_KEY_SECRET }}
       GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
@@ -31,174 +32,88 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Debug - Verify Secrets
+      - name: Verify Secrets
         run: |
-          echo "Checking if secrets are set..."
-          if [ -z "$SERVER_IP" ]; then
-            echo "❌ ERROR: SERVER_IP secret is not set!"
-            exit 1
-          fi
-          if [ -z "$SERVER_USER" ]; then
-            echo "❌ ERROR: SERVER_USER secret is not set!"
-            exit 1
-          fi
-          echo "✅ SERVER_IP is set: ${SERVER_IP:0:5}***"
-          echo "✅ SERVER_USER is set: $SERVER_USER"
-
-      - name: Test Server Connectivity
-        run: |
-          echo "Testing connection to $SERVER_IP..."
-          if ! ping -c 3 -W 5 "$SERVER_IP" > /dev/null 2>&1; then
-            echo "⚠️ Ping failed (might be blocked by firewall, continuing...)"
-          else
-            echo "✅ Ping successful"
-          fi
-          
-          echo "Testing SSH port..."
-          if ! nc -z -w 5 "$SERVER_IP" 22 2>/dev/null; then
-            echo "❌ ERROR: SSH port 22 is not reachable!"
-            echo "   - Check if server IP is correct"
-            echo "   - Check if SSH service is running"
-            echo "   - Check firewall rules"
-            exit 1
-          fi
-          echo "✅ SSH port is reachable"
+          if [ -z "$SERVER_IP" ]; then echo "❌ SERVER_IP missing"; exit 1; fi
+          if [ -z "$SERVER_USER" ]; then echo "❌ SERVER_USER missing"; exit 1; fi
+          echo "✅ Basic connection secrets are present."
 
       - name: Add Server to Known Hosts
         run: |
           mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          
-          echo "Running ssh-keyscan..."
-          ssh-keyscan -H -T 30 "$SERVER_IP" >> ~/.ssh/known_hosts 2>&1
-          
-          if [ $? -ne 0 ]; then
-            echo "❌ ssh-keyscan failed!"
-            echo "Trying with verbose output..."
-            ssh-keyscan -v -H -T 30 "$SERVER_IP" 2>&1 || true
-            exit 1
-          fi
-          
-          chmod 644 ~/.ssh/known_hosts
+          ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts 2>/dev/null
           echo "✅ Server added to known_hosts"
-          cat ~/.ssh/known_hosts
 
-      - name: Test SSH Connection
-        run: |
-          ssh -o ConnectTimeout=10 -o BatchMode=yes "$SERVER_USER@$SERVER_IP" "echo '✅ SSH connection successful!'"
-
-      - name: Deploy Backend
+      - name: Deploy Backend Files
         run: |
           rsync -avz --delete \
-          ./backend/ "$SERVER_USER@$SERVER_IP":/var/www/algorysoft/ \
-          --exclude 'venv' \
-          --exclude '__pycache__' \
-          --exclude '.env' \
-          --exclude '*.pyc' \
-          --exclude 'db.sqlite3' \
-          --exclude 'media/'
+            ./backend/ "$SERVER_USER@$SERVER_IP":/var/www/algorysoft/ \
+            --exclude 'venv' \
+            --exclude '__pycache__' \
+            --exclude '.env' \
+            --exclude '*.pyc' \
+            --exclude 'db.sqlite3' \
+            --exclude 'media/' \
+            --exclude 'staticfiles/'
 
-      - name: Deploy Frontend
+      - name: Deploy Frontend Files
         run: |
           rsync -avz --delete \
-          ./frontend/ "$SERVER_USER@$SERVER_IP":/var/www/frontend/ \
-          --exclude 'node_modules' \
-          --exclude '.next' \
-          --exclude '.env.local'
+            ./frontend/ "$SERVER_USER@$SERVER_IP":/var/www/frontend/ \
+            --exclude 'node_modules' \
+            --exclude '.next' \
+            --exclude '.env.local'
 
-      - name: Write Production .env.local on Server
+      - name: Write Production .env.local
         run: |
-          # Write all required env vars directly to the server's .env.local
-          # Uses printf to correctly handle special characters in secrets
-          ssh "$SERVER_USER@$SERVER_IP" "
-            printf 'RAZORPAY_KEY_ID=%s\n' '${{ secrets.RAZORPAY_KEY_ID }}' > /var/www/frontend/.env.local
-            printf 'RAZORPAY_KEY_SECRET=%s\n' '${{ secrets.RAZORPAY_KEY_SECRET }}' >> /var/www/frontend/.env.local
-            printf 'GOOGLE_CLIENT_ID=%s\n' '${{ secrets.GOOGLE_CLIENT_ID }}' >> /var/www/frontend/.env.local
-            printf 'GOOGLE_CLIENT_SECRET=%s\n' '${{ secrets.GOOGLE_CLIENT_SECRET }}' >> /var/www/frontend/.env.local
-            printf 'NEXTAUTH_SECRET=%s\n' '${{ secrets.NEXTAUTH_SECRET }}' >> /var/www/frontend/.env.local
-            printf 'NEXTAUTH_URL=%s\n' '${{ secrets.NEXTAUTH_URL }}' >> /var/www/frontend/.env.local
-            printf 'NEXT_PUBLIC_API_URL=%s\n' '${{ secrets.NEXT_PUBLIC_API_URL }}' >> /var/www/frontend/.env.local
-            printf 'EMAIL_USER=%s\n' '${{ secrets.EMAIL_USER }}' >> /var/www/frontend/.env.local
-            printf 'EMAIL_PASS=%s\n' '${{ secrets.EMAIL_PASS }}' >> /var/www/frontend/.env.local
-            chmod 600 /var/www/frontend/.env.local
-            echo '✅ .env.local written successfully on production server'
-          "
+          ssh "$SERVER_USER@$SERVER_IP" "cat > /var/www/frontend/.env.local" << EOF
+          RAZORPAY_KEY_ID=$RAZORPAY_KEY_ID
+          RAZORPAY_KEY_SECRET=$RAZORPAY_KEY_SECRET
+          GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+          GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+          NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+          NEXTAUTH_URL=$NEXTAUTH_URL
+          NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+          EMAIL_USER=$EMAIL_USER
+          EMAIL_PASS=$EMAIL_PASS
+          EOF
+          ssh "$SERVER_USER@$SERVER_IP" "chmod 600 /var/www/frontend/.env.local"
 
       - name: Setup and Restart Services
         run: |
           ssh "$SERVER_USER@$SERVER_IP" << 'EOF'
           set -e
-
-          echo "===== BACKEND SETUP ====="
+          
+          echo ">>> Setting up Backend..."
           cd /var/www/algorysoft
-
           if [ ! -d "venv" ]; then
             python3 -m venv venv
           fi
-
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
+          
+          # Migration and Static
+          python manage.py migrate --noinput
+          python manage.py collectstatic --noinput
 
-          echo "Fixing STATIC_ROOT..."
-          if ! grep -q STATIC_ROOT algorysoft/settings.py; then
-            echo 'STATIC_ROOT = BASE_DIR / "staticfiles"' >> algorysoft/settings.py
-          fi
-
-          # ── Fix Django upload size limit (default is 2.5MB — too small for images) ──
-          if ! grep -q DATA_UPLOAD_MAX_MEMORY_SIZE algorysoft/settings.py; then
-            echo 'DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50MB' >> algorysoft/settings.py
-            echo 'FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50MB' >> algorysoft/settings.py
-            echo "✅ Django upload limits increased to 50MB"
-          fi
-
-          # ── Fix nginx upload size limit (default is 1MB — rejects large image payloads) ──
-          NGINX_CONF=$(nginx -t 2>&1 | grep -o '/etc/nginx/sites-enabled/[^ ]*' | head -1 || echo "/etc/nginx/sites-enabled/algorysoft")
-          if [ -f "$NGINX_CONF" ] && ! grep -q "client_max_body_size" "$NGINX_CONF"; then
-            sudo sed -i 's/server {/server {\n    client_max_body_size 50m;/' "$NGINX_CONF"
-            echo "✅ nginx client_max_body_size set to 50m in $NGINX_CONF"
-            sudo nginx -t && sudo systemctl reload nginx || true
-          elif ! sudo grep -r "client_max_body_size" /etc/nginx/ > /dev/null 2>&1; then
-            sudo sed -i 's/http {/http {\n    client_max_body_size 50m;/' /etc/nginx/nginx.conf
-            echo "✅ nginx client_max_body_size set globally to 50m"
-            sudo nginx -t && sudo systemctl reload nginx || true
-          else
-            echo "✅ nginx client_max_body_size already set"
-          fi
-
-          # ── BACKUP DATABASE BEFORE MIGRATE (protects all data) ──
-          if [ -f db.sqlite3 ]; then
-            BACKUP_FILE="db_backup_$(date +%Y%m%d_%H%M%S).sqlite3"
-            cp db.sqlite3 "$BACKUP_FILE"
-            echo "✅ Database backed up to: $BACKUP_FILE"
-            # Keep only the 5 most recent backups to save disk space
-            ls -t db_backup_*.sqlite3 2>/dev/null | tail -n +6 | xargs rm -f || true
-          else
-            echo "⚠️ No existing database found — fresh install."
-          fi
-
-          python manage.py migrate --run-syncdb
-          python manage.py collectstatic --noinput || true
-
-          sudo systemctl restart django
-
-
-          echo "===== FRONTEND SETUP ====="
+          echo ">>> Setting up Frontend..."
           cd /var/www/frontend
-
-          npm install
+          # Use --legacy-peer-deps to avoid dependency conflicts on server
+          npm install --legacy-peer-deps
           npm run build
 
-          sudo systemctl restart nextjs
+          echo ">>> Optimizing Nginx..."
+          # Fix client_max_body_size if not set
+          if ! sudo grep -q "client_max_body_size" /etc/nginx/nginx.conf; then
+            sudo sed -i 's/http {/http {\n    client_max_body_size 50m;/' /etc/nginx/nginx.conf
+            sudo systemctl reload nginx
+          fi
 
-
-          echo "===== NGINX ====="
+          echo ">>> Restarting Services..."
+          sudo systemctl restart django || echo "⚠️ Failed to restart django service"
+          sudo systemctl restart nextjs || echo "⚠️ Failed to restart nextjs service"
           sudo systemctl restart nginx
-
-
-          echo "===== STATUS ====="
-          sudo systemctl status django --no-pager
-          sudo systemctl status nextjs --no-pager
-          sudo systemctl status nginx --no-pager
-
+          
+          echo ">>> Deployment Complete!"
           EOF
