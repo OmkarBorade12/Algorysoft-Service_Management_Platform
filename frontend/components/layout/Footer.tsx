@@ -38,6 +38,7 @@ export default function Footer() {
                                     href={
                                         link === 'Home' ? '/' : 
                                         link === 'About Us' ? '/about' : 
+                                        link === 'Contact Us' ? '/contact' : 
                                         `/${link.toLowerCase().replace(/ /g, '-')}`
                                     } 
                                     className={styles.link} 
